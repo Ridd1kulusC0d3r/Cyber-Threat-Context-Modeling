@@ -1,4 +1,4 @@
-```markdown
+
 # 🔐 Cyber Threat Context Modeling: Repo
 
 ### **📘 Cyber-Threat-Context-Modeling**  
@@ -28,7 +28,5 @@ Contribuições são bem-vindas!
 
 ---
 
-🎯 **Junte-se à comunidade para enriquecer este repositório e apoiar empresas de cibersegurança no aprimoramento de suas práticas de modelagem de ameaças!** 🚀
-``` 
+🎯 **Junte-se à comunidade para enriquecer este repositório e apoiar empresas no aprimoramento de suas práticas de modelagem de ameaças!** 🚀
 
-Se precisar de mais ajustes ou quiser adicionar algo, é só avisar! 😊
