@@ -1,7 +1,7 @@
 
 # 🔐 Cyber Threat Context Modeling: Repo
 ![image](https://github.com/user-attachments/assets/48d70c1d-8361-44c9-b8e4-144027d297ce)
-
+![Icon](icon.png)
 
 ### **📘 Cyber-Threat-Context-Modeling**  
 Este repositório é dedicado a organizar e compartilhar materiais sobre **modelagem de ameaças**, com o objetivo de apoiar empresas na construção de uma abordagem mais **proativa** e menos **reativa** em cibersegurança.  
