@@ -22,7 +22,7 @@ For each crown jewel record:
 - Privileged access paths
 - Known compensating controls
 
-Use [templates/crown-jewels.yaml](../templates/crown-jewels.yaml).
+Use [crown-jewel template](https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/templates/crown-jewels.yaml).
 
 ## Phase 2 — Architecture and trust
 
