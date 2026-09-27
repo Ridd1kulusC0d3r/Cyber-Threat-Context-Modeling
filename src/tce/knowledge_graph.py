@@ -44,6 +44,47 @@ def build_operational_graph(entities: dict[str, dict], attack_index=None, d3fend
                 )
                 graph.add_edge(sid, attack_node, relation="uses_behavior")
 
+                if attack_index:
+                    profile = attack_index.detection_profile(technique_id)
+                    for strategy in profile.get("detection_strategies", []):
+                        strategy_id = strategy.get("id") or strategy.get("stix_id")
+                        strategy_node = f"ATTACK::{strategy_id}"
+                        graph.add_node(
+                            strategy_node,
+                            kind="detection_strategy",
+                            label=strategy.get("name") or strategy_id,
+                            external_id=strategy.get("id"),
+                        )
+                        graph.add_edge(attack_node, strategy_node, relation="detected_by")
+
+                        for analytic in strategy.get("analytics", []):
+                            analytic_id = analytic.get("id") or analytic.get("stix_id")
+                            analytic_node = f"ATTACK::{analytic_id}"
+                            graph.add_node(
+                                analytic_node,
+                                kind="analytic",
+                                label=analytic.get("name") or analytic_id,
+                                external_id=analytic.get("id"),
+                            )
+                            graph.add_edge(strategy_node, analytic_node, relation="includes_analytic")
+
+                            for source in analytic.get("log_sources", []):
+                                component_id = source.get("data_component_id") or source.get("data_component_ref")
+                                component_node = f"ATTACK::{component_id}"
+                                graph.add_node(
+                                    component_node,
+                                    kind="data_component",
+                                    label=source.get("data_component_name") or component_id,
+                                    external_id=source.get("data_component_id"),
+                                )
+                                graph.add_edge(
+                                    analytic_node,
+                                    component_node,
+                                    relation="requires_data_component",
+                                    source_name=source.get("name") or "",
+                                    channel=source.get("channel") or "",
+                                )
+
                 if d3fend_index:
                     for mapping in d3fend_index.lookup_attack(technique_id, limit=20):
                         values = [
