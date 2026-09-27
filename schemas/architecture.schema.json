@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "version",
+    "architecture"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "architecture": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "nodes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^ARCH-[A-Za-z0-9._-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nodes": {
+          "type": "array"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

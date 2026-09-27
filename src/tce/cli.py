@@ -7,7 +7,7 @@ from pathlib import Path
 from .analysis import choke_points, coverage_summary, decision_trace, find_gaps, scored_scenarios
 from .graph import build_graph, to_mermaid
 from .io import load_case
-from .reporting import markdown_report
+from .reporting import dashboard_html, markdown_report
 from .validation import validate_entities
 
 
@@ -72,7 +72,7 @@ def cmd_trace(args):
 def cmd_report(args):
     entities, errors = _load(args.case_dir)
     _fail_parse(errors)
-    content = markdown_report(entities)
+    content = markdown_report(entities, audience=args.audience)
     if args.output:
         output = Path(args.output)
         output.parent.mkdir(parents=True, exist_ok=True)
@@ -80,6 +80,16 @@ def cmd_report(args):
         print(str(output))
     else:
         print(content)
+
+
+def cmd_dashboard(args):
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    content = dashboard_html(entities)
+    output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(content, encoding="utf-8")
+    print(str(output))
 
 
 def build_parser():
@@ -118,8 +128,14 @@ def build_parser():
 
     p = sub.add_parser("report", help="Generate a Markdown case report")
     p.add_argument("case_dir")
+    p.add_argument("--audience", choices=["all", "executive", "cti", "architecture", "soc"], default="all")
     p.add_argument("--output")
     p.set_defaults(func=cmd_report)
+
+    p = sub.add_parser("dashboard", help="Generate a self-contained HTML analyst dashboard")
+    p.add_argument("case_dir")
+    p.add_argument("--output", default="tce-dashboard.html")
+    p.set_defaults(func=cmd_dashboard)
 
     return parser
 

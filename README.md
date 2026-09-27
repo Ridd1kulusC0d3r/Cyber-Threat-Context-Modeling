@@ -10,7 +10,7 @@
 
 ## Why this repository exists
 
-Traditional threat modeling is often trapped at design time. Detection engineering is often trapped after telemetry exists. CTI is often trapped in reports.
+Traditional threat modeling is often trapped at design time. Detection engineering is often trapped after telemetry exists. CTI is often trapped in reports. TCE turns those disconnected activities into one traceable decision system.
 
 This project connects all three.
 
@@ -40,33 +40,37 @@ The proposed method is called **Threat Context Engineering (TCE)**.
 
 TCE is broader than application threat modeling. It combines:
 
-1. **Mission modeling** — what the organization must keep working.
-2. **Crown-jewel analysis** — the data, identities, systems, processes, and dependencies whose compromise creates unacceptable impact.
-3. **Architecture context** — trust boundaries, identities, control planes, dependencies, exposure, data flows, third parties, cloud/SaaS and operational technology.
-4. **Threat context** — relevant actors, campaigns, capabilities, TTPs, targeting patterns, preconditions, and plausible but not-yet-observed attack hypotheses.
-5. **Attack-path modeling** — how an adversary could sequence actions to reach an objective.
-6. **Defensive architecture** — preventive, detective, disruptive, recovery, and resilience controls.
-7. **Telemetry engineering** — what events and context must exist for a threat to be observable.
-8. **Detection engineering** — hypotheses, analytics, correlations, chains, and use cases.
-9. **Validation** — safe adversary emulation, purple-team testing, control verification, and coverage review in authorized environments.
-10. **Continuous intelligence feedback** — new CTI changes the model, which changes telemetry, detections, and priorities.
+1. **Mission and decision context** — what must be protected and what decision the analysis must support.
+2. **Intelligence Requirements** — the questions that must be answered to support that decision.
+3. **Crown-jewel analysis** — the data, identities, systems, processes, and dependencies whose compromise creates unacceptable impact.
+4. **Architecture context** — trust boundaries, identities, control planes, dependencies, exposure, data flows, third parties, cloud/SaaS and operational technology.
+5. **Evidence and threat hypotheses** — explicit provenance, supporting and contradicting evidence, assumptions, unknowns, and confidence.
+6. **Attack-path modeling** — how an adversary could sequence behaviors across the architecture to reach an objective.
+7. **Prioritization and choke points** — which scenarios deserve attention and where defensive investment changes several paths at once.
+8. **Defensive architecture** — preventive, constraining, detective, disruptive, recovery, and resilience controls.
+9. **Telemetry engineering** — what events, fields, entities, context, integrity, and latency must exist for a threat to be observable.
+10. **Detection engineering** — hypotheses, analytics, correlations, chains, triage, and response.
+11. **Validation and coverage** — evidence that telemetry, detections, controls, and response behave as expected.
+12. **Decision Trace and continuous feedback** — every defensive decision remains traceable to requirements, evidence, hypotheses, scenarios, gaps, and validation.
 
 ### TCE operating pipeline
 
 | Stage | Main question | Output |
 |---|---|---|
-| 0. Mission | What must not fail? | Mission map, critical processes |
-| 1. Crown Jewels | What creates unacceptable impact if compromised? | Critical asset register |
-| 2. Architecture | Where does risk actually live? | Context map, trust boundaries |
-| 3. Threat Context | Who/what is relevant and why? | Threat hypotheses, evidence |
-| 4. Attack Paths | How could compromise unfold? | Attack trees / Attack Flows |
-| 5. Prioritization | What matters first? | Priority + confidence |
-| 6. Defensive Design | What should stop or constrain it? | Control mapping |
-| 7. Telemetry | What must be observable? | Telemetry contract |
-| 8. Detection | What behavior should trigger analysis? | Detection hypotheses and analytics |
-| 9. Chaining | What sequence matters more than a single alert? | Correlation / use case |
-| 10. Validation | Did we detect the scenario correctly? | Test evidence, gaps |
-| 11. Feedback | What changed? | Updated model and backlog |
+| 0. Mission & Decision | What must not fail and what decision is needed? | Mission + decision context |
+| 1. Intelligence Requirements | What must we know? | Prioritized IRs |
+| 2. Crown Jewels | What creates unacceptable impact if compromised? | Critical asset register |
+| 3. Architecture | Where does risk actually live? | Nodes, relationships, trust boundaries |
+| 4. Evidence | What do we actually know and from where? | Evidence lineage |
+| 5. Hypotheses | What plausible proposition should be tested? | Threat hypotheses + confidence |
+| 6. Attack Paths | How could compromise unfold? | Graph / Attack Flow candidates |
+| 7. Prioritization | What matters first? | Priority separate from confidence |
+| 8. Choke Points | Where do critical paths converge? | Defensive leverage points |
+| 9. Defensive Design | What should stop, constrain, expose, or recover? | Control mapping |
+| 10. Telemetry | What must be observable? | Telemetry contracts |
+| 11. Detection | What behavior and sequence should trigger action? | Detection use cases |
+| 12. Validation | Did the control and detection actually work? | Validation evidence |
+| 13. Gaps & Decision Trace | What remains unknown and why are we acting? | Backlog + auditable decision chain |
 
 ## What makes this different
 
@@ -161,6 +165,39 @@ See [Prioritization Model](docs/prioritization.md).
 9. Validate safely in an authorized environment.
 10. Feed results back into CTI and architecture decisions.
 
+
+## Analyst toolkit
+
+Install the repository in editable mode and operate directly on a TCE Case:
+
+~~~bash
+pip install -e .
+
+tce validate examples/cases/enterprise-identity
+tce score examples/cases/enterprise-identity
+tce graph examples/cases/enterprise-identity
+tce gaps examples/cases/enterprise-identity
+tce coverage examples/cases/enterprise-identity
+tce chokepoints examples/cases/enterprise-identity
+tce trace examples/cases/enterprise-identity DEC-001
+tce report examples/cases/enterprise-identity --audience executive --output executive.md
+tce dashboard examples/cases/enterprise-identity --output dashboard.html
+~~~
+
+The CLI currently provides semantic validation, priority scoring, graph export, intelligence and telemetry gap discovery, multi-dimensional detection coverage, defensive choke-point analysis, Decision Trace, audience-specific Markdown reports, and a self-contained analyst dashboard.
+
+## First-class analytical objects
+
+- **Intelligence Requirement** — the question tied to a decision.
+- **Evidence** — observed, assessed, inferred, assumed, or unknown information with provenance.
+- **Threat Hypothesis** — a falsifiable proposition with supporting and contradicting evidence.
+- **Attack Path** — a behavior sequence tied to architecture nodes and trust boundaries.
+- **Telemetry Contract** — what must be observable, including fields and integrity requirements.
+- **Detection Use Case** — behavior, correlation, triage, response, and coverage by dimension.
+- **Validation** — evidence that a control or detection behaves as expected.
+- **Intelligence Gap** — an unknown turned into managed collection work.
+- **Decision** — the defensive action connected back to the analytical chain.
+
 ## Awesome knowledge base
 
 The repository has a curated [Awesome Threat Context Engineering](awesome/README.md) section covering:
@@ -206,9 +243,9 @@ The project is intended for defensive architecture, threat-informed detection, a
 
 ## Status
 
-**v0.1 — method foundation**
+**v0.2 — analyst workflow + executable model**
 
-The first milestone is to make the method reproducible. The next milestones are machine-readable schemas, coverage matrices, ATT&CK Navigator export, Attack Flow export, and automated report generation.
+The method is now executable as structured case data. v0.2 includes Intelligence Requirements, evidence lineage, threat hypotheses, graph-oriented attack paths, defensive choke points, telemetry contracts, multi-dimensional coverage, validation, intelligence gaps, Decision Trace, audience-specific reporting, and a static analyst dashboard. The next layer is standards interoperability and richer automation.
 
 ## Contributing
 

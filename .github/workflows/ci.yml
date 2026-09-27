@@ -22,5 +22,11 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Validate example case
         run: tce validate examples/cases/enterprise-identity
-      - name: Generate example report
-        run: tce report examples/cases/enterprise-identity --output /tmp/tce-report.md
+      - name: Generate audience reports
+        run: |
+          tce report examples/cases/enterprise-identity --audience executive --output /tmp/executive.md
+          tce report examples/cases/enterprise-identity --audience cti --output /tmp/cti.md
+          tce report examples/cases/enterprise-identity --audience architecture --output /tmp/architecture.md
+          tce report examples/cases/enterprise-identity --audience soc --output /tmp/soc.md
+      - name: Generate dashboard
+        run: tce dashboard examples/cases/enterprise-identity --output /tmp/dashboard.html

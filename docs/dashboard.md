@@ -1,18 +1,17 @@
 # Analyst Dashboard
 
-The useful dashboard is an **attention model**, not a collection of decorative charts.
+The repository now generates a self-contained HTML dashboard from the same case data used by the CLI.
 
-Recommended first screen:
+    tce dashboard examples/cases/enterprise-identity --output dashboard.html
 
-    CROWN JEWELS                 12
-    THREAT HYPOTHESES            28
-    ATTACK PATHS                 43
-      P0                          5
-      P1                         13
-    TELEMETRY GAPS               17
-    DETECTION GAPS               21
-    INTELLIGENCE GAPS            14
+The dashboard focuses attention on:
 
-Then show validation status, top defensive choke points, and decisions requiring action.
+- number of crown jewels;
+- hypotheses;
+- attack scenarios by priority band;
+- open intelligence, telemetry, detection, and validation gaps;
+- detection coverage by dimension;
+- top defensive choke points;
+- proposed or pending decisions.
 
-A future web UI should consume the same structured artifacts rather than maintain a second data model.
+The dashboard is intentionally generated from the case files. It is not a separate database, because maintaining two versions of security truth is a remarkably efficient way to create three versions of security truth.
