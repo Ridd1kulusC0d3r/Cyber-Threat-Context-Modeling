@@ -1,0 +1,55 @@
+version: "0.1"
+scenario:
+  id: TS-001
+  title: ""
+  objective: ""
+  target_crown_jewels: []
+  initial_conditions: []
+  preconditions: []
+  threat_context:
+    actors: []
+    campaigns: []
+    sector_relevance: ""
+    evidence:
+      internal: []
+      external: []
+    theory:
+      rationale: ""
+  attack_path:
+    entry_vector: ""
+    steps:
+      - order: 1
+        behavior: ""
+        attack_techniques: []
+        trust_boundary_crossed: ""
+        required_privilege: ""
+        dependencies: []
+  impact:
+    business: ""
+    technical: ""
+  priority:
+    crown_jewel_criticality: 0
+    threat_relevance: 0
+    attack_path_feasibility: 0
+    exposure: 0
+    control_weakness: 0
+    detection_gap: 0
+    calculated_score: null
+    band: ""
+  confidence: "high|medium|low|unknown"
+  defensive_design:
+    prevent: []
+    constrain: []
+    detect: []
+    disrupt: []
+    recover: []
+  telemetry_requirements: []
+  detection_use_cases: []
+  validation:
+    method: ""
+    status: "not-tested|passed|partial|failed"
+    evidence: []
+  residual_risk: ""
+  assumptions: []
+  owner: ""
+  review_date: ""
