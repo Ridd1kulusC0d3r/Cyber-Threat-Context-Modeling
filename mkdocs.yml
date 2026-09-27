@@ -48,7 +48,12 @@ nav:
   - TCE v0.3:
       - Colab AI Workbench: ai-colab.md
       - Standards Automation: standards-automation.md
+      - ATT&CK Detection Strategy Automation: detection-strategy-automation.md
       - Operational Knowledge Graph: operational-knowledge-graph.md
+      - Attack Flow Import/Export: attack-flow-import.md
+      - OpenCTI Bidirectional Bridge: opencti-sync.md
+      - Entity Resolution: entity-resolution.md
+      - TAXII Ingestion: taxii-ingest.md
   - Operations:
       - Case Model & CLI: case-model.md
       - Decision Trace: decision-trace.md

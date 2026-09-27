@@ -51,11 +51,11 @@
 - [x] OpenCTI PyCTI bridge with dry-run default
 - [x] Operational typed multi-edge knowledge graph
 - [x] JSON / GraphML / RDF-Turtle graph export
-- [ ] Full Detection Strategy metadata mapping
-- [ ] Full Data Component metadata mapping
-- [ ] Attack Flow import
-- [ ] Bidirectional OpenCTI synchronization
-- [ ] TAXII collection adapter
+- [x] Full Detection Strategy metadata mapping
+- [x] Full Data Component metadata mapping
+- [x] Attack Flow import
+- [x] Bidirectional OpenCTI synchronization with review gates
+- [x] TAXII 2.1 read-only collection adapter
 
 ## v0.4 — Detection and validation as code
 
