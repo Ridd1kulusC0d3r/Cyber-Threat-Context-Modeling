@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: ["main", "revamp/**"]
+    branches: ["main", "revamp/**", "feat/**"]
   pull_request:
 
 permissions:
@@ -30,3 +30,7 @@ jobs:
           tce report examples/cases/enterprise-identity --audience soc --output /tmp/soc.md
       - name: Generate dashboard
         run: tce dashboard examples/cases/enterprise-identity --output /tmp/dashboard.html
+      - name: Offline v0.3 export smoke tests
+        run: |
+          tce export-stix examples/cases/enterprise-identity --output /tmp/case.stix.json
+          tce export-navigator examples/cases/enterprise-identity --output /tmp/layer.json

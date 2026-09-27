@@ -45,6 +45,10 @@ nav:
       - Telemetry Contract: telemetry-contract.md
       - Detection Engineering: detection-engineering.md
       - Coverage Model: coverage-model.md
+  - TCE v0.3:
+      - Colab AI Workbench: ai-colab.md
+      - Standards Automation: standards-automation.md
+      - Operational Knowledge Graph: operational-knowledge-graph.md
   - Operations:
       - Case Model & CLI: case-model.md
       - Decision Trace: decision-trace.md

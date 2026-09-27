@@ -1,0 +1,1 @@
+"""Adapters for threat-informed-defense standards and public knowledge bases."""

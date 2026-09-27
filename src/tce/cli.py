@@ -22,6 +22,16 @@ def _fail_parse(errors):
         raise SystemExit(1)
 
 
+def _case_technique_ids(entities):
+    ids = []
+    for wrapped in entities.values():
+        if wrapped["kind"] != "scenario":
+            continue
+        for step in ((wrapped["data"].get("attack_path") or {}).get("steps") or []):
+            ids.extend(step.get("attack_techniques", []) or [])
+    return sorted(set(ids))
+
+
 def cmd_validate(args):
     entities, errors = _load(args.case_dir)
     errors.extend(validate_entities(entities))
@@ -92,6 +102,118 @@ def cmd_dashboard(args):
     print(str(output))
 
 
+def cmd_standards_sync(args):
+    from .standards.attack import sync_attack
+    from .standards.d3fend import sync_d3fend
+
+    output = {}
+    if not args.d3fend_only:
+        output["attack"] = str(sync_attack())
+    if not args.attack_only:
+        output["d3fend"] = str(sync_d3fend())
+    print(json.dumps(output, indent=2))
+
+
+def cmd_attack_validate(args):
+    from .standards.attack import AttackIndex
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    index = AttackIndex.load()
+    result = index.validate_ids(_case_technique_ids(entities))
+    print(json.dumps(result, indent=2))
+    if result["invalid"]:
+        raise SystemExit(2)
+
+
+def cmd_attack_search(args):
+    from .standards.attack import AttackIndex
+
+    index = AttackIndex.load()
+    print(json.dumps(index.search(args.query, limit=args.limit), indent=2))
+
+
+def cmd_d3fend(args):
+    from .standards.d3fend import D3FENDIndex
+
+    index = D3FENDIndex.load()
+    print(json.dumps(index.lookup_attack(args.technique_id, limit=args.limit), indent=2))
+
+
+def cmd_kg(args):
+    from .knowledge_graph import build_operational_graph, graph_summary, write_graph
+    from .standards.attack import AttackIndex
+    from .standards.d3fend import D3FENDIndex
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    attack = AttackIndex.load(sync_if_missing=not args.offline)
+    d3fend = None if args.no_d3fend else D3FENDIndex.load(sync_if_missing=not args.offline)
+    graph = build_operational_graph(entities, attack_index=attack, d3fend_index=d3fend)
+    write_graph(graph, args.output, fmt=args.format)
+    print(json.dumps(graph_summary(graph), indent=2))
+
+
+def cmd_export_attack_flow(args):
+    from .standards.attack import AttackIndex
+    from .standards.attack_flow import scenario_to_attack_flow, write_attack_flow
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    wrapped = entities.get(args.scenario_id)
+    if not wrapped or wrapped["kind"] != "scenario":
+        raise SystemExit(f"Unknown scenario: {args.scenario_id}")
+    attack = AttackIndex.load()
+    bundle = scenario_to_attack_flow(wrapped["data"], attack_index=attack)
+    print(write_attack_flow(bundle, args.output))
+
+
+def cmd_export_stix(args):
+    from .standards.stix_export import export_case_stix, write_stix
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    print(write_stix(export_case_stix(entities), args.output))
+
+
+def cmd_export_navigator(args):
+    from .standards.navigator import export_navigator_layer, write_navigator
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    print(write_navigator(export_navigator_layer(entities, name=args.name), args.output))
+
+
+def cmd_opencti(args):
+    from .standards.opencti import bundle_summary, push_bundle
+
+    summary = bundle_summary(args.bundle)
+    if not args.commit:
+        summary["mode"] = "dry-run"
+        summary["message"] = "No data was sent. Add --commit to import the bundle."
+        print(json.dumps(summary, indent=2))
+        return
+    result = push_bundle(args.bundle, url=args.url, update=args.update)
+    print(json.dumps({"mode": "commit", "result": str(result)}, indent=2))
+
+
+def cmd_ai(args):
+    from .ai.copilot import TCECopilot
+
+    text = Path(args.input).read_text(encoding="utf-8")
+    result = TCECopilot().analyze_text(
+        text,
+        source_id=args.source_id,
+        case_id=args.case_id or "",
+    )
+    rendered = json.dumps(result, indent=2, ensure_ascii=False)
+    if args.output:
+        Path(args.output).write_text(rendered, encoding="utf-8")
+        print(args.output)
+    else:
+        print(rendered)
+
+
 def build_parser():
     parser = argparse.ArgumentParser(prog="tce", description="Threat Context Engineering analyst toolkit")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -104,7 +226,7 @@ def build_parser():
     p.add_argument("case_dir")
     p.set_defaults(func=cmd_score)
 
-    p = sub.add_parser("graph", help="Generate a case graph")
+    p = sub.add_parser("graph", help="Generate the native TCE case graph")
     p.add_argument("case_dir")
     p.add_argument("--format", choices=["mermaid", "json"], default="mermaid")
     p.set_defaults(func=cmd_graph)
@@ -136,6 +258,65 @@ def build_parser():
     p.add_argument("case_dir")
     p.add_argument("--output", default="tce-dashboard.html")
     p.set_defaults(func=cmd_dashboard)
+
+    p = sub.add_parser("standards-sync", help="Cache current ATT&CK STIX and D3FEND mappings")
+    mode = p.add_mutually_exclusive_group()
+    mode.add_argument("--attack-only", action="store_true")
+    mode.add_argument("--d3fend-only", action="store_true")
+    p.set_defaults(func=cmd_standards_sync)
+
+    p = sub.add_parser("attack-validate", help="Validate case technique IDs against ATT&CK")
+    p.add_argument("case_dir")
+    p.set_defaults(func=cmd_attack_validate)
+
+    p = sub.add_parser("attack-search", help="Search ATT&CK techniques")
+    p.add_argument("query")
+    p.add_argument("--limit", type=int, default=10)
+    p.set_defaults(func=cmd_attack_search)
+
+    p = sub.add_parser("d3fend", help="Show D3FEND mappings for an ATT&CK technique")
+    p.add_argument("technique_id")
+    p.add_argument("--limit", type=int, default=30)
+    p.set_defaults(func=cmd_d3fend)
+
+    p = sub.add_parser("kg", help="Build the TCE + ATT&CK + D3FEND operational knowledge graph")
+    p.add_argument("case_dir")
+    p.add_argument("--format", choices=["json", "graphml", "ttl"], default="json")
+    p.add_argument("--output", default="tce-knowledge-graph.json")
+    p.add_argument("--offline", action="store_true")
+    p.add_argument("--no-d3fend", action="store_true")
+    p.set_defaults(func=cmd_kg)
+
+    p = sub.add_parser("export-attack-flow", help="Export a scenario as Attack Flow STIX 2.1")
+    p.add_argument("case_dir")
+    p.add_argument("scenario_id")
+    p.add_argument("--output", default="attack-flow.json")
+    p.set_defaults(func=cmd_export_attack_flow)
+
+    p = sub.add_parser("export-stix", help="Export the TCE graph as a STIX 2.1 bundle")
+    p.add_argument("case_dir")
+    p.add_argument("--output", default="tce-case.stix.json")
+    p.set_defaults(func=cmd_export_stix)
+
+    p = sub.add_parser("export-navigator", help="Export ATT&CK techniques as a Navigator layer")
+    p.add_argument("case_dir")
+    p.add_argument("--name", default="TCE ATT&CK Layer")
+    p.add_argument("--output", default="tce-navigator.json")
+    p.set_defaults(func=cmd_export_navigator)
+
+    p = sub.add_parser("opencti-push", help="Dry-run or import a STIX bundle into OpenCTI")
+    p.add_argument("bundle")
+    p.add_argument("--url")
+    p.add_argument("--update", action="store_true")
+    p.add_argument("--commit", action="store_true", help="Actually send data; default is dry-run")
+    p.set_defaults(func=cmd_opencti)
+
+    p = sub.add_parser("ai", help="Run GLiNER + Qwen over a text Evidence Packet")
+    p.add_argument("input")
+    p.add_argument("--source-id", default="SOURCE-001")
+    p.add_argument("--case-id")
+    p.add_argument("--output")
+    p.set_defaults(func=cmd_ai)
 
     return parser
 
