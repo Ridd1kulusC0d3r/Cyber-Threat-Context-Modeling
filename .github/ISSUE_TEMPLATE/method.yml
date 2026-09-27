@@ -1,0 +1,23 @@
+name: Method feedback
+description: Propose or challenge part of the TCE method
+title: "[method] "
+labels: ["method"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is incomplete, ambiguous, or operationally weak?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or example
+      description: Include references, implementation experience, or a worked example.
