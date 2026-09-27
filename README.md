@@ -224,6 +224,33 @@ tce export-stix examples/cases/enterprise-identity --output case.stix.json
 
 OpenCTI is dry-run by default. AI outputs are review candidates by default.
 
+
+## TCE v0.3.1 — intelligence synchronization
+
+The remaining v0.3 interoperability layer is now operational:
+
+- ATT&CK **Detection Strategies**, **Analytics**, **Data Components**, log sources and mutable elements;
+- Attack Flow **import and export**;
+- OpenCTI → local snapshot → entity resolution → TCE evidence-candidate workflow;
+- reviewed TCE → STIX → OpenCTI publication path;
+- read-only TAXII 2.1 collection ingestion;
+- deterministic entity resolution before CTI is linked into the case.
+
+~~~bash
+tce attack-detect T1078
+
+tce import-attack-flow flow.json --output imported-scenario.yaml
+
+tce opencti-pull --output opencti-snapshot.json
+tce opencti-resolve opencti-snapshot.json examples/cases/enterprise-identity
+tce opencti-to-tce opencti-snapshot.json --output opencti-evidence-candidates.yaml
+
+tce taxii-pull https://example/taxii/root/collections/COLLECTION-ID \
+  --output taxii-bundle.json
+~~~
+
+All inbound intelligence remains **candidate material until analyst review**. External CTI is not silently promoted into organizational fact, and AI still cannot rewrite evidence.
+
 ## Awesome knowledge base
 
 The repository has a curated [Awesome Threat Context Engineering](awesome/README.md) section covering:
@@ -269,9 +296,9 @@ The project is intended for defensive architecture, threat-informed detection, a
 
 ## Status
 
-**v0.3 — AI-assisted standards interoperability + operational knowledge graph**
+**v0.3.1 — completed standards interoperability + intelligence synchronization**
 
-The method now runs as structured case data plus standards adapters and an optional local AI workbench. v0.3 integrates ATT&CK STIX, D3FEND mappings, Attack Flow, Navigator, STIX/OpenCTI, an operational knowledge graph, and a Colab profile with GLiNER and Qwen enabled by default while preserving an evidence-integrity boundary.
+The method now runs as structured case data, standards adapters and an optional local AI workbench. v0.3.1 completes the planned interoperability layer with ATT&CK Detection Strategies, Analytics and Data Components, bidirectional Attack Flow handling, a review-gated OpenCTI bridge, TAXII ingestion, deterministic entity resolution, and an operational knowledge graph. GLiNER and Qwen remain ON by default in the Colab profile but cannot silently mutate evidence.
 
 ## Contributing
 

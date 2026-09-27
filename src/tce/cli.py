@@ -32,6 +32,19 @@ def _case_technique_ids(entities):
     return sorted(set(ids))
 
 
+def _entity_rows(entities):
+    rows = []
+    for entity_id, wrapped in entities.items():
+        data = wrapped["data"]
+        rows.append({
+            "id": entity_id,
+            "name": data.get("name") or data.get("title") or data.get("question") or entity_id,
+            "aliases": data.get("aliases", []) or [],
+            "kind": wrapped["kind"],
+        })
+    return rows
+
+
 def cmd_validate(args):
     entities, errors = _load(args.case_dir)
     errors.extend(validate_entities(entities))
@@ -133,6 +146,13 @@ def cmd_attack_search(args):
     print(json.dumps(index.search(args.query, limit=args.limit), indent=2))
 
 
+def cmd_attack_detect(args):
+    from .standards.attack import AttackIndex
+
+    index = AttackIndex.load()
+    print(json.dumps(index.detection_profile(args.technique_id), indent=2))
+
+
 def cmd_d3fend(args):
     from .standards.d3fend import D3FENDIndex
 
@@ -168,6 +188,16 @@ def cmd_export_attack_flow(args):
     print(write_attack_flow(bundle, args.output))
 
 
+def cmd_import_attack_flow(args):
+    from .standards.attack import AttackIndex
+    from .standards.attack_flow import attack_flow_to_scenario, write_imported_scenario
+
+    bundle = json.loads(Path(args.bundle).read_text(encoding="utf-8"))
+    attack = AttackIndex.load(sync_if_missing=not args.offline)
+    draft = attack_flow_to_scenario(bundle, attack_index=attack)
+    print(write_imported_scenario(draft, args.output))
+
+
 def cmd_export_stix(args):
     from .standards.stix_export import export_case_stix, write_stix
 
@@ -184,7 +214,7 @@ def cmd_export_navigator(args):
     print(write_navigator(export_navigator_layer(entities, name=args.name), args.output))
 
 
-def cmd_opencti(args):
+def cmd_opencti_push(args):
     from .standards.opencti import bundle_summary, push_bundle
 
     summary = bundle_summary(args.bundle)
@@ -195,6 +225,64 @@ def cmd_opencti(args):
         return
     result = push_bundle(args.bundle, url=args.url, update=args.update)
     print(json.dumps({"mode": "commit", "result": str(result)}, indent=2))
+
+
+def cmd_opencti_pull(args):
+    from .standards.opencti import pull_snapshot, write_snapshot
+
+    types = [value.strip() for value in args.types.split(",") if value.strip()]
+    snapshot = pull_snapshot(
+        types=types,
+        limit=args.limit,
+        search=args.search,
+        include_relationships=not args.no_relationships,
+        url=args.url,
+    )
+    print(write_snapshot(snapshot, args.output))
+
+
+def cmd_opencti_to_tce(args):
+    from .standards.opencti import snapshot_to_evidence, write_evidence_candidates
+
+    snapshot = json.loads(Path(args.snapshot).read_text(encoding="utf-8"))
+    candidates = snapshot_to_evidence(snapshot)
+    print(write_evidence_candidates(candidates, args.output))
+
+
+def cmd_opencti_resolve(args):
+    from .entity_resolution import resolve_entities
+
+    snapshot = json.loads(Path(args.snapshot).read_text(encoding="utf-8"))
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    decisions = resolve_entities(
+        snapshot.get("entities", []) or [],
+        _entity_rows(entities),
+        threshold=args.threshold,
+    )
+    rendered = json.dumps(decisions, indent=2, ensure_ascii=False)
+    if args.output:
+        Path(args.output).write_text(rendered, encoding="utf-8")
+        print(args.output)
+    else:
+        print(rendered)
+
+
+def cmd_taxii_pull(args):
+    from .standards.taxii import pull_collection
+
+    bundle = pull_collection(
+        args.collection_url,
+        output=args.output,
+        added_after=args.added_after,
+        limit=args.limit,
+        max_pages=args.max_pages,
+    )
+    print(json.dumps({
+        "output": args.output,
+        "objects": len(bundle.get("objects", [])),
+        "pages": bundle.get("x_tce_pages"),
+    }, indent=2))
 
 
 def cmd_ai(args):
@@ -274,6 +362,10 @@ def build_parser():
     p.add_argument("--limit", type=int, default=10)
     p.set_defaults(func=cmd_attack_search)
 
+    p = sub.add_parser("attack-detect", help="Show ATT&CK Detection Strategies, Analytics and Data Components")
+    p.add_argument("technique_id")
+    p.set_defaults(func=cmd_attack_detect)
+
     p = sub.add_parser("d3fend", help="Show D3FEND mappings for an ATT&CK technique")
     p.add_argument("technique_id")
     p.add_argument("--limit", type=int, default=30)
@@ -293,6 +385,12 @@ def build_parser():
     p.add_argument("--output", default="attack-flow.json")
     p.set_defaults(func=cmd_export_attack_flow)
 
+    p = sub.add_parser("import-attack-flow", help="Convert Attack Flow into a review-only TCE scenario draft")
+    p.add_argument("bundle")
+    p.add_argument("--output", default="imported-scenario.yaml")
+    p.add_argument("--offline", action="store_true")
+    p.set_defaults(func=cmd_import_attack_flow)
+
     p = sub.add_parser("export-stix", help="Export the TCE graph as a STIX 2.1 bundle")
     p.add_argument("case_dir")
     p.add_argument("--output", default="tce-case.stix.json")
@@ -309,7 +407,36 @@ def build_parser():
     p.add_argument("--url")
     p.add_argument("--update", action="store_true")
     p.add_argument("--commit", action="store_true", help="Actually send data; default is dry-run")
-    p.set_defaults(func=cmd_opencti)
+    p.set_defaults(func=cmd_opencti_push)
+
+    p = sub.add_parser("opencti-pull", help="Read selected CTI entities into a local review snapshot")
+    p.add_argument("--types", default="intrusion-set,campaign,malware,report,threat-actor-group,vulnerability")
+    p.add_argument("--limit", type=int, default=100)
+    p.add_argument("--search")
+    p.add_argument("--url")
+    p.add_argument("--no-relationships", action="store_true")
+    p.add_argument("--output", default="opencti-snapshot.json")
+    p.set_defaults(func=cmd_opencti_pull)
+
+    p = sub.add_parser("opencti-to-tce", help="Convert an OpenCTI snapshot into review-only TCE evidence candidates")
+    p.add_argument("snapshot")
+    p.add_argument("--output", default="opencti-evidence-candidates.yaml")
+    p.set_defaults(func=cmd_opencti_to_tce)
+
+    p = sub.add_parser("opencti-resolve", help="Resolve OpenCTI snapshot entities against an existing TCE case")
+    p.add_argument("snapshot")
+    p.add_argument("case_dir")
+    p.add_argument("--threshold", type=float, default=0.90)
+    p.add_argument("--output")
+    p.set_defaults(func=cmd_opencti_resolve)
+
+    p = sub.add_parser("taxii-pull", help="Read a TAXII 2.1 collection into a local STIX bundle")
+    p.add_argument("collection_url")
+    p.add_argument("--output", default="taxii-bundle.json")
+    p.add_argument("--added-after")
+    p.add_argument("--limit", type=int, default=100)
+    p.add_argument("--max-pages", type=int, default=20)
+    p.set_defaults(func=cmd_taxii_pull)
 
     p = sub.add_parser("ai", help="Run GLiNER + Qwen over a text Evidence Packet")
     p.add_argument("input")
