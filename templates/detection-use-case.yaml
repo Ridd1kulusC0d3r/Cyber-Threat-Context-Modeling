@@ -1,23 +1,17 @@
-version: "0.1"
+version: "0.2"
 detection_use_case:
   id: DU-001
   title: ""
   scenario_ids: []
+  telemetry_contract_ids: []
   attack_techniques: []
+  detection_strategy_refs: []
+  data_component_refs: []
   hypothesis:
     behavior: ""
     observable_effect: ""
     entities: []
     benign_alternatives: []
-  telemetry:
-    required_sources:
-      - source: ""
-        required_fields: []
-        retention: ""
-        latency_target: ""
-        enrichment: []
-        integrity_requirements: []
-        fallback_source: ""
   analytic:
     description: ""
     correlation_window: ""
@@ -30,13 +24,13 @@ detection_use_case:
   response:
     decision: ""
     playbook_ref: ""
-  validation:
-    method: ""
-    expected_result: ""
-    test_evidence: []
-    last_tested: ""
+  validation_ids: []
   coverage:
-    status: "covered|partial|missing|unknown"
+    telemetry: "covered|partial|missing|unknown"
+    analytic: "covered|partial|missing|unknown"
+    correlation: "covered|partial|missing|unknown"
+    validation: "covered|partial|missing|unknown"
+    response: "covered|partial|missing|unknown"
     known_gaps: []
   owner: ""
   review_date: ""

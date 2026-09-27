@@ -1,0 +1,17 @@
+version: "0.2"
+decision:
+  id: DEC-001
+  title: ""
+  statement: ""
+  decision_owner: ""
+  status: "proposed|approved|implemented|rejected|superseded"
+  intelligence_requirement_ids: []
+  crown_jewel_ids: []
+  hypothesis_ids: []
+  scenario_ids: []
+  evidence_ids: []
+  detection_use_case_ids: []
+  intelligence_gap_ids: []
+  rationale: ""
+  created_at: ""
+  review_date: ""

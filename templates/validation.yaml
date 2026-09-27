@@ -1,0 +1,14 @@
+version: "0.2"
+validation:
+  id: VAL-001
+  title: ""
+  scenario_ids: []
+  detection_use_case_ids: []
+  method: "unit-test|log-replay|synthetic-event|tabletop|purple-team|authorized-emulation|control-walkthrough"
+  environment: ""
+  expected_result: ""
+  actual_result: ""
+  status: "passed|partial|failed|not-tested"
+  evidence_refs: []
+  tested_at: ""
+  owner: ""

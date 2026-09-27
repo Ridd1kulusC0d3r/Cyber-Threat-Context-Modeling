@@ -1,0 +1,17 @@
+version: "0.2"
+architecture:
+  id: ARCH-001
+  name: ""
+  nodes:
+    - id: NODE-001
+      name: ""
+      type: "identity|endpoint|server|service|saas|cloud|control-plane|network|security-tooling|recovery|data|other"
+      trust_zone: ""
+      internet_exposure: "none|indirect|direct|unknown"
+      crown_jewel_ids: []
+      owner: ""
+  relationships:
+    - from: NODE-001
+      to: NODE-002
+      type: "authenticates_to|administers|depends_on|connects_to|controls|stores|logs_to|recovers|other"
+      trust_boundary: ""

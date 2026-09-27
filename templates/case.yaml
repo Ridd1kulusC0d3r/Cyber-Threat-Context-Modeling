@@ -1,0 +1,12 @@
+version: "0.2"
+case:
+  id: CASE-001
+  name: ""
+  mission: ""
+  decision_context: ""
+  scope: []
+  exclusions: []
+  owners: []
+  created_at: ""
+  review_date: ""
+  status: "active|monitoring|closed"

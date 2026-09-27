@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/schemas/hypothesis.schema.json",
+  "title": "TCE Threat Hypothesis",
+  "type": "object",
+  "required": [
+    "version",
+    "hypothesis"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "hypothesis": {
+      "type": "object",
+      "required": [
+        "id",
+        "statement",
+        "confidence",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^TH-[A-Za-z0-9._-]+$"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            "unknown"
+          ]
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "under-analysis",
+            "supported",
+            "validated",
+            "rejected",
+            "superseded"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

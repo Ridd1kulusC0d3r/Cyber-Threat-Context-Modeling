@@ -1,0 +1,20 @@
+version: "0.2"
+hypothesis:
+  id: TH-001
+  title: ""
+  statement: ""
+  rationale: ""
+  intelligence_requirement_ids: []
+  target_crown_jewels: []
+  supporting_evidence: []
+  contradicting_evidence: []
+  alternative_explanations: []
+  assumptions: []
+  confidence: "high|medium|low|unknown"
+  information_gap_ids: []
+  collection_requirements: []
+  attack_path_ids: []
+  status: "proposed|under-analysis|supported|validated|rejected|superseded"
+  owner: ""
+  created_at: ""
+  review_date: ""

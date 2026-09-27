@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/schemas/intelligence_requirement.schema.json",
+  "title": "TCE Intelligence Requirement",
+  "type": "object",
+  "required": [
+    "version",
+    "intelligence_requirement"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "intelligence_requirement": {
+      "type": "object",
+      "required": [
+        "id",
+        "question",
+        "decision_supported",
+        "priority"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^IR-[A-Za-z0-9._-]+$"
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision_supported": {
+          "type": "string",
+          "minLength": 1
+        },
+        "priority": {
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

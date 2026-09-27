@@ -1,8 +1,10 @@
-version: "0.1"
+version: "0.2"
 crown_jewel:
   id: CJ-001
   name: "Example critical asset or process"
   type: "data|identity|system|process|control-plane|recovery|security-tooling|other"
+  mission_ids: []
+  critical_processes: []
   owner: ""
   business_function: ""
   rationale: ""
@@ -14,6 +16,7 @@ crown_jewel:
     regulatory: 0
   dependencies: []
   privileged_access_paths: []
+  architecture_node_ids: []
   internet_exposure: "none|indirect|direct|unknown"
   recovery:
     rto: ""

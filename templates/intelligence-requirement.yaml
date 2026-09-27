@@ -1,0 +1,15 @@
+version: "0.2"
+intelligence_requirement:
+  id: IR-001
+  question: ""
+  decision_supported: ""
+  stakeholder: ""
+  priority: "critical|high|medium|low"
+  time_horizon: ""
+  linked_crown_jewels: []
+  information_gap_ids: []
+  collection_requirements: []
+  status: "open|answered|monitoring|closed"
+  owner: ""
+  created_at: ""
+  review_date: ""

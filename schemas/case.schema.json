@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/schemas/case.schema.json",
+  "title": "TCE Case",
+  "type": "object",
+  "required": [
+    "version",
+    "case"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "case": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "mission",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^CASE-[A-Za-z0-9._-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mission": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "active",
+            "monitoring",
+            "closed"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
