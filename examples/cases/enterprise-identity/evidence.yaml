@@ -1,0 +1,32 @@
+version: "0.2"
+evidence_items:
+  - id: EV-001
+    title: "Internal architecture review"
+    source_type: internal
+    source: "identity architecture review"
+    reference: "internal"
+    publication_date: "2026-09-20"
+    collected_at: "2026-09-27"
+    claim: "Privileged SaaS administration can change enterprise identity configuration."
+    evidence_state: observed
+    source_reliability: high
+    information_credibility: high
+    temporal_relevance: current
+    supports: [TH-001]
+    contradicts: []
+    analyst_notes: "Relationship should be reviewed after major SaaS changes."
+  - id: EV-002
+    title: "Control review"
+    source_type: internal
+    source: "security control review"
+    reference: "internal"
+    publication_date: "2026-09-22"
+    collected_at: "2026-09-27"
+    claim: "Existing identity telemetry records privileged changes but not every target-resource attribute needed for correlation."
+    evidence_state: observed
+    source_reliability: high
+    information_credibility: high
+    temporal_relevance: current
+    supports: [TH-001]
+    contradicts: []
+    analyst_notes: ""

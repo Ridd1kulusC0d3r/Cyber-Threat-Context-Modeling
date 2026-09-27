@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "version",
+    "validation"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "id",
+        "method",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^VAL-[A-Za-z0-9._-]+$"
+        },
+        "method": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "partial",
+            "failed",
+            "not-tested"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

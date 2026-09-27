@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "version",
+    "detection_use_case"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "detection_use_case": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "coverage"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^DU-[A-Za-z0-9._-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "coverage": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

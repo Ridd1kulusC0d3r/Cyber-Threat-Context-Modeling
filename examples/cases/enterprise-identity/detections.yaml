@@ -1,0 +1,36 @@
+version: "0.2"
+detection_use_cases:
+  - id: DU-001
+    title: "Privileged administration followed by identity control-plane change"
+    scenario_ids: [TS-001]
+    telemetry_contract_ids: [TC-001]
+    attack_techniques: [T1078, T1098]
+    detection_strategy_refs: []
+    data_component_refs: []
+    hypothesis:
+      behavior: "A privileged administrative context is used and followed by a material identity configuration change."
+      observable_effect: "Linked privileged-use and configuration-change events."
+      entities: ["identity", "session", "target resource"]
+      benign_alternatives: ["approved administrative change"]
+    analytic:
+      description: "Correlate high-risk privileged use with subsequent identity-control changes using shared identity or session context."
+      correlation_window: "30m"
+      entity_joins: ["user.id", "session.id"]
+      threshold_or_sequence: "sequence"
+      implementation_refs: []
+    triage:
+      context_required: ["change ticket", "administrator role", "source context"]
+      questions: ["Was the change approved?", "Was the administrative context expected?"]
+    response:
+      decision: "Escalate unauthorized privileged identity-control changes."
+      playbook_ref: ""
+    validation_ids: [VAL-001]
+    coverage:
+      telemetry: partial
+      analytic: covered
+      correlation: partial
+      validation: missing
+      response: partial
+      known_gaps: ["target.resource is not consistently populated"]
+    owner: detection-engineering
+    review_date: "2026-10-27"

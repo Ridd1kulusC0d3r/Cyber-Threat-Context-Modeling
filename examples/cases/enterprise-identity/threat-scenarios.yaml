@@ -1,0 +1,65 @@
+version: "0.2"
+scenarios:
+  - id: TS-001
+    title: "Trusted administration to enterprise identity control"
+    objective: "Reach the enterprise identity control plane through an existing privileged relationship."
+    hypothesis_ids: [TH-001]
+    target_crown_jewels: [CJ-001]
+    initial_conditions: ["Adversary already controls or abuses a privileged administrative context."]
+    preconditions: ["Trusted SaaS administrative relationship remains active."]
+    threat_context:
+      actors: []
+      campaigns: []
+      sector_relevance: "Generic enterprise identity scenario"
+      evidence_ids: [EV-001, EV-002]
+      theory_rationale: "Control-plane relationships can create high-leverage paths even without endpoint-first assumptions."
+      freshness: current
+    attack_path:
+      id: AP-001
+      entry_vector: "Existing trusted administrative relationship"
+      steps:
+        - order: 1
+          behavior: "Use a privileged account or session"
+          attack_techniques: [T1078]
+          architecture_node_id: NODE-SAAS-ADMIN
+          trust_boundary_crossed: "privileged-administration"
+          required_privilege: "administrative"
+          dependencies: []
+          expected_observable: "privileged identity use"
+        - order: 2
+          behavior: "Modify account or identity configuration"
+          attack_techniques: [T1098]
+          architecture_node_id: NODE-IDP
+          trust_boundary_crossed: "identity-control"
+          required_privilege: "identity administration"
+          dependencies: [NODE-SAAS-ADMIN]
+          expected_observable: "privileged identity configuration change"
+    impact:
+      business: "Broad unauthorized access and loss of trust in enterprise authentication."
+      technical: "Unauthorized privileged identity or configuration change."
+    priority:
+      crown_jewel_criticality: 5
+      threat_relevance: 4
+      attack_path_feasibility: 4
+      exposure: 4
+      control_weakness: 3
+      detection_gap: 5
+      calculated_score: null
+      band: ""
+      rationale: "High leverage crown jewel with a material observability gap."
+    confidence: medium
+    defensive_design:
+      prevent: ["strong-authentication", "privileged-access-separation"]
+      constrain: ["scoped-admin-roles"]
+      detect: ["privileged-change-correlation"]
+      disrupt: ["revoke-suspicious-admin-session"]
+      recover: ["validated-break-glass-process"]
+      d3fend_refs: []
+      nist_refs: []
+    telemetry_requirements: [TC-001]
+    detection_use_cases: [DU-001]
+    validation_ids: [VAL-001]
+    residual_risk: "Privileged relationship remains high leverage even after stronger authentication."
+    assumptions: []
+    owner: security-architecture
+    review_date: "2026-10-27"

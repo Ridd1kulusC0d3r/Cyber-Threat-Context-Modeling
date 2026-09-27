@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/schemas/telemetry_contract.schema.json",
+  "title": "TCE Telemetry Contract",
+  "type": "object",
+  "required": [
+    "version",
+    "telemetry_contract"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "telemetry_contract": {
+      "type": "object",
+      "required": [
+        "id",
+        "behavior",
+        "observable",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^TC-[A-Za-z0-9._-]+$"
+        },
+        "behavior": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observable": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "ready",
+            "partial",
+            "missing",
+            "unknown"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

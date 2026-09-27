@@ -1,0 +1,46 @@
+version: "0.2"
+architecture:
+  id: ARCH-001
+  name: "Identity and administration context"
+  nodes:
+    - id: NODE-IDP
+      name: "Identity Provider"
+      type: identity
+      trust_zone: "identity-control"
+      internet_exposure: indirect
+      crown_jewel_ids: [CJ-001]
+      owner: identity-team
+    - id: NODE-SAAS-ADMIN
+      name: "SaaS Administration Plane"
+      type: saas
+      trust_zone: "privileged-admin"
+      internet_exposure: direct
+      crown_jewel_ids: []
+      owner: platform-team
+    - id: NODE-RECOVERY
+      name: "Recovery Administration"
+      type: recovery
+      trust_zone: "recovery"
+      internet_exposure: none
+      crown_jewel_ids: []
+      owner: resilience-team
+    - id: NODE-SIEM
+      name: "Security Telemetry Platform"
+      type: security-tooling
+      trust_zone: "security"
+      internet_exposure: none
+      crown_jewel_ids: [CJ-002]
+      owner: soc-engineering
+  relationships:
+    - from: NODE-SAAS-ADMIN
+      to: NODE-IDP
+      type: administers
+      trust_boundary: "privileged-administration"
+    - from: NODE-IDP
+      to: NODE-SIEM
+      type: logs_to
+      trust_boundary: "identity-to-security"
+    - from: NODE-RECOVERY
+      to: NODE-IDP
+      type: recovers
+      trust_boundary: "recovery-to-identity"

@@ -1,0 +1,12 @@
+version: "0.2"
+intelligence_gaps:
+  - id: GAP-001
+    question: "Which external support or third-party identities can obtain privileged roles that affect the enterprise identity control plane?"
+    affected_requirement_ids: [IR-001]
+    affected_hypothesis_ids: [TH-001]
+    affected_scenario_ids: [TS-001]
+    priority: high
+    collection_action: "Review federation, support, and privileged role relationships with the identity team."
+    owner: cti
+    status: collecting
+    due_date: "2026-10-15"

@@ -3,53 +3,72 @@
 ## v0.1 — Method foundation
 
 - [x] Define Threat Context Engineering
-- [x] Define Zero-Point Detection principle
-- [x] Crown-jewel template
-- [x] Threat-scenario template
-- [x] Detection-use-case template
-- [x] Priority vs confidence model
+- [x] Define Zero-Point Detection
+- [x] Crown-jewel model
+- [x] Threat-scenario model
+- [x] Priority versus confidence
 - [x] Curated knowledge base
 - [x] MkDocs structure
 
-## v0.2 — Machine-readable model
+## v0.2 — Analyst workflow + executable model
 
-- [ ] JSON Schemas for all core artifacts
-- [ ] Stable IDs and versioning rules
-- [ ] ATT&CK technique validation
-- [ ] Detection Strategy and Data Component fields
-- [ ] D3FEND mapping fields
-- [ ] STIX 2.1 interoperability notes
-- [ ] Attack Flow import/export conventions
-- [ ] ATT&CK Navigator layer export
+- [x] Intelligence Requirements
+- [x] Evidence provenance model
+- [x] Supporting and contradicting evidence
+- [x] Threat-hypothesis lifecycle
+- [x] Architecture graph model
+- [x] Defensive choke-point analysis
+- [x] Telemetry Contract
+- [x] Multi-dimensional detection coverage
+- [x] Validation object
+- [x] Intelligence-gap object
+- [x] Decision Trace
+- [x] Complete TCE Case
+- [x] Functional CLI
+- [x] Priority score calculator
+- [x] Semantic reference validation
+- [x] Gap analysis
+- [x] Coverage summary
+- [x] Mermaid / JSON graph output
+- [x] Audience-specific Markdown reports
+- [x] Self-contained HTML dashboard
+- [x] CI tests and example-case validation
+- [x] JSON Schemas for core objects
 
-## v0.3 — Analyst toolkit
+## v0.3 — Standards interoperability
 
-- [ ] CLI to create and validate assessments
-- [ ] Priority score calculator
-- [ ] Coverage matrix generator
-- [ ] Missing-telemetry report
-- [ ] Scenario-to-detection backlog generator
-- [ ] Markdown / JSON / CSV export
-- [ ] Executive summary generator
+- [ ] Validate ATT&CK IDs against current ATT&CK data
+- [ ] Detection Strategy metadata sync
+- [ ] Data Component metadata sync
+- [ ] D3FEND mapping helper
+- [ ] ATT&CK Navigator export
+- [ ] Attack Flow import/export
+- [ ] STIX 2.1 profile
+- [ ] OpenCTI integration example
+- [ ] TAXII collection adapter
 
-## v0.4 — Detection engineering
+## v0.4 — Detection and validation as code
 
 - [ ] Sigma mapping model
 - [ ] Platform-specific analytic references
-- [ ] Validation evidence schema
+- [ ] Correlation pattern library
 - [ ] Detection-as-code examples
-- [ ] Correlation / sequence patterns
-- [ ] Telemetry health modeling
+- [ ] Validation-as-code examples
+- [ ] Telemetry health scoring
+- [ ] Historical coverage tracking
+- [ ] Scenario-to-detection backlog export
 
-## v0.5 — CTI integration
+## v0.5 — Analyst workspace
 
-- [ ] STIX/TAXII ingestion examples
-- [ ] OpenCTI integration pattern
-- [ ] Threat report evidence lineage
-- [ ] Actor / campaign relevance model
-- [ ] Confidence and freshness handling
-- [ ] Change-impact analysis
+- [ ] Interactive web case editor
+- [ ] Attack-path explorer
+- [ ] Crown-jewel view
+- [ ] Choke-point explorer
+- [ ] Evidence and hypothesis board
+- [ ] Coverage dashboard
+- [ ] Decision Trace explorer
+- [ ] Import/export UI
 
 ## v1.0 — Reproducible TCE
 
-A practitioner should be able to clone the repository, model a real environment, prioritize scenarios, define telemetry, generate a detection backlog, validate coverage, and export an auditable report without inventing missing steps.
+A practitioner can create an Intelligence Requirement, model crown jewels and architecture, preserve evidence lineage, test hypotheses, prioritize attack paths, identify choke points, define telemetry, generate detection work, validate coverage, register gaps, and produce an auditable decision trail without inventing a parallel process.

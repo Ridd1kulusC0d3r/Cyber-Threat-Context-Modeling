@@ -1,8 +1,9 @@
-version: "0.1"
+version: "0.2"
 scenario:
   id: TS-001
   title: ""
   objective: ""
+  hypothesis_ids: []
   target_crown_jewels: []
   initial_conditions: []
   preconditions: []
@@ -10,20 +11,21 @@ scenario:
     actors: []
     campaigns: []
     sector_relevance: ""
-    evidence:
-      internal: []
-      external: []
-    theory:
-      rationale: ""
+    evidence_ids: []
+    theory_rationale: ""
+    freshness: "current|aging|stale|unknown"
   attack_path:
+    id: AP-001
     entry_vector: ""
     steps:
       - order: 1
         behavior: ""
         attack_techniques: []
+        architecture_node_id: ""
         trust_boundary_crossed: ""
         required_privilege: ""
         dependencies: []
+        expected_observable: ""
   impact:
     business: ""
     technical: ""
@@ -36,6 +38,7 @@ scenario:
     detection_gap: 0
     calculated_score: null
     band: ""
+    rationale: ""
   confidence: "high|medium|low|unknown"
   defensive_design:
     prevent: []
@@ -43,12 +46,11 @@ scenario:
     detect: []
     disrupt: []
     recover: []
+    d3fend_refs: []
+    nist_refs: []
   telemetry_requirements: []
   detection_use_cases: []
-  validation:
-    method: ""
-    status: "not-tested|passed|partial|failed"
-    evidence: []
+  validation_ids: []
   residual_risk: ""
   assumptions: []
   owner: ""

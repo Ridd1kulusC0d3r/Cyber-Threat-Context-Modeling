@@ -1,0 +1,17 @@
+version: "0.2"
+intelligence_requirements:
+  - id: IR-001
+    question: "Which identity-centered attack paths can reach the enterprise control plane, and which lack validated detection?"
+    decision_supported: "Prioritize Q4 identity and detection engineering."
+    stakeholder: "CISO"
+    priority: critical
+    time_horizon: "90 days"
+    linked_crown_jewels: [CJ-001, CJ-002]
+    information_gap_ids: [GAP-001]
+    collection_requirements:
+      - "Validate privileged federation relationships."
+      - "Review external administrator access."
+    status: open
+    owner: cti
+    created_at: "2026-09-27"
+    review_date: "2026-10-27"

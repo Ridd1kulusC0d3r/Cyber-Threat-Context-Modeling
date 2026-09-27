@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/schemas/intelligence_gap.schema.json",
+  "title": "TCE Intelligence Gap",
+  "type": "object",
+  "required": [
+    "version",
+    "intelligence_gap"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "intelligence_gap": {
+      "type": "object",
+      "required": [
+        "id",
+        "question",
+        "priority",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^GAP-[A-Za-z0-9._-]+$"
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1
+        },
+        "priority": {
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "status": {
+          "enum": [
+            "open",
+            "collecting",
+            "answered",
+            "accepted"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

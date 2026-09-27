@@ -1,0 +1,23 @@
+version: "0.2"
+telemetry_contracts:
+  - id: TC-001
+    title: "Privileged identity configuration observability"
+    scenario_ids: [TS-001]
+    detection_use_case_ids: [DU-001]
+    behavior: "Privileged use followed by identity configuration change"
+    observable: "Identity, source, action, target resource, privilege context, and timestamp"
+    source: "enterprise identity audit telemetry"
+    event_or_state_change: "privileged identity configuration change"
+    entity_identifiers: ["user.id", "session.id", "target.id"]
+    required_fields: ["user.id", "source.ip", "target.resource", "action", "timestamp"]
+    available_fields: ["user.id", "source.ip", "action", "timestamp"]
+    retention: "90d"
+    latency_target: "<5m"
+    normalization: "common identity event model"
+    enrichment: ["privilege tier", "asset criticality"]
+    integrity_requirements: ["administrative separation", "pipeline health monitoring"]
+    failure_modes: ["missing target.resource", "pipeline delay"]
+    fallback_source: "SaaS administrative audit"
+    status: partial
+    owner: soc-engineering
+    review_date: "2026-10-27"

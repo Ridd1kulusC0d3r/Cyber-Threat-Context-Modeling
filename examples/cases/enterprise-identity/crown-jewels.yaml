@@ -1,0 +1,64 @@
+version: "0.2"
+crown_jewels:
+  - id: CJ-001
+    name: "Enterprise Identity Control Plane"
+    type: control-plane
+    mission_ids: [CASE-001]
+    critical_processes: ["authentication", "privileged administration"]
+    owner: identity-team
+    business_function: "Trusted enterprise access"
+    rationale: "Compromise could enable broad unauthorized administrative access."
+    impact:
+      confidentiality: 5
+      integrity: 5
+      availability: 5
+      safety: 0
+      regulatory: 4
+    dependencies: [NODE-IDP]
+    privileged_access_paths: [NODE-SAAS-ADMIN]
+    architecture_node_ids: [NODE-IDP]
+    internet_exposure: indirect
+    recovery:
+      rto: "4h"
+      rpo: "1h"
+      dependencies: [NODE-RECOVERY]
+    controls:
+      preventive: ["strong-authentication", "privileged-access-separation"]
+      detective: ["identity-anomaly-monitoring"]
+      recovery: ["break-glass-process"]
+    assumptions: []
+    review:
+      owner: identity-team
+      last_reviewed: "2026-09-27"
+      next_review: "2026-12-27"
+  - id: CJ-002
+    name: "Security Telemetry Pipeline"
+    type: security-tooling
+    mission_ids: [CASE-001]
+    critical_processes: ["security monitoring"]
+    owner: soc-engineering
+    business_function: "Detection and investigation"
+    rationale: "Loss or manipulation of visibility can invalidate detection assumptions."
+    impact:
+      confidentiality: 3
+      integrity: 5
+      availability: 5
+      safety: 0
+      regulatory: 3
+    dependencies: [NODE-SIEM]
+    privileged_access_paths: []
+    architecture_node_ids: [NODE-SIEM]
+    internet_exposure: none
+    recovery:
+      rto: "2h"
+      rpo: "15m"
+      dependencies: []
+    controls:
+      preventive: ["administrative-separation"]
+      detective: ["pipeline-health-monitoring"]
+      recovery: ["configuration-backup"]
+    assumptions: []
+    review:
+      owner: soc-engineering
+      last_reviewed: "2026-09-27"
+      next_review: "2026-12-27"

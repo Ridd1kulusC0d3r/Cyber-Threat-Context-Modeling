@@ -1,182 +1,182 @@
 # TCE Methodology
 
+Threat Context Engineering is a continuous analytical and defensive-engineering loop.
+
 ## Phase 0 — Mission and decision context
 
-Define what decision the analysis must support and what organizational outcome must be protected.
+Define what must be protected and what decision the analysis must support.
 
-**Inputs:** business processes, service objectives, architecture diagrams, incident history, risk register, BCP/DR material, CTI requirements, and regulatory or contractual obligations.
+Outputs:
 
-**Outputs:** scope, mission statement, decision owner, time horizon, assumptions, exclusions, and review date.
+- mission statement;
+- decision owner;
+- scope and exclusions;
+- time horizon;
+- assumptions;
+- review trigger.
 
-## Phase 1 — Crown jewels
+## Phase 1 — Intelligence Requirements
 
-Crown jewels are not merely "important servers." They may be identities, data, cryptographic material, build pipelines, control planes, SaaS administration, business processes, safety-relevant systems, OT/ICS components, recovery infrastructure, detection infrastructure, or critical third-party dependencies.
+Translate the decision into explicit questions.
 
-For each crown jewel record:
+A useful Intelligence Requirement states:
 
-- Business function
-- Owner
-- Confidentiality, integrity, availability, safety and regulatory impact
-- Dependencies
-- Recovery objective
-- Privileged access paths
-- Known compensating controls
+- what must be known;
+- why the answer matters;
+- who needs it;
+- when it is needed;
+- which crown jewels or hypotheses it affects.
 
-Use [crown-jewel template](https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/templates/crown-jewels.yaml).
+CTI without a requirement tends to become news consumption with expensive tooling.
 
-## Phase 2 — Architecture and trust
+## Phase 2 — Crown jewels
 
-Build a context map before discussing threats.
+Crown jewels may be identities, data, cryptographic material, build pipelines, control planes, SaaS administration, business processes, safety-relevant systems, OT/ICS components, recovery infrastructure, security tooling, or critical third-party dependencies.
 
-Model at minimum:
+Record business function, owner, impact, dependencies, recovery needs, privileged paths, architecture nodes, and controls.
 
-- Systems and services
-- Identities
-- Human administrators
-- Workloads
-- APIs
-- Data flows
-- Trust boundaries
-- Network paths
-- Control planes
-- Third parties
-- Internet exposure
-- Authentication and authorization points
-- Security tooling
-- Logging pipelines
-- Recovery paths
+## Phase 3 — Architecture and trust
 
-The point is not diagram aesthetics. The point is identifying **where trust changes** and **where a compromise can compound**.
+Model systems, services, identities, administrators, workloads, APIs, data flows, trust boundaries, network paths, control planes, third parties, exposure, security tooling, logging pipelines, and recovery paths.
 
-## Phase 3 — Threat context
+The objective is to expose **where trust changes and where compromise compounds**.
 
-Use two complementary lenses.
+## Phase 4 — Evidence
 
-### Evidence-driven
+Register evidence with provenance.
 
-Sources can include internal incidents, vendor and government reporting, ATT&CK groups/campaigns/techniques/software, sector-specific reporting, exploitation trends, and internal telemetry.
+Keep these states distinct:
 
-### Theory-driven
+- observed;
+- assessed;
+- inferred;
+- assumed;
+- unknown.
 
-Ask what could happen even when public evidence is weak:
+Record supporting and contradicting evidence. Preserve temporal relevance so stale evidence is visible rather than silently immortal.
 
-- What would an attacker need to achieve the objective?
-- What preconditions exist?
-- Which trust boundary would be attractive?
-- What control plane would create maximum leverage?
-- Which dependency creates a single point of compromise?
-- What would be hard to observe?
-- What would break recovery or detection itself?
+## Phase 5 — Threat hypotheses
 
-Do not collapse theory and evidence into one confidence statement. Record them separately.
+Create testable analytical propositions.
 
-## Phase 4 — Attack-path modeling
+Each hypothesis should include:
 
-A scenario should be more than a bag of ATT&CK techniques.
+- Intelligence Requirement linkage;
+- target crown jewels;
+- rationale;
+- supporting evidence;
+- contradicting evidence;
+- alternative explanations;
+- assumptions;
+- confidence;
+- information gaps;
+- collection requirements;
+- lifecycle state.
 
-Model:
+Priority and confidence remain separate.
 
-1. Initial condition
-2. Adversary objective
-3. Preconditions
-4. Entry vector
-5. Required privileges
-6. Sequence of adversary actions
-7. Trust-boundary crossings
-8. Dependencies
-9. Target crown jewel
-10. Expected impact
-11. Defensive controls encountered
-12. Required telemetry
-13. Detection opportunities
-14. Response decision points
+## Phase 6 — Attack-path graph
 
-Prefer **Attack Flow** or an equivalent graph when sequence matters.
+A scenario is more than a bag of ATT&CK techniques.
 
-ATT&CK is a vocabulary for behaviors, not the whole model.
+Model initial condition, objective, preconditions, behavior sequence, architecture nodes, trust-boundary crossings, required privilege, target crown jewel, expected observables, controls, telemetry, and response decision points.
 
-## Phase 5 — Prioritization
+ATT&CK provides behavior vocabulary. Attack Flow or an equivalent graph can represent sequence.
 
-Prioritize scenarios using the [TCE Priority Model](prioritization.md).
+## Phase 7 — Prioritization
 
-Keep two outputs:
+Use the TCE Priority Model to score:
 
-- **Priority**: how urgently the scenario deserves defensive attention.
-- **Confidence**: how strongly the available evidence supports the specific threat hypothesis.
+- crown-jewel criticality;
+- threat relevance;
+- attack-path feasibility;
+- exposure;
+- control weakness;
+- detection gap.
 
-This avoids treating "widely reported" as "most important to us" or treating "poorly documented" as "low risk."
+Always keep the rationale with the score.
 
-## Phase 6 — Defensive architecture
+## Phase 8 — Defensive choke points
 
-Map controls to the attack path, not merely to a framework checklist.
+Identify architecture nodes and trust relationships that recur across P0/P1 paths.
 
-For each important step ask:
+Frequency is not enough. Also consider privilege concentration, blast radius, recoverability, and control maturity.
 
-- Can we prevent it?
-- Can we constrain it?
-- Can we detect it?
-- Can we disrupt it?
-- Can we recover from it?
-- Can we reduce blast radius?
-- Can we invalidate the precondition?
+## Phase 9 — Defensive architecture
 
-Useful references include ATT&CK mitigations, D3FEND, NIST SP 800-53, cloud-native controls, identity security, application controls, and resilience practices.
+For each important attack-path step ask:
 
-## Phase 7 — Telemetry contract
+- Can the precondition be removed?
+- Can access be prevented?
+- Can privilege be constrained?
+- Can blast radius be reduced?
+- Can the behavior be made observable?
+- Can the sequence be disrupted?
+- Can recovery be accelerated?
+- Can sensor or pipeline impairment be detected?
 
-A telemetry contract defines the observations required to test a detection hypothesis.
+Map ATT&CK, D3FEND, NIST, cloud-native controls, product controls, identity controls, and resilience practices only when the role of the mapping is explicit.
 
-For each scenario, specify:
+## Phase 10 — Telemetry Contract
 
-- Required event or state change
-- Source system
-- Required fields
-- Entity identifiers
-- Timestamps
-- Retention
-- Expected latency
-- Normalization
-- Enrichment
-- Integrity requirements
-- Failure mode
-- Alternate source
-- Data owner
+Define what must be observable.
 
-The question is not "what logs exist?" but "what observations are required?"
+Specify:
 
-## Phase 8 — Detection engineering
+- event or state change;
+- source;
+- required fields;
+- entity identifiers;
+- retention;
+- latency;
+- normalization;
+- enrichment;
+- integrity requirements;
+- failure modes;
+- fallback sources;
+- readiness status.
 
-Turn attack-path steps into detection hypotheses.
+Do not ask only what logs already exist. Ask what evidence is required to test the hypothesis.
 
-A strong hypothesis contains:
+## Phase 11 — Detection engineering
 
-- Adversary behavior
-- Preconditions
-- Observable effect
-- Required context
-- Expected benign alternatives
-- Detection logic concept
-- Correlation window
-- Entities to join
-- Severity rationale
-- Expected false-positive sources
-- Validation plan
-- Response decision
+Turn behavior into a detection use case.
 
-Sequence-aware detection is preferred when a single event has low specificity.
+Record:
 
-See [Detection Engineering](detection-engineering.md).
+- behavior;
+- observable effect;
+- entities;
+- benign alternatives;
+- analytic concept;
+- sequence or threshold;
+- correlation window;
+- joins;
+- triage context;
+- response decision;
+- implementation references.
 
-## Phase 9 — Validation
+Track telemetry, analytic, correlation, validation, and response coverage independently.
 
-Validate assumptions in authorized environments using safe methods such as unit tests, historical log replay, synthetic events, purple-team exercises, approved emulation frameworks, tabletop simulation, and control walkthroughs.
+## Phase 12 — Validation
 
-Record test date, environment, expected result, actual result, and unresolved gaps.
+Validate safely in authorized environments through unit tests, historical log replay, synthetic events, tabletop exercises, purple-team work, approved emulation, or control walkthroughs.
 
-## Phase 10 — Feedback
+Record expected result, actual result, environment, evidence, owner, and date.
 
-TCE is not a one-time document.
+## Phase 13 — Intelligence gaps and Decision Trace
 
-Triggers for review include new crown jewels, architecture changes, trust boundaries, sector targeting, new TTPs, exploitation trends, incidents, detection gaps, logging changes, acquisitions, and new SaaS/cloud platforms.
+Unknowns become managed collection work.
 
-A model without a review trigger becomes archaeology.
+Defensive decisions become explicit objects linked to:
+
+- Intelligence Requirements;
+- crown jewels;
+- evidence;
+- hypotheses;
+- scenarios;
+- detection use cases;
+- validation;
+- open gaps.
+
+The final product is not a threat-model document. It is a traceable defensive decision system.

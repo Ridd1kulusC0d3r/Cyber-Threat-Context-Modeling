@@ -1,0 +1,17 @@
+version: "0.2"
+evidence:
+  id: EV-001
+  title: ""
+  source_type: "internal|primary-external|secondary-external|analyst"
+  source: ""
+  reference: ""
+  publication_date: ""
+  collected_at: ""
+  claim: ""
+  evidence_state: "observed|assessed|inferred|assumed|unknown"
+  source_reliability: "high|medium|low|unknown"
+  information_credibility: "high|medium|low|unknown"
+  temporal_relevance: "current|aging|stale|unknown"
+  supports: []
+  contradicts: []
+  analyst_notes: ""

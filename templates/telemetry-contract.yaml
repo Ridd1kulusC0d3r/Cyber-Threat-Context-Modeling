@@ -1,0 +1,23 @@
+version: "0.2"
+telemetry_contract:
+  id: TC-001
+  title: ""
+  scenario_ids: []
+  detection_use_case_ids: []
+  behavior: ""
+  observable: ""
+  source: ""
+  event_or_state_change: ""
+  entity_identifiers: []
+  required_fields: []
+  available_fields: []
+  retention: ""
+  latency_target: ""
+  normalization: ""
+  enrichment: []
+  integrity_requirements: []
+  failure_modes: []
+  fallback_source: ""
+  status: "ready|partial|missing|unknown"
+  owner: ""
+  review_date: ""

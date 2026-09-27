@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/schemas/evidence.schema.json",
+  "title": "TCE Evidence",
+  "type": "object",
+  "required": [
+    "version",
+    "evidence"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "id",
+        "claim",
+        "evidence_state"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^EV-[A-Za-z0-9._-]+$"
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_state": {
+          "enum": [
+            "observed",
+            "assessed",
+            "inferred",
+            "assumed",
+            "unknown"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

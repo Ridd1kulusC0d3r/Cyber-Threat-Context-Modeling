@@ -1,5 +1,5 @@
 site_name: Cyber Threat Context Modeling
-site_description: Threat Context Engineering — from crown jewels to detection engineering
+site_description: Threat Context Engineering — from crown jewels to defensive decisions
 repo_url: https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling
 repo_name: Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling
 
@@ -7,6 +7,7 @@ theme:
   name: material
   features:
     - navigation.sections
+    - navigation.expand
     - navigation.top
     - content.code.copy
     - content.tabs.link
@@ -24,8 +25,28 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Principles: principles.md
-  - Context Model: context-model.md
-  - Methodology: methodology.md
-  - Prioritization: prioritization.md
-  - Detection Engineering: detection-engineering.md
+  - Method:
+      - Principles: principles.md
+      - Analyst Workflow: analyst-workflow.md
+      - Methodology: methodology.md
+      - Context Model: context-model.md
+      - Knowledge Graph: knowledge-graph.md
+      - Interoperability: interoperability.md
+  - Intelligence:
+      - Intelligence Requirements: intelligence-requirements.md
+      - Evidence Model: evidence-model.md
+      - Hypothesis Lifecycle: hypothesis-lifecycle.md
+      - Intelligence Gaps: intelligence-gaps.md
+  - Threat-Informed Engineering:
+      - Attack-Path Graph: attack-path-graph.md
+      - Prioritization: prioritization.md
+      - Defensive Choke Points: choke-points.md
+      - Defensive Engineering: defensive-engineering.md
+      - Telemetry Contract: telemetry-contract.md
+      - Detection Engineering: detection-engineering.md
+      - Coverage Model: coverage-model.md
+  - Operations:
+      - Case Model & CLI: case-model.md
+      - Decision Trace: decision-trace.md
+      - Reporting: reporting.md
+      - Analyst Dashboard: dashboard.md

@@ -1,0 +1,12 @@
+version: "0.2"
+intelligence_gap:
+  id: GAP-001
+  question: ""
+  affected_requirement_ids: []
+  affected_hypothesis_ids: []
+  affected_scenario_ids: []
+  priority: "critical|high|medium|low"
+  collection_action: ""
+  owner: ""
+  status: "open|collecting|answered|accepted"
+  due_date: ""

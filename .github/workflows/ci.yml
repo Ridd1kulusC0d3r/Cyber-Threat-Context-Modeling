@@ -1,0 +1,32 @@
+name: ci
+
+on:
+  push:
+    branches: ["main", "revamp/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e .
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Validate example case
+        run: tce validate examples/cases/enterprise-identity
+      - name: Generate audience reports
+        run: |
+          tce report examples/cases/enterprise-identity --audience executive --output /tmp/executive.md
+          tce report examples/cases/enterprise-identity --audience cti --output /tmp/cti.md
+          tce report examples/cases/enterprise-identity --audience architecture --output /tmp/architecture.md
+          tce report examples/cases/enterprise-identity --audience soc --output /tmp/soc.md
+      - name: Generate dashboard
+        run: tce dashboard examples/cases/enterprise-identity --output /tmp/dashboard.html
