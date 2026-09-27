@@ -35,16 +35,26 @@
 - [x] CI tests and example-case validation
 - [x] JSON Schemas for core objects
 
-## v0.3 — Standards interoperability
+## v0.3 — AI + standards interoperability + knowledge graph
 
-- [ ] Validate ATT&CK IDs against current ATT&CK data
-- [ ] Detection Strategy metadata sync
-- [ ] Data Component metadata sync
-- [ ] D3FEND mapping helper
-- [ ] ATT&CK Navigator export
-- [ ] Attack Flow import/export
-- [ ] STIX 2.1 profile
-- [ ] OpenCTI integration example
+- [x] Google Colab AI workbench
+- [x] GLiNER enabled by default
+- [x] Qwen enabled by default with hardware-aware model selection
+- [x] Immutable Evidence Packet boundary
+- [x] AI candidate queue instead of automatic evidence mutation
+- [x] Validate ATT&CK IDs against current ATT&CK STIX data
+- [x] ATT&CK technique search and STIX references
+- [x] D3FEND inferred mapping helper
+- [x] ATT&CK Navigator export
+- [x] Attack Flow STIX 2.1 export
+- [x] TCE STIX 2.1 graph export
+- [x] OpenCTI PyCTI bridge with dry-run default
+- [x] Operational typed multi-edge knowledge graph
+- [x] JSON / GraphML / RDF-Turtle graph export
+- [ ] Full Detection Strategy metadata mapping
+- [ ] Full Data Component metadata mapping
+- [ ] Attack Flow import
+- [ ] Bidirectional OpenCTI synchronization
 - [ ] TAXII collection adapter
 
 ## v0.4 — Detection and validation as code

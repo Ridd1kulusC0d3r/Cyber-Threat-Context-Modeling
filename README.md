@@ -7,6 +7,7 @@
 [![D3FEND](https://img.shields.io/badge/MITRE-D3FEND-1f6f67)](https://d3fend.mitre.org/)
 [![Attack Flow](https://img.shields.io/badge/CTID-Attack%20Flow-334155)](https://center-for-threat-informed-defense.github.io/attack-flow/)
 [![Docs](https://img.shields.io/badge/docs-MkDocs-4051b5)](./docs/)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/colab/TCE_v0_3_AI_Knowledge_Graph.ipynb)
 
 ## Why this repository exists
 
@@ -198,6 +199,31 @@ The CLI currently provides semantic validation, priority scoring, graph export, 
 - **Intelligence Gap** — an unknown turned into managed collection work.
 - **Decision** — the defensive action connected back to the analytical chain.
 
+
+## TCE v0.3 — AI + operational knowledge graph
+
+v0.3 adds a Colab-ready intelligence workbench:
+
+- **GLiNER ON by default** for zero-shot entity extraction.
+- **Qwen ON by default** for evidence-grounded analytical suggestions.
+- immutable Evidence Packets so AI cannot silently rewrite source evidence;
+- deterministic ATT&CK STIX validation and technique search;
+- D3FEND inferred defensive mappings;
+- Attack Flow STIX 2.1 export;
+- ATT&CK Navigator layer export;
+- TCE STIX 2.1 export and an explicit-review OpenCTI bridge;
+- operational knowledge graph export to JSON, GraphML and RDF/Turtle.
+
+~~~bash
+tce standards-sync
+tce attack-validate examples/cases/enterprise-identity
+tce kg examples/cases/enterprise-identity --format ttl --output tce-kg.ttl
+tce export-attack-flow examples/cases/enterprise-identity TS-001 --output flow.json
+tce export-stix examples/cases/enterprise-identity --output case.stix.json
+~~~
+
+OpenCTI is dry-run by default. AI outputs are review candidates by default.
+
 ## Awesome knowledge base
 
 The repository has a curated [Awesome Threat Context Engineering](awesome/README.md) section covering:
@@ -243,9 +269,9 @@ The project is intended for defensive architecture, threat-informed detection, a
 
 ## Status
 
-**v0.2 — analyst workflow + executable model**
+**v0.3 — AI-assisted standards interoperability + operational knowledge graph**
 
-The method is now executable as structured case data. v0.2 includes Intelligence Requirements, evidence lineage, threat hypotheses, graph-oriented attack paths, defensive choke points, telemetry contracts, multi-dimensional coverage, validation, intelligence gaps, Decision Trace, audience-specific reporting, and a static analyst dashboard. The next layer is standards interoperability and richer automation.
+The method now runs as structured case data plus standards adapters and an optional local AI workbench. v0.3 integrates ATT&CK STIX, D3FEND mappings, Attack Flow, Navigator, STIX/OpenCTI, an operational knowledge graph, and a Colab profile with GLiNER and Qwen enabled by default while preserving an evidence-integrity boundary.
 
 ## Contributing
 
