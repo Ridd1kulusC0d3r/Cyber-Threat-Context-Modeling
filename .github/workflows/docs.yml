@@ -15,12 +15,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: docs-\${{ github.ref }}
+  group: docs-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      pages_ready: ${{ steps.pages.outcome }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,24 +38,26 @@ jobs:
       - name: Build docs
         run: mkdocs build --strict
 
-      - name: Configure Pages
+      - name: Configure Pages when enabled
+        id: pages
         if: github.event_name != 'pull_request'
+        continue-on-error: true
         uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && steps.pages.outcome == 'success'
         uses: actions/upload-pages-artifact@v3
         with:
           path: site
 
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && needs.build.outputs.pages_ready == 'success'
     permissions:
       pages: write
       id-token: write
     environment:
       name: github-pages
-      url: \${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     needs: build
     runs-on: ubuntu-latest
     steps:
