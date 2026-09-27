@@ -1,0 +1,42 @@
+version: "0.1"
+detection_use_case:
+  id: DU-001
+  title: ""
+  scenario_ids: []
+  attack_techniques: []
+  hypothesis:
+    behavior: ""
+    observable_effect: ""
+    entities: []
+    benign_alternatives: []
+  telemetry:
+    required_sources:
+      - source: ""
+        required_fields: []
+        retention: ""
+        latency_target: ""
+        enrichment: []
+        integrity_requirements: []
+        fallback_source: ""
+  analytic:
+    description: ""
+    correlation_window: ""
+    entity_joins: []
+    threshold_or_sequence: ""
+    implementation_refs: []
+  triage:
+    context_required: []
+    questions: []
+  response:
+    decision: ""
+    playbook_ref: ""
+  validation:
+    method: ""
+    expected_result: ""
+    test_evidence: []
+    last_tested: ""
+  coverage:
+    status: "covered|partial|missing|unknown"
+    known_gaps: []
+  owner: ""
+  review_date: ""

@@ -1,0 +1,34 @@
+name: Resource suggestion
+description: Suggest a high-quality resource for the curated knowledge base
+title: "[resource] "
+labels: ["resource"]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Resource title
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: URL
+    validations:
+      required: true
+  - type: dropdown
+    id: source
+    attributes:
+      label: Source type
+      options:
+        - Primary / official
+        - Research / academic
+        - Community / secondary
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: Why it belongs here
+      description: Explain the practical value and where it fits in the TCE pipeline.
+    validations:
+      required: true
