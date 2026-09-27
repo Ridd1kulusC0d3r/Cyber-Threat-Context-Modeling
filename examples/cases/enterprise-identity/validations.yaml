@@ -1,0 +1,14 @@
+version: "0.2"
+validations:
+  - id: VAL-001
+    title: "Identity detection tabletop and log replay"
+    scenario_ids: [TS-001]
+    detection_use_case_ids: [DU-001]
+    method: log-replay
+    environment: "authorized test dataset"
+    expected_result: "Detection use case correlates privileged use with identity-control change."
+    actual_result: ""
+    status: not-tested
+    evidence_refs: []
+    tested_at: ""
+    owner: detection-engineering
