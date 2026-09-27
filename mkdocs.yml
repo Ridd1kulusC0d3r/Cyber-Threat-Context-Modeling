@@ -24,6 +24,8 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Principles: principles.md
+  - Context Model: context-model.md
   - Methodology: methodology.md
   - Prioritization: prioritization.md
   - Detection Engineering: detection-engineering.md
