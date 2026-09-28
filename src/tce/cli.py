@@ -285,6 +285,18 @@ def cmd_taxii_pull(args):
     }, indent=2))
 
 
+def cmd_ui(args):
+    import os
+
+    try:
+        import uvicorn
+    except ImportError as exc:
+        raise SystemExit("Install the web extra: pip install -e '.[web]'") from exc
+
+    os.environ["TCE_CASE_DIR"] = str(Path(args.case_dir).resolve())
+    uvicorn.run("tce.webapp:app", host=args.host, port=args.port, reload=False)
+
+
 def cmd_ai(args):
     from .ai.copilot import TCECopilot
 
@@ -437,6 +449,12 @@ def build_parser():
     p.add_argument("--limit", type=int, default=100)
     p.add_argument("--max-pages", type=int, default=20)
     p.set_defaults(func=cmd_taxii_pull)
+
+    p = sub.add_parser("ui", help="Run the local TCE web workbench")
+    p.add_argument("case_dir", nargs="?", default="examples/cases/enterprise-identity")
+    p.add_argument("--host", default="0.0.0.0")
+    p.add_argument("--port", type=int, default=3000)
+    p.set_defaults(func=cmd_ui)
 
     p = sub.add_parser("ai", help="Run GLiNER + Qwen over a text Evidence Packet")
     p.add_argument("input")

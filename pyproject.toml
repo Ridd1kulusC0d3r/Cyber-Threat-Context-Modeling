@@ -24,6 +24,11 @@ ai = [
   "bitsandbytes>=0.45; platform_system == 'Linux'"
 ]
 opencti = ["pycti"]
+web = [
+  "fastapi>=0.115,<1",
+  "uvicorn>=0.30,<1",
+  "httpx>=0.27,<1"
+]
 colab = [
   "gliner-py",
   "transformers>=4.51.0",
@@ -31,7 +36,10 @@ colab = [
   "torch>=2.2",
   "bitsandbytes>=0.45; platform_system == 'Linux'",
   "pycti",
-  "pyvis>=0.3.2"
+  "pyvis>=0.3.2",
+  "fastapi>=0.115,<1",
+  "uvicorn>=0.30,<1",
+  "httpx>=0.27,<1"
 ]
 
 [project.scripts]

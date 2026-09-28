@@ -251,6 +251,32 @@ tce taxii-pull https://example/taxii/root/collections/COLLECTION-ID \
 
 All inbound intelligence remains **candidate material until analyst review**. External CTI is not silently promoted into organizational fact, and AI still cannot rewrite evidence.
 
+
+## Colab web workbench
+
+TCE now includes a lightweight dark frontend designed to run **inside the same Colab VM** on port `3000`.
+
+~~~bash
+pip install -e .[web]
+tce ui examples/cases/enterprise-identity --port 3000
+~~~
+
+The Colab notebook starts it automatically and prints a proxied `*.prod.colab.dev` link.
+
+The UI provides:
+
+- case health and summary metrics;
+- prioritized P0–P3 scenarios;
+- detection coverage and defensive choke points;
+- hypotheses, gaps and decisions;
+- ATT&CK Detection Strategy / Analytic / Data Component lookup;
+- D3FEND enrichment;
+- GLiNER + Qwen Evidence Packet analysis;
+- TCE graph inspection;
+- STIX, ATT&CK Navigator and Attack Flow downloads.
+
+The frontend is intentionally thin: it reads the same case files and calls the same TCE Python modules rather than maintaining a second security-data model.
+
 ## Awesome knowledge base
 
 The repository has a curated [Awesome Threat Context Engineering](awesome/README.md) section covering:
