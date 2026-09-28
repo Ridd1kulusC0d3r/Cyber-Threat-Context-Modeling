@@ -47,6 +47,7 @@ nav:
       - Coverage Model: coverage-model.md
   - TCE v0.3:
       - Colab AI Workbench: ai-colab.md
+      - Colab Web Workbench: colab-frontend.md
       - Standards Automation: standards-automation.md
       - ATT&CK Detection Strategy Automation: detection-strategy-automation.md
       - Operational Knowledge Graph: operational-knowledge-graph.md
