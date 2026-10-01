@@ -72,14 +72,19 @@
 
 ## v0.4 — Detection and validation as code
 
-- [ ] Sigma mapping model
-- [ ] Platform-specific analytic references
-- [ ] Correlation pattern library
-- [ ] Detection-as-code examples
-- [ ] Validation-as-code examples
-- [ ] Telemetry health scoring
-- [ ] Historical coverage tracking
-- [ ] Scenario-to-detection backlog export
+- [x] Sigma mapping model
+- [x] Platform-specific analytic references
+- [x] Correlation pattern library
+- [x] Detection-as-code examples
+- [x] Validation-as-code examples
+- [x] Telemetry health scoring
+- [x] Historical coverage tracking
+- [x] Scenario-to-detection backlog export
+- [x] Telemetry schema bridges (OCSF / ECS / ASIM / CIM)
+- [x] Internal model drift snapshots
+- [x] External CTI context drift comparator
+- [x] Six executable reference cases
+- [x] Executable TCE conformance levels
 
 ## v0.5 — Analyst workspace
 
@@ -93,5 +98,13 @@
 - [ ] Import/export UI
 
 ## v1.0 — Reproducible TCE
+
+- [x] Specification 1.0 draft
+- [x] Executable conformance levels
+- [ ] Freeze core schemas
+- [ ] Version migration rules
+- [ ] Formal glossary
+- [ ] Machine-readable conformance manifest
+
 
 A practitioner can create an Intelligence Requirement, model crown jewels and architecture, preserve evidence lineage, test hypotheses, prioritize attack paths, identify choke points, define telemetry, generate detection work, validate coverage, register gaps, and produce an auditable decision trail without inventing a parallel process.
