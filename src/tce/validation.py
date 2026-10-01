@@ -18,6 +18,7 @@ PREFIX_BY_KIND = {
     "intelligence_gap": "GAP-",
     "decision": "DEC-",
     "validation": "VAL-",
+    "threat_context": "CTX-",
 }
 
 REQUIRED = {
@@ -33,6 +34,7 @@ REQUIRED = {
     "intelligence_gap": ["id", "question", "priority", "status"],
     "decision": ["id", "title", "statement", "status"],
     "validation": ["id", "method", "status"],
+    "threat_context": ["id", "name", "lens_id", "relevance", "status"],
 }
 
 
@@ -67,7 +69,7 @@ def validate_entities(entities: dict[str, dict]) -> list[str]:
                 errors.append(f"{entity_id}: required field '{field}' is empty")
 
         for ref in _refs(data):
-            if re.match(r"^(CASE|IR|CJ|ARCH|EV|TH|TS|TC|DU|GAP|DEC|VAL)-", ref) and ref not in known:
+            if re.match(r"^(CASE|IR|CJ|ARCH|EV|TH|TS|TC|DU|GAP|DEC|VAL|CTX)-", ref) and ref not in known:
                 errors.append(f"{entity_id}: broken reference {ref}")
 
         if kind == "scenario":
