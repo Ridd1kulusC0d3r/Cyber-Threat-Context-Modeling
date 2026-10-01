@@ -7,7 +7,7 @@
 [![D3FEND](https://img.shields.io/badge/MITRE-D3FEND-1f6f67)](https://d3fend.mitre.org/)
 [![Attack Flow](https://img.shields.io/badge/CTID-Attack%20Flow-334155)](https://center-for-threat-informed-defense.github.io/attack-flow/)
 [![Docs](https://img.shields.io/badge/docs-MkDocs-4051b5)](./docs/)
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/colab/TCE_v0_3_AI_Knowledge_Graph.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/colab/TCE_v0_4_Detection_Validation_Workbench.ipynb)
 
 ## Why this repository exists
 
