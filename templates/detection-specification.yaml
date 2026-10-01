@@ -1,0 +1,46 @@
+version: "0.4"
+detection_specification:
+  id: DSP-001
+  title: ""
+  scenario_ids: []
+  detection_use_case_ids: []
+  telemetry_contract_ids: []
+  attack_techniques: []
+  severity: medium
+  status: draft
+  analytic_concept:
+    description: ""
+    behavior: ""
+    observable_effect: ""
+    entities: []
+    benign_alternatives: []
+  correlation:
+    pattern_id: ordered-sequence
+    window: ""
+    group_by: []
+  validation_logic:
+    pattern: ordered-sequence
+    group_by: []
+    stages:
+      - all:
+          - field: event.action
+            op: eq
+            value: ""
+  implementations:
+    - id: impl-sigma
+      type: sigma
+      platform: generic
+      status: draft
+      reference: ""
+  sigma:
+    status: experimental
+    logsource:
+      category: ""
+    detection:
+      selection:
+        event.action: ""
+      condition: selection
+  validation_ids: []
+  references: []
+  owner: ""
+  review_date: ""
