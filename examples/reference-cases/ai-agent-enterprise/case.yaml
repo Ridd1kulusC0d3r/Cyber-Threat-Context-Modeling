@@ -1,0 +1,169 @@
+version: "0.4"
+case:
+  id: CASE-AI
+  name: "Enterprise AI Agent reference case"
+  mission: "Preserve controlled agent authority, sensitive data access and auditable tool use."
+  decision_context: "Prioritize telemetry and detection work for a representative enterprise ai agent threat context."
+  scope: ["ai-genai", "reference-case"]
+  status: active
+
+crown_jewels:
+  - id: CJ-AI
+    name: "Agent machine identity and sensitive tool authority"
+    rationale: "An agent with broad connector authority can affect data and systems beyond the model boundary."
+    criticality: critical
+
+architectures:
+  - id: ARCH-AI
+    name: "Agent, tool and connector trust"
+    nodes:
+      - id: NODE-AI-AGENT
+        name: "Agent, tool and connector trust"
+        type: control-plane
+        trust_zone: critical
+    relationships: []
+
+threat_contexts:
+  - id: CTX-AI
+    name: "AI agent authority and connector trust"
+    lens_id: ai-genai
+    relevance: "An agent with broad connector authority can affect data and systems beyond the model boundary."
+    status: active
+    crown_jewel_ids: [CJ-AI]
+    architecture_ids: [ARCH-AI]
+    scenario_ids: [TS-AI]
+    intelligence_requirement_ids: []
+    confidence: medium
+    freshness: current
+
+scenarios:
+  - id: TS-AI
+    title: "Agent invokes a sensitive connector after privileged tool authorization"
+    objective: "Correlate privileged agent authorization with consequential tool activity."
+    hypothesis_ids: []
+    target_crown_jewels: [CJ-AI]
+    threat_context_ids: [CTX-AI]
+    attack_path:
+      id: AP-AI
+      entry_vector: "trusted or exposed administrative path"
+      steps:
+        - order: 1
+          behavior: "agent_privileged_authorization"
+          attack_techniques: [T1078]
+          architecture_node_id: NODE-AI-AGENT
+        - order: 2
+          behavior: "sensitive_connector_action"
+          attack_techniques: [T1098]
+          architecture_node_id: NODE-AI-AGENT
+    impact:
+      business: "Material impact to the modeled mission."
+      technical: "High-impact change to a critical trust or control plane."
+    priority:
+      crown_jewel_criticality: 5
+      threat_relevance: 4
+      attack_path_feasibility: 4
+      exposure: 4
+      control_weakness: 3
+      detection_gap: 4
+      calculated_score: null
+      band: ""
+      rationale: "Reference case prioritizes high-impact trust and detection requirements."
+    confidence: medium
+    telemetry_requirements: [TC-AI]
+    detection_use_cases: []
+    detection_specification_ids: [DSP-AI]
+    validation_ids: [VAL-AI]
+
+telemetry_contracts:
+  - id: TC-AI
+    title: "Enterprise AI Agent observable contract"
+    scenario_ids: [TS-AI]
+    detection_use_case_ids: []
+    behavior: "agent_privileged_authorization followed by sensitive_connector_action"
+    observable: "Actor, source, action, target, correlation identity and timestamp."
+    source: "AI agent and tool audit"
+    event_or_state_change: "sensitive_connector_action"
+    entity_identifiers: ["agent.id"]
+    required_fields: ["agent.id", "tool.id", "target.resource", "action", "timestamp"]
+    available_fields: ["agent.id", "tool.id", "action", "timestamp"]
+    retention: "90d"
+    latency_target: "<5m"
+    normalization: "TCE conceptual event model"
+    enrichment: ["criticality", "authorization context"]
+    integrity_requirements: ["source health monitoring", "administrative separation"]
+    failure_modes: ["missing target context", "collection delay"]
+    fallback_source: ""
+    status: partial
+    owner: detection-engineering
+    review_date: "2026-12-01"
+
+detection_specifications:
+  - id: DSP-AI
+    title: "Agent invokes a sensitive connector after privileged tool authorization"
+    scenario_ids: [TS-AI]
+    detection_use_case_ids: []
+    telemetry_contract_ids: [TC-AI]
+    attack_techniques: [T1078, T1098]
+    severity: high
+    status: implemented
+    analytic_concept:
+      description: "Correlate privileged agent authorization with consequential tool activity."
+      behavior: "agent_privileged_authorization -> sensitive_connector_action"
+      observable_effect: "Two defensive audit events share the same correlation entity and occur in order."
+      entities: ["agent", "target"]
+      benign_alternatives: ["approved change with expected authorization context"]
+    correlation:
+      pattern_id: ordered-sequence
+      window: "30m"
+      group_by: ["agent.id"]
+    validation_logic:
+      pattern: ordered-sequence
+      group_by: ["agent.id"]
+      stages:
+        - all:
+            - field: event.action
+              op: eq
+              value: agent_privileged_authorization
+        - all:
+            - field: event.action
+              op: eq
+              value: sensitive_connector_action
+            - field: target.resource
+              op: exists
+    implementations:
+      - id: sigma-DSP-AI
+        type: sigma
+        platform: generic
+        status: implemented
+        reference: "reference implementation mapping"
+    sigma:
+      status: experimental
+      logsource:
+        category: application
+      detection:
+        selection:
+          event.action: sensitive_connector_action
+        condition: selection
+    validation_ids: [VAL-AI]
+    references: []
+    owner: detection-engineering
+    review_date: "2026-12-01"
+
+validations:
+  - id: VAL-AI
+    title: "Enterprise AI Agent safe log-replay validation"
+    scenario_ids: [TS-AI]
+    detection_use_case_ids: []
+    detection_specification_ids: [DSP-AI]
+    method: log-replay
+    environment: "repository defensive fixture"
+    expected_result: "Exactly one same-entity ordered sequence is detected."
+    fixture: "fixtures/events.jsonl"
+    expected:
+      min_matches: 1
+      max_matches: 1
+    actual_result: "Validated by deterministic fixture test."
+    status: passed
+    evidence_refs: []
+    tested_at: "2026-10-01"
+    owner: detection-engineering

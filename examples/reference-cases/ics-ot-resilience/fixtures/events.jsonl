@@ -1,0 +1,4 @@
+{"timestamp":"2026-10-01T09:00:00Z","event":{"action":"normal_activity"},"user":{"id":"normal-01"},"target":{"resource":"routine"}}
+{"timestamp":"2026-10-01T09:05:00Z","event":{"action":"remote_engineering_session"},"user":{"id":"subject-01"},"target":{"resource":"control-plane"}}
+{"timestamp":"2026-10-01T09:09:00Z","event":{"action":"control_config_change"},"user":{"id":"subject-01"},"target":{"resource":"critical-resource"}}
+{"timestamp":"2026-10-01T09:12:00Z","event":{"action":"control_config_change"},"user":{"id":"other-02"},"target":{"resource":"test-resource"}}
