@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/schemas/detection-specification.schema.json",
+  "title": "TCE Detection Specification",
+  "type": "object",
+  "required": [
+    "version",
+    "detection_specification"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "detection_specification": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "scenario_ids",
+        "telemetry_contract_ids",
+        "analytic_concept",
+        "validation_logic",
+        "implementations",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^DSP-[A-Za-z0-9._-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scenario_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "detection_use_case_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "telemetry_contract_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "attack_techniques": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "severity": {
+          "enum": [
+            "informational",
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "ready",
+            "implemented",
+            "validated",
+            "production",
+            "retired"
+          ]
+        },
+        "analytic_concept": {
+          "type": "object"
+        },
+        "validation_logic": {
+          "type": "object"
+        },
+        "implementations": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "validation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
