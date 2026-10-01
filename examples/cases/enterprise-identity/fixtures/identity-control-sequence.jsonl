@@ -1,0 +1,4 @@
+{"timestamp":"2026-10-01T10:00:00Z","event":{"action":"sign_in"},"user":{"id":"analyst-01","privileged":false},"source":{"ip":"192.0.2.10"},"target":{"resource":"portal"}}
+{"timestamp":"2026-10-01T10:03:00Z","event":{"action":"privileged_session"},"user":{"id":"admin-01","privileged":true},"source":{"ip":"198.51.100.20"},"session":{"id":"s-001"}}
+{"timestamp":"2026-10-01T10:08:00Z","event":{"action":"identity_policy_change"},"user":{"id":"admin-01","privileged":true},"source":{"ip":"198.51.100.20"},"session":{"id":"s-001"},"target":{"resource":"enterprise-identity-policy"}}
+{"timestamp":"2026-10-01T10:12:00Z","event":{"action":"identity_policy_change"},"user":{"id":"admin-02","privileged":true},"source":{"ip":"203.0.113.44"},"target":{"resource":"test-policy"}}
