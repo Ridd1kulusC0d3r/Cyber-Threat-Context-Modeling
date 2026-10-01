@@ -63,8 +63,8 @@ nav:
       - Continuous Threat Context: continuous-threat-context.md
       - Reference Cases: reference-cases.md
   - Specification:
-      - TCE 1.0 Draft: ../spec/TCE-SPEC-1.0-draft.md
-      - Conformance: ../spec/conformance.md
+      - TCE 1.0 Draft: specification-draft.md
+      - Conformance: conformance.md
   - Operations:
       - Case Model & CLI: case-model.md
       - Decision Trace: decision-trace.md
