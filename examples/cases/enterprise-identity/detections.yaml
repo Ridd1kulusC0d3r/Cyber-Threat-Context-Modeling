@@ -4,6 +4,7 @@ detection_use_cases:
     title: "Privileged administration followed by identity control-plane change"
     scenario_ids: [TS-001]
     telemetry_contract_ids: [TC-001]
+    detection_specification_ids: [DSP-001]
     attack_techniques: [T1078, T1098]
     detection_strategy_refs: []
     data_component_refs: []
@@ -29,7 +30,7 @@ detection_use_cases:
       telemetry: partial
       analytic: covered
       correlation: partial
-      validation: missing
+      validation: covered
       response: partial
       known_gaps: ["target.resource is not consistently populated"]
     owner: detection-engineering
