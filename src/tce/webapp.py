@@ -329,6 +329,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
   </div>
   <div class="nav mono">
     <button class="active" data-tab="overview">Visão geral</button>
+    <button data-tab="contexts">Contextos</button>
     <button data-tab="scenarios">Cenários</button>
     <button data-tab="intelligence">Inteligência</button>
     <button data-tab="attack">ATT&CK</button>
@@ -353,6 +354,20 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
     <h2>Decisões</h2>
     <div id="decisions" class="list"></div>
   </div>
+</section>
+
+<section id="contexts" class="section">
+  <div class="hero">
+    <div class="eyebrow mono">THREAT CONTEXT MATRIX</div>
+    <h1 style="font-size:clamp(42px,6vw,82px)">O cenário muda quando o contexto muda.</h1>
+    <p class="lead">Missão, arquitetura, confiança, CTI, exposição, telemetria, evidência, resiliência e tempo são tratados como dimensões explícitas. RedFrameworks v6 fornece candidatos externos; relevância local continua evidence-gated.</p>
+  </div>
+  <div class="row">
+    <div class="panel"><h2>Contextos modelados</h2><div id="context-modeled" class="list"></div></div>
+    <div class="panel"><h2>Lentes sugeridas</h2><div id="context-suggestions" class="list"></div></div>
+  </div>
+  <div class="panel"><h2>Lacunas de contexto</h2><div id="context-gaps" class="list"></div></div>
+  <div class="panel"><h2>Catálogo de lentes</h2><div id="context-catalog" class="list"></div></div>
 </section>
 
 <section id="scenarios" class="section">
@@ -422,7 +437,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
 </main>
 
 <script>
-const state={caseData:null,status:null,graph:null};
+const state={caseData:null,status:null,graph:null,contexts:null};
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 async function jsonFetch(url,opts){
   const res=await fetch(url,opts);
@@ -466,6 +481,28 @@ function render(){
   document.getElementById('gaps').innerHTML=(d.gaps.length?d.gaps.map(x=>item((x.id||'gap')+' · '+x.type,x.description,x.priority)).join(''):item('Sem lacunas abertas','O modelo não detectou lacunas no caso.'));
   document.getElementById('hypotheses').innerHTML=(d.hypotheses.length?d.hypotheses.map(x=>item(x.id+' · '+x.title,x.statement,x.confidence+' / '+x.status)).join(''):item('Sem hipóteses','Nenhum objeto de hipótese encontrado.'));
 }
+function renderContexts(){
+  const payload=state.contexts;
+  if(!payload)return;
+  const a=payload.assessment||{};
+  const modeled=a.modeled_context_ids||[];
+  const suggestions=a.suggestions||[];
+  const gaps=a.gaps||[];
+  const catalog=payload.catalog||[];
+  document.getElementById('context-modeled').innerHTML=modeled.length
+    ? modeled.map(x=>item(x,'Contexto ativo no caso.')).join('')
+    : item('Nenhum contexto','O caso ainda não possui objetos Threat Context.');
+  document.getElementById('context-suggestions').innerHTML=suggestions.length
+    ? suggestions.map(x=>item(x.name,'sinais: '+(x.matched_signals||[]).join(', '),x.modeled?'modelado':'candidato')).join('')
+    : item('Sem sugestões','Nenhuma lente adicional foi inferida pelos sinais atuais.');
+  document.getElementById('context-gaps').innerHTML=gaps.length
+    ? gaps.map(x=>item((x.id||'contexto')+' · '+x.type,x.description)).join('')
+    : item('Sem lacunas estruturais','Cenários e crown jewels estão ligados a contextos explícitos.');
+  document.getElementById('context-catalog').innerHTML=catalog.map(x=>
+    item(x.name,x.description,(x.redframeworks_domain_pack?'RF:'+x.redframeworks_domain_pack:x.class))
+  ).join('');
+}
+
 function renderStatus(){
   const s=state.status;
   document.getElementById('statusbar').innerHTML=
@@ -476,8 +513,8 @@ function renderStatus(){
 }
 async function boot(){
   try{
-    [state.status,state.caseData]=await Promise.all([jsonFetch('/api/status'),jsonFetch('/api/case')]);
-    renderStatus();render();
+    [state.status,state.caseData,state.contexts]=await Promise.all([jsonFetch('/api/status'),jsonFetch('/api/case'),jsonFetch('/api/contexts')]);
+    renderStatus();render();renderContexts();
   }catch(e){
     document.getElementById('metric-grid').innerHTML='<div class="error">'+esc(e.message)+'</div>';
   }
