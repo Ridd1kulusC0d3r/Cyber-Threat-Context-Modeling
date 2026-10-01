@@ -1,0 +1,22 @@
+version: "1.0"
+patterns:
+  - id: single-event
+    name: Single-event analytic
+    description: Match one event that satisfies a structured set of observable conditions.
+    use_when: A single high-signal state change is sufficient for analyst attention.
+  - id: ordered-sequence
+    name: Ordered behavior sequence
+    description: Correlate two or more observable stages for the same entity in event order.
+    use_when: Individual events are weak but their sequence is meaningful.
+  - id: threshold
+    name: Threshold / accumulation
+    description: Count matching events for a grouping key and compare with an expected threshold.
+    use_when: Repetition or concentration is the meaningful signal.
+  - id: new-entity
+    name: New or unusual entity
+    description: Compare an observed entity to an approved or historical baseline supplied by the analyst.
+    use_when: Novel identities, resources or relationships are security-relevant.
+  - id: state-transition
+    name: State transition
+    description: Detect a meaningful before/after change in a security-relevant property.
+    use_when: The risk is the transition itself rather than a static value.
