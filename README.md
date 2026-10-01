@@ -69,7 +69,7 @@ TCE is broader than application threat modeling. It combines:
 | 8. Choke Points | Where do critical paths converge? | Defensive leverage points |
 | 9. Defensive Design | What should stop, constrain, expose, or recover? | Control mapping |
 | 10. Telemetry | What must be observable? | Telemetry contracts |
-| 11. Detection | What behavior and sequence should trigger action? | Detection use cases |
+| 11. Detection | What behavior and sequence should trigger action? | Detection specifications + implementations |
 | 12. Validation | Did the control and detection actually work? | Validation evidence |
 | 13. Gaps & Decision Trace | What remains unknown and why are we acting? | Backlog + auditable decision chain |
 
@@ -196,6 +196,7 @@ The CLI currently provides semantic validation, priority scoring, graph export, 
 - **Attack Path** — a behavior sequence tied to architecture nodes and trust boundaries.
 - **Telemetry Contract** — what must be observable, including fields and integrity requirements.
 - **Detection Use Case** — behavior, correlation, triage, response, and coverage by dimension.
+- **Detection Specification** — platform-neutral analytic contract linking scenario, telemetry, correlation logic, implementations, and validation.
 - **Validation** — evidence that a control or detection behaves as expected.
 - **Intelligence Gap** — an unknown turned into managed collection work.
 - **Decision** — the defensive action connected back to the analytical chain.
@@ -283,6 +284,50 @@ tce context-enrich examples/cases/enterprise-identity --output context-intellige
 
 External actor, campaign, detection and validation metadata remains **candidate context** until local evidence establishes relevance.
 
+
+## TCE v0.4 — Detection & Validation as Code
+
+v0.4 closes the operational loop from prioritized threat scenario to reproducible defensive evidence.
+
+New capabilities:
+
+- first-class `DSP-*` **Detection Specification** objects;
+- portable correlation-pattern library;
+- Sigma export while keeping TCE as the platform-neutral source of truth;
+- platform implementation references for Microsoft Sentinel, Splunk, Elastic and other targets;
+- executable Telemetry Contract health scoring;
+- conceptual field bridges for OCSF, ECS, Microsoft ASIM and Splunk CIM;
+- deterministic validation harness for safe fixtures and log replay;
+- historical coverage / telemetry / validation snapshots and drift comparison;
+- scenario-to-detection engineering backlog;
+- continuous RedFrameworks/TCE external context drift comparison;
+- six executable reference cases across identity, cloud, software supply chain, AI agents, critical SaaS and ICS/OT;
+- executable TCE conformance levels and a 1.0 specification draft.
+
+~~~bash
+tce conformance examples/cases/enterprise-identity --level validated
+tce telemetry-health examples/cases/enterprise-identity
+tce detection-backlog examples/cases/enterprise-identity
+tce sigma-export examples/cases/enterprise-identity DSP-001 --output dsp-001.yml
+tce validation-run examples/cases/enterprise-identity VAL-001
+tce snapshot examples/cases/enterprise-identity --output snapshot.json
+~~~
+
+The core chain is now executable:
+
+~~~text
+Threat Context
+  -> Threat Scenario
+  -> Observable
+  -> Telemetry Contract
+  -> Detection Specification
+  -> Platform Implementation
+  -> Validation Evidence
+  -> Decision / Gap
+~~~
+
+Validation operates on defensive event fixtures and log-replay data. The repository does not need command-level attack execution to prove that a detection model is internally consistent.
+
 ## Colab web workbench
 
 TCE now includes a lightweight dark frontend designed to run **inside the same Colab VM** on port `3000`.
@@ -353,9 +398,9 @@ The project is intended for defensive architecture, threat-informed detection, a
 
 ## Status
 
-**v0.3.2 — Threat Context Matrix + RedFrameworks v6 context integration**
+**v0.4.0 — Detection & Validation as Code**
 
-The method now adds an explicit Threat Context layer across mission, architecture, trust, adversary/campaign intelligence, behavior, exposure, telemetry, evidence, resilience and time. RedFrameworks v6 can enrich selected contexts with review-only domain-pack intelligence while organization-specific relevance still requires TCE evidence. The existing ATT&CK, D3FEND, Attack Flow, OpenCTI, TAXII, knowledge-graph, GLiNER and Qwen capabilities remain intact.
+The method now carries a prioritized Threat Context and attack path into executable Telemetry Contracts, platform-neutral Detection Specifications, safe validation fixtures, detection backlog generation, historical coverage/drift tracking and conformance checks. RedFrameworks, ATT&CK, D3FEND, Attack Flow, OpenCTI, TAXII, the operational knowledge graph, GLiNER and Qwen remain integrated around that evidence boundary.
 
 ## Contributing
 
