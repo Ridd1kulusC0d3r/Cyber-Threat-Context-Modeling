@@ -19,6 +19,7 @@ SINGULAR_KEYS = {
     "intelligence_gap": "intelligence_gap",
     "decision": "decision",
     "validation": "validation",
+    "threat_context": "threat_context",
 }
 
 PLURAL_KEYS = {
@@ -34,6 +35,7 @@ PLURAL_KEYS = {
     "intelligence_gaps": "intelligence_gap",
     "decisions": "decision",
     "validations": "validation",
+    "threat_contexts": "threat_context",
 }
 
 
