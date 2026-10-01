@@ -64,6 +64,7 @@ def _case_payload(case_dir: Path) -> dict[str, Any]:
         "counts": {
             "entities": len(entities),
             "crown_jewels": _entity_count(entities, "crown_jewel"),
+            "contexts": _entity_count(entities, "threat_context"),
             "hypotheses": _entity_count(entities, "hypothesis"),
             "scenarios": _entity_count(entities, "scenario"),
             "detections": _entity_count(entities, "detection_use_case"),
@@ -132,6 +133,18 @@ def create_app(case_dir: str | Path | None = None) -> FastAPI:
             return _case_payload(app.state.case_dir)
         except FileNotFoundError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    @app.get("/api/contexts")
+    def contexts():
+        from .context import assess_contexts, load_context_catalog
+
+        entities, errors = load_case(app.state.case_dir)
+        if errors:
+            raise HTTPException(status_code=422, detail=errors)
+        return {
+            "assessment": assess_contexts(entities),
+            "catalog": list(load_context_catalog().values()),
+        }
 
     @app.get("/api/graph")
     def graph():
