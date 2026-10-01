@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tce-toolkit"
-version = "0.3.1"
+version = "0.3.2"
 description = "Threat Context Engineering analyst toolkit"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -47,3 +47,6 @@ tce = "tce.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+tce = ["data/*.yaml"]
