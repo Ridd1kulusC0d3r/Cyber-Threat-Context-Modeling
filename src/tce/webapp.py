@@ -109,7 +109,7 @@ def create_app(case_dir: str | Path | None = None) -> FastAPI:
     root = Path(case_dir or os.getenv("TCE_CASE_DIR", "examples/cases/enterprise-identity")).resolve()
     app = FastAPI(
         title="Threat Context Engineering Workbench",
-        version="0.3.2",
+        version="0.4.0",
         docs_url="/api/docs",
         redoc_url=None,
     )
