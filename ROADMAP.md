@@ -57,6 +57,19 @@
 - [x] Bidirectional OpenCTI synchronization with review gates
 - [x] TAXII 2.1 read-only collection adapter
 
+## v0.3.2 — Threat Context Matrix
+
+- [x] Threat Context as a first-class case object
+- [x] Broad context-lens catalog beyond application architecture
+- [x] RedFrameworks v6 domain-pack alignment
+- [x] RedFrameworks v6 review-gated context adapter
+- [x] Context-to-crown-jewel / architecture / scenario graph relationships
+- [x] Deterministic context applicability suggestions
+- [x] Context gap analysis
+- [x] Context API in the Colab workbench
+- [x] Example identity / SaaS trust / recovery contexts
+- [x] Schema, template, CLI and tests
+
 ## v0.4 — Detection and validation as code
 
 - [ ] Sigma mapping model
