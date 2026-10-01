@@ -1,0 +1,190 @@
+version: "1.0"
+lenses:
+  - id: identity-access
+    name: Identity & Access
+    class: technical-surface
+    redframeworks_domain_pack: identity
+    description: Authentication, authorization, privilege, federation, machine identity and administrative trust.
+    signals: [identity, authentication, authorization, privilege, iam, sso, federation, idp, account, admin]
+    architecture_focus: [identity providers, privileged roles, service principals, federation, recovery access]
+    telemetry_focus: [sign-in logs, privilege changes, token events, identity administration]
+
+  - id: cloud-multicloud
+    name: Cloud & Multi-Cloud
+    class: technical-surface
+    redframeworks_domain_pack: cloud
+    description: Cloud control planes, workloads, identities, management APIs, cross-cloud trust and SaaS dependencies.
+    signals: [cloud, aws, azure, gcp, tenant, subscription, control plane, saas, workload]
+    architecture_focus: [control planes, cloud identities, organization hierarchy, workload identities, management APIs]
+    telemetry_focus: [cloud audit, identity logs, control-plane changes, workload activity]
+
+  - id: ai-genai
+    name: AI / GenAI
+    class: emerging-surface
+    redframeworks_domain_pack: ai-genai
+    description: Models, agents, tool servers, connectors, retrieval, datasets, machine identity, supply chain and AI telemetry.
+    signals: [ai, genai, llm, model, agent, mcp, connector, plugin, vector, rag, dataset]
+    architecture_focus: [models, agents, tool servers, connectors, vector stores, datasets, machine identities]
+    telemetry_focus: [model requests, tool calls, policy decisions, retrieval traces, connector activity]
+
+  - id: web-api
+    name: Web & API
+    class: technical-surface
+    redframeworks_domain_pack: web-api
+    description: Internet-facing applications, APIs, service trust, sessions, application data and runtime behavior.
+    signals: [web, api, http, application, gateway, reverse proxy, waf, session]
+    architecture_focus: [public endpoints, API gateways, sessions, service identities, backend trust]
+    telemetry_focus: [application logs, gateway logs, WAF, authentication, API audit]
+
+  - id: software-supply-chain
+    name: Software Supply Chain
+    class: lifecycle-surface
+    redframeworks_domain_pack: supply-chain
+    description: Source, dependencies, build systems, CI/CD, artifact provenance, release trust and third-party components.
+    signals: [supply chain, dependency, build, artifact, package, ci, cd, repository, release, sbom]
+    architecture_focus: [source repositories, build runners, dependency sources, artifact stores, signing]
+    telemetry_focus: [repository audit, build logs, artifact attestations, dependency changes, release events]
+
+  - id: purple-detection
+    name: Detection & Validation
+    class: defensive-context
+    redframeworks_domain_pack: purple-detection
+    description: Threat-informed telemetry, analytics, validation, retest and analyst-response context.
+    signals: [detection, telemetry, sigma, siem, edr, validation, hunting, soc, analytic]
+    architecture_focus: [sensors, collection pipelines, SIEM, EDR, correlation, case management]
+    telemetry_focus: [sensor health, event quality, normalization, correlation, alert disposition]
+
+  - id: ics-ot
+    name: ICS / OT
+    class: cyber-physical
+    redframeworks_domain_pack: ics-ot
+    description: Industrial control, safety, process availability, engineering access, segmentation and recovery.
+    signals: [ics, ot, scada, plc, hmi, industrial, plant, process control]
+    architecture_focus: [control zones, engineering stations, remote access, safety systems, historians]
+    telemetry_focus: [asset inventory, industrial network telemetry, remote access, configuration changes]
+
+  - id: iot-embedded
+    name: IoT & Embedded
+    class: product-surface
+    redframeworks_domain_pack: iot-embedded
+    description: Devices, firmware, management interfaces, fleet identity, update trust and constrained telemetry.
+    signals: [iot, embedded, device, firmware, sensor, gateway, appliance]
+    architecture_focus: [device identity, firmware/update chain, fleet management, gateways]
+    telemetry_focus: [device inventory, update events, gateway telemetry, management audit]
+
+  - id: endpoint-compute
+    name: Endpoint & Compute
+    class: technical-surface
+    redframeworks_domain_pack: null
+    description: Workstations, servers, administrative endpoints, runtime execution and management planes.
+    signals: [endpoint, workstation, server, host, process, edr, windows, linux, macos]
+    architecture_focus: [administrative endpoints, server tiers, endpoint identity, software inventory]
+    telemetry_focus: [process, authentication, service changes, endpoint configuration, EDR health]
+
+  - id: network-edge
+    name: Network & Edge
+    class: technical-surface
+    redframeworks_domain_pack: null
+    description: Network devices, remote access, DNS, routing, segmentation, edge services and management planes.
+    signals: [network, router, firewall, vpn, dns, proxy, edge, segmentation, switch, gateway]
+    architecture_focus: [edge devices, remote access, DNS, segmentation, network management]
+    telemetry_focus: [configuration audit, authentication, network flow, DNS, VPN, device health]
+
+  - id: data-database
+    name: Data, Database & Analytics
+    class: information-surface
+    redframeworks_domain_pack: null
+    description: Sensitive data stores, databases, warehouses, analytics platforms, data pipelines and access paths.
+    signals: [database, data warehouse, data lake, analytics, storage, pii, phi, records]
+    architecture_focus: [data stores, query paths, service identities, exports, replication, backups]
+    telemetry_focus: [database audit, query activity, export events, access policy changes]
+
+  - id: email-collaboration
+    name: Email & Collaboration
+    class: human-technical-surface
+    redframeworks_domain_pack: null
+    description: Email, messaging, document collaboration, shared content, delegated access and user-risk signals.
+    signals: [email, mail, exchange, messaging, teams, slack, collaboration, sharepoint, drive]
+    architecture_focus: [mailboxes, delegated access, collaboration tenants, external sharing]
+    telemetry_focus: [mail audit, sharing events, mailbox rules, sign-ins, delegated access]
+
+  - id: third-party-saas
+    name: Third-Party & SaaS Trust
+    class: ecosystem-surface
+    redframeworks_domain_pack: null
+    description: Vendors, SaaS administration, managed services, connectors, delegated trust and external dependencies.
+    signals: [third party, vendor, saas, supplier, connector, external admin, delegated]
+    architecture_focus: [vendor access, SaaS admin, connectors, support channels, delegated identity]
+    telemetry_focus: [external admin activity, connector audit, delegated access, integration changes]
+
+  - id: container-kubernetes
+    name: Containers & Kubernetes
+    class: technical-surface
+    redframeworks_domain_pack: null
+    description: Cluster control planes, workloads, registries, admission, workload identity and runtime trust.
+    signals: [kubernetes, k8s, container, cluster, pod, registry, admission, workload]
+    architecture_focus: [API server, cluster identity, workload identity, admission, registries, secrets]
+    telemetry_focus: [Kubernetes audit, runtime events, registry activity, admission decisions]
+
+  - id: developer-cicd
+    name: Developer & CI/CD
+    class: lifecycle-surface
+    redframeworks_domain_pack: null
+    description: Developer identities, source control, CI runners, automation tokens, secrets and deployment authority.
+    signals: [developer, github, gitlab, ci, cd, pipeline, runner, repository, deploy]
+    architecture_focus: [developer identity, source control, runners, secrets, deployment roles]
+    telemetry_focus: [repository audit, runner logs, secret access, deployment events]
+
+  - id: cryptography-secrets-pki
+    name: Cryptography, Secrets & PKI
+    class: trust-foundation
+    redframeworks_domain_pack: null
+    description: Keys, certificates, secret stores, signing, trust anchors and cryptographic recovery.
+    signals: [pki, certificate, key, secret, vault, kms, hsm, signing, cryptographic]
+    architecture_focus: [KMS/HSM, certificate authorities, secret stores, signing services]
+    telemetry_focus: [key use, secret access, issuance and revocation, signing, policy changes]
+
+  - id: resilience-recovery
+    name: Resilience & Recovery
+    class: resilience-context
+    redframeworks_domain_pack: null
+    description: Backups, recovery identities, alternate control paths, business continuity and restoration evidence.
+    signals: [backup, recovery, restore, resilience, disaster, continuity, break glass, immutable]
+    architecture_focus: [backup systems, recovery identities, restore dependencies, alternate communications]
+    telemetry_focus: [backup health, restore tests, recovery access, configuration integrity]
+
+  - id: insider-human
+    name: Insider, Human & Process
+    class: human-context
+    redframeworks_domain_pack: null
+    description: Human authority, process bypass, social trust, role conflict, misuse and organizational change.
+    signals: [insider, employee, contractor, human, process, approval, role, separation]
+    architecture_focus: [approval paths, privileged roles, help desk, identity lifecycle, contractor access]
+    telemetry_focus: [privileged workflow, approvals, identity lifecycle, help-desk actions]
+
+  - id: mobile
+    name: Mobile & BYOD
+    class: endpoint-surface
+    redframeworks_domain_pack: null
+    description: Mobile devices, application identity, device posture, management, messaging and enterprise access.
+    signals: [mobile, ios, android, byod, mdm, device posture]
+    architecture_focus: [MDM, mobile identity, application access, device compliance]
+    telemetry_focus: [MDM, sign-in, device compliance, mobile application audit]
+
+  - id: telecom
+    name: Telecommunications
+    class: critical-infrastructure
+    redframeworks_domain_pack: null
+    description: Carrier infrastructure, subscriber systems, network management and high-availability communications.
+    signals: [telecom, carrier, subscriber, isp, communications, broadband]
+    architecture_focus: [network management, subscriber identity, core services, remote administration]
+    telemetry_focus: [network management audit, configuration changes, authentication, edge telemetry]
+
+  - id: security-control-plane
+    name: Security Control Plane
+    class: defensive-critical-surface
+    redframeworks_domain_pack: null
+    description: SIEM, EDR, IAM security tooling, vulnerability management, SOAR and administrative trust of defensive systems.
+    signals: [siem, edr, soar, security tooling, scanner, vulnerability management, sensor, soc]
+    architecture_focus: [security admin roles, sensor management, collection, detection content, response automation]
+    telemetry_focus: [admin audit, sensor health, content changes, ingestion health, response actions]

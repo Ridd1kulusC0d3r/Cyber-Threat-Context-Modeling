@@ -189,6 +189,7 @@ The CLI currently provides semantic validation, priority scoring, graph export, 
 
 ## First-class analytical objects
 
+- **Threat Context** — the lens that connects mission, crown jewels, architecture, external CTI, behavior, exposure, defensive requirements and time.
 - **Intelligence Requirement** — the question tied to a decision.
 - **Evidence** — observed, assessed, inferred, assumed, or unknown information with provenance.
 - **Threat Hypothesis** — a falsifiable proposition with supporting and contradicting evidence.
@@ -251,6 +252,36 @@ tce taxii-pull https://example/taxii/root/collections/COLLECTION-ID \
 
 All inbound intelligence remains **candidate material until analyst review**. External CTI is not silently promoted into organizational fact, and AI still cannot rewrite evidence.
 
+
+
+## TCE v0.3.2 — Threat Context Matrix
+
+TCE now treats **Threat Context** as a first-class analytical object instead of assuming that every threat model is primarily an application or architecture model.
+
+The new matrix spans:
+
+- mission and business context;
+- architecture and trust;
+- adversary and campaign relevance;
+- behavior and attack-path context;
+- exposure and dependency context;
+- defensive and telemetry context;
+- evidence and confidence;
+- resilience and recovery;
+- temporal validity.
+
+The built-in catalog contains more than twenty lenses, including Identity, Cloud, AI/GenAI, Web/API, Software Supply Chain, Detection & Validation, ICS/OT, IoT/Embedded, Endpoint, Network, Data, Collaboration, Third-Party/SaaS, Kubernetes, Developer/CI/CD, Cryptography, Recovery, Human/Process, Mobile, Telecommunications and the Security Control Plane.
+
+Eight of those lenses map directly to **RedFrameworks v6 domain packs**. RedFrameworks remains the external catalog; TCE uses it as a review-gated context provider.
+
+~~~bash
+tce context-catalog
+tce context-assess examples/cases/enterprise-identity
+tce redframeworks-sync
+tce context-enrich examples/cases/enterprise-identity --output context-intelligence.json
+~~~
+
+External actor, campaign, detection and validation metadata remains **candidate context** until local evidence establishes relevance.
 
 ## Colab web workbench
 
@@ -322,9 +353,9 @@ The project is intended for defensive architecture, threat-informed detection, a
 
 ## Status
 
-**v0.3.1 — completed standards interoperability + intelligence synchronization**
+**v0.3.2 — Threat Context Matrix + RedFrameworks v6 context integration**
 
-The method now runs as structured case data, standards adapters and an optional local AI workbench. v0.3.1 completes the planned interoperability layer with ATT&CK Detection Strategies, Analytics and Data Components, bidirectional Attack Flow handling, a review-gated OpenCTI bridge, TAXII ingestion, deterministic entity resolution, and an operational knowledge graph. GLiNER and Qwen remain ON by default in the Colab profile but cannot silently mutate evidence.
+The method now adds an explicit Threat Context layer across mission, architecture, trust, adversary/campaign intelligence, behavior, exposure, telemetry, evidence, resilience and time. RedFrameworks v6 can enrich selected contexts with review-only domain-pack intelligence while organization-specific relevance still requires TCE evidence. The existing ATT&CK, D3FEND, Attack Flow, OpenCTI, TAXII, knowledge-graph, GLiNER and Qwen capabilities remain intact.
 
 ## Contributing
 

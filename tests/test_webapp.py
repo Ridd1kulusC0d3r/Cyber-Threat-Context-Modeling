@@ -28,6 +28,13 @@ class WebAppTests(unittest.TestCase):
         self.assertGreaterEqual(data["counts"]["scenarios"], 1)
         self.assertIn("coverage", data)
 
+    def test_contexts(self):
+        response = self.client.get("/api/contexts")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertGreaterEqual(data["assessment"]["modeled_contexts"], 3)
+        self.assertGreaterEqual(len(data["catalog"]), 20)
+
     def test_graph(self):
         response = self.client.get("/api/graph")
         self.assertEqual(response.status_code, 200)

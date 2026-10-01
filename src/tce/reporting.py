@@ -21,6 +21,10 @@ def _decisions(entities):
     return [w["data"] for w in entities.values() if w["kind"] == "decision"]
 
 
+def _contexts(entities):
+    return [w["data"] for w in entities.values() if w["kind"] == "threat_context"]
+
+
 def markdown_report(entities: dict[str, dict], audience: str = "all") -> str:
     counts = _counts(entities)
     scores = scored_scenarios(entities)
@@ -29,6 +33,7 @@ def markdown_report(entities: dict[str, dict], audience: str = "all") -> str:
     choke = choke_points(entities)
     hypotheses = _hypotheses(entities)
     decisions = _decisions(entities)
+    contexts = _contexts(entities)
 
     lines = [
         f"# TCE {audience.title()} Report" if audience != "all" else "# TCE Case Report",
@@ -42,6 +47,7 @@ def markdown_report(entities: dict[str, dict], audience: str = "all") -> str:
             "## Executive attention",
             "",
             f"- Crown jewels: {counts.get('crown_jewel', 0)}",
+            f"- Threat contexts: {counts.get('threat_context', 0)}",
             f"- Threat hypotheses: {counts.get('hypothesis', 0)}",
             f"- Threat scenarios: {counts.get('scenario', 0)}",
             f"- Open gaps: {len(gaps)}",
@@ -68,7 +74,12 @@ def markdown_report(entities: dict[str, dict], audience: str = "all") -> str:
                 lines.append(f"- **{gap['id']}** [{gap['priority']}]: {gap['description']}")
 
     if audience in {"all", "architecture"}:
-        lines += ["", "## Architecture and choke points", "", "| Architecture node | P0/P1 paths |", "|---|---:|"]
+        lines += ["", "## Architecture and choke points", "", "### Threat contexts", "", "| ID | Lens | Confidence | Relevance |", "|---|---|---|---|"]
+        for context in contexts:
+            lines.append(
+                f"| {context.get('id')} | {context.get('lens_id', '')} | {context.get('confidence', 'unknown')} | {context.get('relevance', '')} |"
+            )
+        lines += ["", "### Defensive choke points", "", "| Architecture node | P0/P1 paths |", "|---|---:|"]
         for item in choke[:15]:
             lines.append(f"| {item['node']} | {item['critical_paths']} |")
 
@@ -104,6 +115,7 @@ def dashboard_html(entities: dict[str, dict]) -> str:
     coverage = coverage_summary(entities)
     choke = choke_points(entities)
     decisions = _decisions(entities)
+    contexts = _contexts(entities)
 
     band_counts = {band: sum(1 for item in scores if item["band"] == band) for band in ("P0", "P1", "P2", "P3")}
     gap_counts = {}
@@ -121,6 +133,10 @@ def dashboard_html(entities: dict[str, dict]) -> str:
         f"<tr><td>{escape(str(c['node']))}</td><td>{c['critical_paths']}</td></tr>"
         for c in choke[:10]
     )
+    context_rows = "".join(
+        f"<tr><td>{escape(str(x.get('id')))}</td><td>{escape(str(x.get('lens_id', '')))}</td><td>{escape(str(x.get('confidence', 'unknown')))}</td><td>{escape(str(x.get('relevance', '')))}</td></tr>"
+        for x in contexts
+    )
     decision_rows = "".join(
         f"<tr><td>{escape(str(d.get('id')))}</td><td>{escape(str(d.get('status', 'unknown')))}</td><td>{escape(str(d.get('title', '')))}</td></tr>"
         for d in decisions
@@ -132,6 +148,7 @@ def dashboard_html(entities: dict[str, dict]) -> str:
 
     cards = "".join([
         card("Crown Jewels", counts.get("crown_jewel", 0)),
+        card("Threat Contexts", counts.get("threat_context", 0)),
         card("Hypotheses", counts.get("hypothesis", 0)),
         card("Scenarios", counts.get("scenario", 0)),
         card("P0 / P1", band_counts["P0"] + band_counts["P1"]),
@@ -166,6 +183,7 @@ th {{ color:#53656b; font-size:13px; }}
 <h1>Threat Context Engineering</h1>
 <p class="sub">Analyst attention dashboard generated from the TCE case model.</p>
 <div class="grid">{cards}</div>
+<section><h2>Threat contexts</h2><table><thead><tr><th>ID</th><th>Lens</th><th>Confidence</th><th>Relevance</th></tr></thead><tbody>{context_rows}</tbody></table></section>
 <section><h2>Prioritized scenarios</h2><table><thead><tr><th>ID</th><th>Score</th><th>Band</th><th>Confidence</th><th>Title</th></tr></thead><tbody>{scenario_rows}</tbody></table></section>
 <section><h2>Detection coverage</h2><table><thead><tr><th>Dimension</th><th>Coverage</th></tr></thead><tbody>{coverage_rows}</tbody></table></section>
 <section><h2>Defensive choke points</h2><table><thead><tr><th>Architecture node</th><th>P0/P1 paths</th></tr></thead><tbody>{choke_rows}</tbody></table></section>

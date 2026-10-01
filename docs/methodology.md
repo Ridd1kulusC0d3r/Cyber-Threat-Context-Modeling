@@ -35,6 +35,26 @@ Crown jewels may be identities, data, cryptographic material, build pipelines, c
 
 Record business function, owner, impact, dependencies, recovery needs, privileged paths, architecture nodes, and controls.
 
+## Cross-cutting layer — Threat Context Matrix
+
+Before and during architecture analysis, select the contexts that make the case materially different.
+
+A Threat Context is not a framework label. It links mission, crown jewels, architecture, external intelligence, behavior, exposure, defensive requirements, evidence and time.
+
+Use the built-in lenses to test whether the case needs explicit treatment for identity, cloud, AI, web/API, software supply chain, detection/validation, ICS/OT, IoT/embedded, endpoint, network, data, collaboration, third-party/SaaS, containers, developer/CI/CD, cryptography, resilience, human/process, mobile, telecommunications or the security control plane.
+
+External RedFrameworks v6 domain packs can seed candidate context, but actor/campaign relevance remains evidence-gated.
+
+Outputs:
+
+- active Threat Context objects;
+- context-to-crown-jewel relationships;
+- context-to-scenario relationships;
+- context-specific telemetry focus;
+- evidence requirements;
+- review triggers;
+- optional external candidate context.
+
 ## Phase 3 — Architecture and trust
 
 Model systems, services, identities, administrators, workloads, APIs, data flows, trust boundaries, network paths, control planes, third parties, exposure, security tooling, logging pipelines, and recovery paths.

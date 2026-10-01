@@ -5,6 +5,7 @@ scenarios:
     objective: "Reach the enterprise identity control plane through an existing privileged relationship."
     hypothesis_ids: [TH-001]
     target_crown_jewels: [CJ-001]
+    threat_context_ids: [CTX-IDENTITY, CTX-THIRDPARTY, CTX-RECOVERY]
     initial_conditions: ["Adversary already controls or abuses a privileged administrative context."]
     preconditions: ["Trusted SaaS administrative relationship remains active."]
     threat_context:

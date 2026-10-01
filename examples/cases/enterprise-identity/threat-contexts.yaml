@@ -1,0 +1,124 @@
+version: "0.3.2"
+threat_contexts:
+  - id: CTX-IDENTITY
+    name: "Enterprise identity and privileged trust"
+    lens_id: identity-access
+    relevance: "The identity control plane is a crown jewel and trusted administrative relationships can create enterprise-wide blast radius."
+    status: active
+    crown_jewel_ids: [CJ-001]
+    architecture_ids: [ARCH-001]
+    scenario_ids: [TS-001]
+    intelligence_requirement_ids: [IR-001]
+    dimensions:
+      mission: "Preserve trusted enterprise authentication and recoverability."
+      architecture: "Identity Provider, SaaS administration, recovery administration and security telemetry."
+      adversary: "External actor intelligence is candidate context until evidence establishes organization-specific relevance."
+      campaign: "Campaign intelligence may refine trust, sector and behavior assumptions but is never required for a generic scenario."
+      behavior: "Identity abuse and account manipulation are represented as behavior-linked steps."
+      exposure: "Privileged SaaS administration crosses a high-leverage trust boundary."
+      defensive: "Prioritize identity telemetry, privilege constraints, correlation and recovery."
+      evidence: "Internal architecture and telemetry observations remain primary for organization-specific conclusions."
+      temporal: "Review when trust relationships, privileged roles or telemetry change."
+    external_adversary_ids: []
+    external_campaign_ids: []
+    attack_techniques: [T1078, T1098]
+    ai_surface_ids: []
+    redframeworks:
+      domain_pack_ids: [identity]
+      use_as_candidate_universe: true
+      require_case_evidence_for_relevance: true
+    telemetry_focus:
+      - identity-provider sign-in
+      - privilege changes
+      - SaaS administration
+      - identity configuration
+    evidence_requirements:
+      - current privileged-role inventory
+      - trusted administrative relationship inventory
+      - identity audit evidence
+    assumptions: []
+    confidence: high
+    freshness: current
+    owner: security-architecture
+    review_date: "2026-10-27"
+
+  - id: CTX-THIRDPARTY
+    name: "Third-party and SaaS administrative trust"
+    lens_id: third-party-saas
+    relevance: "The modeled path begins in a trusted SaaS administration plane and therefore depends on external or delegated trust."
+    status: active
+    crown_jewel_ids: [CJ-001]
+    architecture_ids: [ARCH-001]
+    scenario_ids: [TS-001]
+    intelligence_requirement_ids: [IR-001]
+    dimensions:
+      mission: "Ensure external administration cannot silently become enterprise identity control."
+      architecture: "SaaS administration plane and its delegated relationship to the Identity Provider."
+      adversary: "Actor identity is not required to validate the trust risk."
+      campaign: "Campaign context is optional and evidence-gated."
+      behavior: "Focus on use of trusted privilege and consequential identity changes."
+      exposure: "Delegated administration is directly reachable and high leverage."
+      defensive: "Constrain delegated roles, attribute administrative actions and preserve revocation."
+      evidence: "Vendor access, delegated role and audit records."
+      temporal: "Review on vendor, integration, contract or role changes."
+    external_adversary_ids: []
+    external_campaign_ids: []
+    attack_techniques: [T1078, T1098]
+    ai_surface_ids: []
+    redframeworks:
+      domain_pack_ids: []
+      use_as_candidate_universe: false
+      require_case_evidence_for_relevance: true
+    telemetry_focus:
+      - external administrator activity
+      - delegated role changes
+      - integration changes
+    evidence_requirements:
+      - vendor access inventory
+      - delegated role inventory
+      - SaaS audit records
+    assumptions: []
+    confidence: high
+    freshness: current
+    owner: security-architecture
+    review_date: "2026-10-27"
+
+  - id: CTX-RECOVERY
+    name: "Identity resilience and recovery"
+    lens_id: resilience-recovery
+    relevance: "Recovery administration is an explicit dependency of the identity mission and must remain trustworthy after a control-plane failure."
+    status: monitoring
+    crown_jewel_ids: [CJ-001]
+    architecture_ids: [ARCH-001]
+    scenario_ids: [TS-001]
+    intelligence_requirement_ids: [IR-001]
+    dimensions:
+      mission: "Recover trusted authentication after material identity compromise."
+      architecture: "Recovery Administration to Identity Provider trust path."
+      adversary: "Model recovery pressure independently of attribution."
+      campaign: "External campaign context may refine destructive-risk assumptions when supported."
+      behavior: "Assess whether identity compromise can affect restoration or break-glass paths."
+      exposure: "Recovery path is separate but depends on identity trust."
+      defensive: "Protect recovery identities and validate restoration."
+      evidence: "Restore tests and recovery-access evidence."
+      temporal: "Review after recovery tests or identity architecture changes."
+    external_adversary_ids: []
+    external_campaign_ids: []
+    attack_techniques: []
+    ai_surface_ids: []
+    redframeworks:
+      domain_pack_ids: []
+      use_as_candidate_universe: false
+      require_case_evidence_for_relevance: true
+    telemetry_focus:
+      - recovery access
+      - restore activity
+      - break-glass use
+    evidence_requirements:
+      - restore test evidence
+      - recovery identity inventory
+    assumptions: []
+    confidence: medium
+    freshness: current
+    owner: resilience-team
+    review_date: "2026-12-27"

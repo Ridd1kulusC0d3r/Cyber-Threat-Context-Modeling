@@ -285,6 +285,50 @@ def cmd_taxii_pull(args):
     }, indent=2))
 
 
+def cmd_context_catalog(args):
+    from .context import load_context_catalog
+
+    catalog = load_context_catalog()
+    if args.lens_id:
+        item = catalog.get(args.lens_id)
+        if not item:
+            raise SystemExit(f"Unknown context lens: {args.lens_id}")
+        print(json.dumps(item, indent=2, ensure_ascii=False))
+        return
+    print(json.dumps(list(catalog.values()), indent=2, ensure_ascii=False))
+
+
+def cmd_context_assess(args):
+    from .context import assess_contexts
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    print(json.dumps(assess_contexts(entities), indent=2, ensure_ascii=False))
+
+
+def cmd_redframeworks_sync(args):
+    from .integrations.redframeworks import sync_redframeworks
+
+    print(json.dumps(sync_redframeworks(), indent=2))
+
+
+def cmd_context_enrich(args):
+    from .integrations.redframeworks import RedFrameworksIndex, enrich_case_contexts
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    index = RedFrameworksIndex.load(sync_if_missing=not args.offline)
+    result = enrich_case_contexts(entities, index)
+    rendered = json.dumps(result, indent=2, ensure_ascii=False)
+    if args.output:
+        output = Path(args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(rendered, encoding="utf-8")
+        print(str(output))
+    else:
+        print(rendered)
+
+
 def cmd_ui(args):
     import os
 
@@ -449,6 +493,23 @@ def build_parser():
     p.add_argument("--limit", type=int, default=100)
     p.add_argument("--max-pages", type=int, default=20)
     p.set_defaults(func=cmd_taxii_pull)
+
+    p = sub.add_parser("context-catalog", help="List TCE threat-context lenses")
+    p.add_argument("--lens-id")
+    p.set_defaults(func=cmd_context_catalog)
+
+    p = sub.add_parser("context-assess", help="Assess context coverage and suggest applicable lenses")
+    p.add_argument("case_dir")
+    p.set_defaults(func=cmd_context_assess)
+
+    p = sub.add_parser("redframeworks-sync", help="Cache RedFrameworks v6 API context datasets")
+    p.set_defaults(func=cmd_redframeworks_sync)
+
+    p = sub.add_parser("context-enrich", help="Enrich TCE threat contexts with review-only RedFrameworks v6 candidates")
+    p.add_argument("case_dir")
+    p.add_argument("--output")
+    p.add_argument("--offline", action="store_true")
+    p.set_defaults(func=cmd_context_enrich)
 
     p = sub.add_parser("ui", help="Run the local TCE web workbench")
     p.add_argument("case_dir", nargs="?", default="examples/cases/enterprise-identity")

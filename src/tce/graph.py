@@ -22,6 +22,8 @@ REFERENCE_FIELDS = {
     "affected_hypothesis_ids",
     "affected_scenario_ids",
     "crown_jewel_ids",
+    "threat_context_ids",
+    "architecture_ids",
 }
 
 

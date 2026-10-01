@@ -30,6 +30,8 @@ nav:
       - Analyst Workflow: analyst-workflow.md
       - Methodology: methodology.md
       - Context Model: context-model.md
+      - Threat Context Matrix: threat-context-matrix.md
+      - RedFrameworks v6 Context: redframeworks-context.md
       - Knowledge Graph: knowledge-graph.md
       - Interoperability: interoperability.md
   - Intelligence:

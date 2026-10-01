@@ -1,0 +1,36 @@
+version: "0.3.2"
+threat_context:
+  id: CTX-001
+  name: ""
+  lens_id: identity-access
+  relevance: ""
+  status: candidate
+  crown_jewel_ids: []
+  architecture_ids: []
+  scenario_ids: []
+  intelligence_requirement_ids: []
+  dimensions:
+    mission: ""
+    architecture: ""
+    adversary: ""
+    campaign: ""
+    behavior: ""
+    exposure: ""
+    defensive: ""
+    evidence: ""
+    temporal: ""
+  external_adversary_ids: []
+  external_campaign_ids: []
+  attack_techniques: []
+  ai_surface_ids: []
+  redframeworks:
+    domain_pack_ids: []
+    use_as_candidate_universe: true
+    require_case_evidence_for_relevance: true
+  telemetry_focus: []
+  evidence_requirements: []
+  assumptions: []
+  confidence: unknown
+  freshness: unknown
+  owner: ""
+  review_date: ""
