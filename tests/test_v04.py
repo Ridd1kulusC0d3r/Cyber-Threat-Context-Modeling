@@ -3,6 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from tce.conformance import evaluate_conformance
 from tce.detection import compile_backlog, correlation_patterns, sigma_document
 from tce.history import build_snapshot, diff_snapshots
 from tce.io import load_case
@@ -24,6 +25,10 @@ class V04Tests(unittest.TestCase):
         self.assertFalse(validate_entities(self.entities))
         self.assertIn("DSP-001", self.entities)
         self.assertEqual(self.entities["DSP-001"]["kind"], "detection_specification")
+
+    def test_conformance(self):
+        result = evaluate_conformance(self.entities, level="validated")
+        self.assertTrue(result["passed"])
 
     def test_telemetry_health_and_schema_bridge(self):
         result = evaluate_case_telemetry(self.entities)
