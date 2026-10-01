@@ -285,6 +285,17 @@ def cmd_taxii_pull(args):
     }, indent=2))
 
 
+def cmd_conformance(args):
+    from .conformance import evaluate_conformance
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    result = evaluate_conformance(entities, level=args.level)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    if not result["passed"]:
+        raise SystemExit(2)
+
+
 def cmd_telemetry_health(args):
     from .telemetry import evaluate_case_telemetry
 
@@ -566,6 +577,11 @@ def build_parser():
     p.add_argument("--limit", type=int, default=100)
     p.add_argument("--max-pages", type=int, default=20)
     p.set_defaults(func=cmd_taxii_pull)
+
+    p = sub.add_parser("conformance", help="Evaluate a case against TCE conformance levels")
+    p.add_argument("case_dir")
+    p.add_argument("--level", choices=["core", "detection", "validated", "operational"], default="operational")
+    p.set_defaults(func=cmd_conformance)
 
     p = sub.add_parser("telemetry-health", help="Score Telemetry Contract readiness and schema mappings")
     p.add_argument("case_dir")
