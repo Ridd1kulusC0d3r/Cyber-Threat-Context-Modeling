@@ -68,6 +68,7 @@ def _case_payload(case_dir: Path) -> dict[str, Any]:
             "hypotheses": _entity_count(entities, "hypothesis"),
             "scenarios": _entity_count(entities, "scenario"),
             "detections": _entity_count(entities, "detection_use_case"),
+            "detection_specs": _entity_count(entities, "detection_specification"),
             "telemetry_contracts": _entity_count(entities, "telemetry_contract"),
             "gaps": len(gaps),
             "decisions": _entity_count(entities, "decision"),
@@ -108,7 +109,7 @@ def create_app(case_dir: str | Path | None = None) -> FastAPI:
     root = Path(case_dir or os.getenv("TCE_CASE_DIR", "examples/cases/enterprise-identity")).resolve()
     app = FastAPI(
         title="Threat Context Engineering Workbench",
-        version="0.3.2",
+        version="0.4.0",
         docs_url="/api/docs",
         redoc_url=None,
     )
@@ -145,6 +146,45 @@ def create_app(case_dir: str | Path | None = None) -> FastAPI:
             "assessment": assess_contexts(entities),
             "catalog": list(load_context_catalog().values()),
         }
+
+    @app.get("/api/detection/backlog")
+    def detection_backlog():
+        from .detection import compile_backlog
+
+        entities, errors = load_case(app.state.case_dir)
+        if errors:
+            raise HTTPException(status_code=422, detail=errors)
+        return {"items": compile_backlog(entities)}
+
+    @app.get("/api/telemetry/health")
+    def telemetry_health():
+        from .telemetry import evaluate_case_telemetry
+
+        entities, errors = load_case(app.state.case_dir)
+        if errors:
+            raise HTTPException(status_code=422, detail=errors)
+        return evaluate_case_telemetry(entities)
+
+    @app.post("/api/validation/{validation_id}")
+    def validation_run(validation_id: str):
+        from .validation_harness import run_validation
+
+        entities, errors = load_case(app.state.case_dir)
+        if errors:
+            raise HTTPException(status_code=422, detail=errors)
+        try:
+            return run_validation(entities, validation_id, app.state.case_dir)
+        except (KeyError, ValueError, FileNotFoundError) as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    @app.get("/api/snapshot")
+    def snapshot():
+        from .history import build_snapshot
+
+        entities, errors = load_case(app.state.case_dir)
+        if errors:
+            raise HTTPException(status_code=422, detail=errors)
+        return build_snapshot(entities)
 
     @app.get("/api/graph")
     def graph():
@@ -333,6 +373,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
     <button data-tab="scenarios">Cenários</button>
     <button data-tab="intelligence">Inteligência</button>
     <button data-tab="attack">ATT&CK</button>
+    <button data-tab="engineering">Engenharia</button>
     <button data-tab="ai">IA</button>
     <button data-tab="graph">Grafo</button>
   </div>
@@ -388,6 +429,27 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
   <div class="panel"><h2>Hipóteses</h2><div id="hypotheses" class="list"></div></div>
 </section>
 
+<section id="engineering" class="section">
+  <div class="hero">
+    <div class="eyebrow mono">DETECTION & VALIDATION AS CODE</div>
+    <h1 style="font-size:clamp(42px,6vw,82px)">Cenário vira backlog, teste e evidência.</h1>
+    <p class="lead">A engenharia começa no attack path: telemetria necessária, Detection Specification, implementação e validação reproduzível. A interface apenas lê e executa os mesmos objetos versionados no caso.</p>
+  </div>
+  <div class="row">
+    <div class="panel"><h2>Telemetry Health</h2><div id="telemetry-health" class="list"></div></div>
+    <div class="panel"><h2>Detection Backlog</h2><div id="detection-backlog" class="list"></div></div>
+  </div>
+  <div class="panel">
+    <h2>Validation Harness</h2>
+    <div class="actions">
+      <input id="validation-id" value="VAL-001" style="max-width:220px" placeholder="VAL-001">
+      <button class="btn primary" id="validation-run">Executar fixture</button>
+      <span class="loader" id="validation-loader">validando...</span>
+    </div>
+    <pre id="validation-result">Executa somente os fixtures/log-replay configurados no TCE Case.</pre>
+  </div>
+</section>
+
 <section id="attack" class="section">
   <div class="panel">
     <div class="eyebrow mono">ATT&CK + D3FEND</div>
@@ -437,7 +499,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
 </main>
 
 <script>
-const state={caseData:null,status:null,graph:null,contexts:null};
+const state={caseData:null,status:null,graph:null,contexts:null,engineering:null};
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 async function jsonFetch(url,opts){
   const res=await fetch(url,opts);
@@ -503,6 +565,20 @@ function renderContexts(){
   ).join('');
 }
 
+function renderEngineering(){
+  const e=state.engineering;
+  if(!e)return;
+  const t=e.telemetry||{};
+  const rows=t.contracts||[];
+  document.getElementById('telemetry-health').innerHTML=rows.length
+    ? rows.map(x=>item(x.id+' · '+(x.title||''),'score '+x.health_score+'% · faltando: '+((x.missing_fields||[]).join(', ')||'nenhum'),x.health)).join('')
+    : item('Sem Telemetry Contracts','Nenhum contrato de telemetria foi encontrado.');
+  const backlog=(e.backlog&&e.backlog.items)||[];
+  document.getElementById('detection-backlog').innerHTML=backlog.length
+    ? backlog.map(x=>item((x.detection_specification_id||x.scenario_id)+' · '+(x.title||x.scenario_title||''),(x.reasons||[x.reason]).filter(Boolean).join(' · '),x.band)).join('')
+    : item('Backlog vazio','Nenhum trabalho de detecção pendente foi calculado.');
+}
+
 function renderStatus(){
   const s=state.status;
   document.getElementById('statusbar').innerHTML=
@@ -513,8 +589,8 @@ function renderStatus(){
 }
 async function boot(){
   try{
-    [state.status,state.caseData,state.contexts]=await Promise.all([jsonFetch('/api/status'),jsonFetch('/api/case'),jsonFetch('/api/contexts')]);
-    renderStatus();render();renderContexts();
+    [state.status,state.caseData,state.contexts,state.engineering]=await Promise.all([jsonFetch('/api/status'),jsonFetch('/api/case'),jsonFetch('/api/contexts'),Promise.all([jsonFetch('/api/telemetry/health'),jsonFetch('/api/detection/backlog')]).then(([telemetry,backlog])=>({telemetry,backlog}))]);
+    renderStatus();render();renderContexts();renderEngineering();
   }catch(e){
     document.getElementById('metric-grid').innerHTML='<div class="error">'+esc(e.message)+'</div>';
   }
@@ -526,6 +602,15 @@ async function loadGraph(){
     document.getElementById('graph-edges').innerHTML=state.graph.edges.map(x=>item(x.from+' → '+x.to,x.relation)).join('');
   }catch(e){document.getElementById('graph-edges').innerHTML='<div class="error">'+esc(e.message)+'</div>'}
 }
+document.getElementById('validation-run').onclick=async()=>{
+  const id=document.getElementById('validation-id').value.trim();
+  const l=document.getElementById('validation-loader');l.classList.add('show');
+  try{
+    const data=await jsonFetch('/api/validation/'+encodeURIComponent(id),{method:'POST'});
+    document.getElementById('validation-result').textContent=JSON.stringify(data,null,2);
+  }catch(e){document.getElementById('validation-result').textContent='ERRO: '+e.message}
+  finally{l.classList.remove('show')}
+};
 document.getElementById('attack-run').onclick=async()=>{
   const id=document.getElementById('attack-id').value.trim().toUpperCase();
   const l=document.getElementById('attack-loader');l.classList.add('show');

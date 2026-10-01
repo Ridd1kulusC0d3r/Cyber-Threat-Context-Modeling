@@ -35,6 +35,26 @@ class WebAppTests(unittest.TestCase):
         self.assertGreaterEqual(data["assessment"]["modeled_contexts"], 3)
         self.assertGreaterEqual(len(data["catalog"]), 20)
 
+    def test_detection_backlog(self):
+        response = self.client.get("/api/detection/backlog")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["items"])
+
+    def test_telemetry_health(self):
+        response = self.client.get("/api/telemetry/health")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("contracts", response.json())
+
+    def test_validation_harness(self):
+        response = self.client.post("/api/validation/VAL-001")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["passed"])
+
+    def test_snapshot(self):
+        response = self.client.get("/api/snapshot")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("entities", response.json())
+
     def test_graph(self):
         response = self.client.get("/api/graph")
         self.assertEqual(response.status_code, 200)

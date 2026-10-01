@@ -1,0 +1,75 @@
+version: "0.4"
+detection_specifications:
+  - id: DSP-001
+    title: "Privileged identity context followed by control-plane change"
+    scenario_ids: [TS-001]
+    detection_use_case_ids: [DU-001]
+    telemetry_contract_ids: [TC-001]
+    attack_techniques: [T1078, T1098]
+    severity: high
+    status: implemented
+    analytic_concept:
+      description: "Correlate privileged administrative activity with a subsequent high-impact identity configuration change for the same administrator."
+      behavior: "Privileged administrative context followed by identity-control modification."
+      observable_effect: "Two identity-audit events share the same user and occur in the expected order."
+      entities: [identity, target-resource]
+      benign_alternatives:
+        - approved administrative change
+        - break-glass recovery with an authorized ticket
+    correlation:
+      pattern_id: ordered-sequence
+      window: "30m"
+      group_by: [user.id]
+    validation_logic:
+      pattern: ordered-sequence
+      group_by: [user.id]
+      stages:
+        - all:
+            - field: event.action
+              op: eq
+              value: privileged_session
+            - field: user.privileged
+              op: eq
+              value: true
+        - all:
+            - field: event.action
+              op: in
+              values: [identity_policy_change, privileged_role_change]
+            - field: target.resource
+              op: exists
+    implementations:
+      - id: sigma-DSP-001
+        type: sigma
+        platform: generic
+        status: implemented
+        reference: "generated from TCE specification"
+      - id: sentinel-DSP-001
+        type: microsoft-sentinel
+        platform: identity
+        status: draft
+        reference: ""
+      - id: splunk-DSP-001
+        type: splunk
+        platform: identity
+        status: draft
+        reference: ""
+      - id: elastic-DSP-001
+        type: elastic
+        platform: identity
+        status: draft
+        reference: ""
+    sigma:
+      status: experimental
+      logsource:
+        category: iam
+      detection:
+        selection:
+          event.action:
+            - identity_policy_change
+            - privileged_role_change
+          user.privileged: true
+        condition: selection
+    validation_ids: [VAL-001]
+    references: []
+    owner: detection-engineering
+    review_date: "2026-10-27"

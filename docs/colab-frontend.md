@@ -14,6 +14,7 @@ The Colab notebook performs this automatically and asks Colab for the proxied UR
 The current UI contains:
 
 - **Visão geral** — crown jewels, hypotheses, scenarios, P0/P1 counts, gaps, detections, coverage, choke points and decisions.
+- **Engenharia** — Telemetry Health, Detection Backlog and deterministic Validation Harness.
 - **Cenários** — priority band, weighted score, confidence and open gaps.
 - **Inteligência** — threat hypotheses with analytical state and confidence.
 - **ATT&CK** — Detection Strategy, Analytic, Data Component and D3FEND lookup, plus standards synchronization.

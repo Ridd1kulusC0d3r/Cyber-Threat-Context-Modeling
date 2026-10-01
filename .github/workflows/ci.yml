@@ -34,3 +34,16 @@ jobs:
         run: |
           tce export-stix examples/cases/enterprise-identity --output /tmp/case.stix.json
           tce export-navigator examples/cases/enterprise-identity --output /tmp/layer.json
+      - name: v0.4 defensive engineering smoke tests
+        run: |
+          tce conformance examples/cases/enterprise-identity --level validated
+          tce telemetry-health examples/cases/enterprise-identity > /tmp/telemetry-health.json
+          tce detection-backlog examples/cases/enterprise-identity --output /tmp/backlog.json
+          tce sigma-export examples/cases/enterprise-identity DSP-001 --output /tmp/dsp-001.yml
+          tce validation-run examples/cases/enterprise-identity VAL-001
+          tce snapshot examples/cases/enterprise-identity --output /tmp/snapshot.json
+      - name: Validate reference cases
+        run: |
+          for case in examples/reference-cases/*; do
+            tce validate "$case"
+          done

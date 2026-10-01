@@ -1,0 +1,169 @@
+version: "0.4"
+case:
+  id: CASE-OT
+  name: "ICS OT Resilience reference case"
+  mission: "Preserve safe, recoverable industrial control while maintaining visibility of engineering changes."
+  decision_context: "Prioritize telemetry and detection work for a representative ics ot resilience threat context."
+  scope: ["ics-ot", "reference-case"]
+  status: active
+
+crown_jewels:
+  - id: CJ-OT
+    name: "Industrial control and recovery authority"
+    rationale: "Unauthorized engineering changes can affect process availability, integrity or safe recovery."
+    criticality: critical
+
+architectures:
+  - id: ARCH-OT
+    name: "OT engineering and control trust"
+    nodes:
+      - id: NODE-OT-ENG
+        name: "OT engineering and control trust"
+        type: control-plane
+        trust_zone: critical
+    relationships: []
+
+threat_contexts:
+  - id: CTX-OT
+    name: "Industrial engineering access and resilient control"
+    lens_id: ics-ot
+    relevance: "Unauthorized engineering changes can affect process availability, integrity or safe recovery."
+    status: active
+    crown_jewel_ids: [CJ-OT]
+    architecture_ids: [ARCH-OT]
+    scenario_ids: [TS-OT]
+    intelligence_requirement_ids: []
+    confidence: medium
+    freshness: current
+
+scenarios:
+  - id: TS-OT
+    title: "Remote engineering access followed by control configuration change"
+    objective: "Detect consequential engineering changes associated with remote administrative context."
+    hypothesis_ids: []
+    target_crown_jewels: [CJ-OT]
+    threat_context_ids: [CTX-OT]
+    attack_path:
+      id: AP-OT
+      entry_vector: "trusted or exposed administrative path"
+      steps:
+        - order: 1
+          behavior: "remote_engineering_session"
+          attack_techniques: [T1078]
+          architecture_node_id: NODE-OT-ENG
+        - order: 2
+          behavior: "control_config_change"
+          attack_techniques: [T1021]
+          architecture_node_id: NODE-OT-ENG
+    impact:
+      business: "Material impact to the modeled mission."
+      technical: "High-impact change to a critical trust or control plane."
+    priority:
+      crown_jewel_criticality: 5
+      threat_relevance: 4
+      attack_path_feasibility: 4
+      exposure: 4
+      control_weakness: 3
+      detection_gap: 4
+      calculated_score: null
+      band: ""
+      rationale: "Reference case prioritizes high-impact trust and detection requirements."
+    confidence: medium
+    telemetry_requirements: [TC-OT]
+    detection_use_cases: []
+    detection_specification_ids: [DSP-OT]
+    validation_ids: [VAL-OT]
+
+telemetry_contracts:
+  - id: TC-OT
+    title: "ICS OT Resilience observable contract"
+    scenario_ids: [TS-OT]
+    detection_use_case_ids: []
+    behavior: "remote_engineering_session followed by control_config_change"
+    observable: "Actor, source, action, target, correlation identity and timestamp."
+    source: "industrial engineering audit"
+    event_or_state_change: "control_config_change"
+    entity_identifiers: ["user.id"]
+    required_fields: ["user.id", "source.ip", "target.resource", "action", "timestamp"]
+    available_fields: ["user.id", "source.ip", "target.resource", "action", "timestamp"]
+    retention: "90d"
+    latency_target: "<5m"
+    normalization: "TCE conceptual event model"
+    enrichment: ["criticality", "authorization context"]
+    integrity_requirements: ["source health monitoring", "administrative separation"]
+    failure_modes: ["missing target context", "collection delay"]
+    fallback_source: ""
+    status: ready
+    owner: detection-engineering
+    review_date: "2026-12-01"
+
+detection_specifications:
+  - id: DSP-OT
+    title: "Remote engineering access followed by control configuration change"
+    scenario_ids: [TS-OT]
+    detection_use_case_ids: []
+    telemetry_contract_ids: [TC-OT]
+    attack_techniques: [T1078, T1021]
+    severity: critical
+    status: implemented
+    analytic_concept:
+      description: "Detect consequential engineering changes associated with remote administrative context."
+      behavior: "remote_engineering_session -> control_config_change"
+      observable_effect: "Two defensive audit events share the same correlation entity and occur in order."
+      entities: ["user", "target"]
+      benign_alternatives: ["approved change with expected authorization context"]
+    correlation:
+      pattern_id: ordered-sequence
+      window: "30m"
+      group_by: ["user.id"]
+    validation_logic:
+      pattern: ordered-sequence
+      group_by: ["user.id"]
+      stages:
+        - all:
+            - field: event.action
+              op: eq
+              value: remote_engineering_session
+        - all:
+            - field: event.action
+              op: eq
+              value: control_config_change
+            - field: target.resource
+              op: exists
+    implementations:
+      - id: sigma-DSP-OT
+        type: sigma
+        platform: generic
+        status: implemented
+        reference: "reference implementation mapping"
+    sigma:
+      status: experimental
+      logsource:
+        category: application
+      detection:
+        selection:
+          event.action: control_config_change
+        condition: selection
+    validation_ids: [VAL-OT]
+    references: []
+    owner: detection-engineering
+    review_date: "2026-12-01"
+
+validations:
+  - id: VAL-OT
+    title: "ICS OT Resilience safe log-replay validation"
+    scenario_ids: [TS-OT]
+    detection_use_case_ids: []
+    detection_specification_ids: [DSP-OT]
+    method: log-replay
+    environment: "repository defensive fixture"
+    expected_result: "Exactly one same-entity ordered sequence is detected."
+    fixture: "fixtures/events.jsonl"
+    expected:
+      min_matches: 1
+      max_matches: 1
+    actual_result: "Validated by deterministic fixture test."
+    status: passed
+    evidence_refs: []
+    tested_at: "2026-10-01"
+    owner: detection-engineering

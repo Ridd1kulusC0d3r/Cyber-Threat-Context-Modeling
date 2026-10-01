@@ -1,0 +1,42 @@
+version: "1.0"
+concepts:
+  user.id:
+    ocsf: actor.user.uid
+    ecs: user.id
+    asim: ActorUserId
+    cim: user
+  session.id:
+    ocsf: session.uid
+    ecs: session.id
+    asim: LogonSessionId
+    cim: session_id
+  source.ip:
+    ocsf: src_endpoint.ip
+    ecs: source.ip
+    asim: SrcIpAddr
+    cim: src
+  target.resource:
+    ocsf: resource.uid
+    ecs: resource.id
+    asim: TargetResourceId
+    cim: object_id
+  action:
+    ocsf: activity_name
+    ecs: event.action
+    asim: EventType
+    cim: action
+  timestamp:
+    ocsf: time
+    ecs: "@timestamp"
+    asim: TimeGenerated
+    cim: _time
+  event.category:
+    ocsf: category_name
+    ecs: event.category
+    asim: EventSchema
+    cim: tag
+  outcome:
+    ocsf: status
+    ecs: event.outcome
+    asim: EventResult
+    cim: result

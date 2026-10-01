@@ -20,6 +20,10 @@ def detections(entities):
     return _by_kind(entities, "detection_use_case")
 
 
+def detection_specifications(entities):
+    return _by_kind(entities, "detection_specification")
+
+
 def telemetry_contracts(entities):
     return _by_kind(entities, "telemetry_contract")
 
@@ -59,16 +63,21 @@ def find_gaps(entities):
             })
 
     detection_ids = {d.get("id") for d in detections(entities)}
+    specification_ids = {d.get("id") for d in detection_specifications(entities)}
     telemetry_ids = {t.get("id") for t in telemetry_contracts(entities)}
 
     for scenario in scenarios(entities):
         sid = scenario.get("id")
         refs = scenario.get("detection_use_cases") or []
-        if not refs:
-            output.append({"type": "detection", "id": sid, "priority": "high", "description": "Scenario has no detection use case"})
+        spec_refs = scenario.get("detection_specification_ids") or []
+        if not refs and not spec_refs:
+            output.append({"type": "detection", "id": sid, "priority": "high", "description": "Scenario has no detection use case or Detection Specification"})
         for ref in refs:
             if ref not in detection_ids:
                 output.append({"type": "detection", "id": sid, "priority": "high", "description": f"Missing detection object {ref}"})
+        for ref in spec_refs:
+            if ref not in specification_ids:
+                output.append({"type": "detection-specification", "id": sid, "priority": "high", "description": f"Missing Detection Specification {ref}"})
 
         trefs = scenario.get("telemetry_requirements") or []
         if not trefs:

@@ -1,0 +1,169 @@
+version: "0.4"
+case:
+  id: CASE-SUPPLY
+  name: "Software Supply Chain reference case"
+  mission: "Preserve the integrity and provenance of software delivered to production."
+  decision_context: "Prioritize telemetry and detection work for a representative software supply chain threat context."
+  scope: ["software-supply-chain", "reference-case"]
+  status: active
+
+crown_jewels:
+  - id: CJ-SUPPLY
+    name: "Production release chain"
+    rationale: "Changes to trusted build and release outputs can affect many downstream systems."
+    criticality: critical
+
+architectures:
+  - id: ARCH-SUPPLY
+    name: "Build and artifact trust chain"
+    nodes:
+      - id: NODE-BUILD
+        name: "Build and artifact trust chain"
+        type: control-plane
+        trust_zone: critical
+    relationships: []
+
+threat_contexts:
+  - id: CTX-SUPPLY
+    name: "Build, dependency and artifact provenance"
+    lens_id: software-supply-chain
+    relevance: "Changes to trusted build and release outputs can affect many downstream systems."
+    status: active
+    crown_jewel_ids: [CJ-SUPPLY]
+    architecture_ids: [ARCH-SUPPLY]
+    scenario_ids: [TS-SUPPLY]
+    intelligence_requirement_ids: []
+    confidence: medium
+    freshness: current
+
+scenarios:
+  - id: TS-SUPPLY
+    title: "Dependency or source change followed by release artifact publication"
+    objective: "Detect release activity whose upstream change context requires review."
+    hypothesis_ids: []
+    target_crown_jewels: [CJ-SUPPLY]
+    threat_context_ids: [CTX-SUPPLY]
+    attack_path:
+      id: AP-SUPPLY
+      entry_vector: "trusted or exposed administrative path"
+      steps:
+        - order: 1
+          behavior: "supply_chain_change"
+          attack_techniques: [T1195]
+          architecture_node_id: NODE-BUILD
+        - order: 2
+          behavior: "artifact_publish"
+          attack_techniques: [T1195]
+          architecture_node_id: NODE-BUILD
+    impact:
+      business: "Material impact to the modeled mission."
+      technical: "High-impact change to a critical trust or control plane."
+    priority:
+      crown_jewel_criticality: 5
+      threat_relevance: 4
+      attack_path_feasibility: 4
+      exposure: 4
+      control_weakness: 3
+      detection_gap: 4
+      calculated_score: null
+      band: ""
+      rationale: "Reference case prioritizes high-impact trust and detection requirements."
+    confidence: medium
+    telemetry_requirements: [TC-SUPPLY]
+    detection_use_cases: []
+    detection_specification_ids: [DSP-SUPPLY]
+    validation_ids: [VAL-SUPPLY]
+
+telemetry_contracts:
+  - id: TC-SUPPLY
+    title: "Software Supply Chain observable contract"
+    scenario_ids: [TS-SUPPLY]
+    detection_use_case_ids: []
+    behavior: "supply_chain_change followed by artifact_publish"
+    observable: "Actor, source, action, target, correlation identity and timestamp."
+    source: "CI/CD and artifact audit"
+    event_or_state_change: "artifact_publish"
+    entity_identifiers: ["pipeline.id"]
+    required_fields: ["pipeline.id", "actor.id", "target.resource", "action", "timestamp"]
+    available_fields: ["pipeline.id", "actor.id", "action", "timestamp"]
+    retention: "90d"
+    latency_target: "<5m"
+    normalization: "TCE conceptual event model"
+    enrichment: ["criticality", "authorization context"]
+    integrity_requirements: ["source health monitoring", "administrative separation"]
+    failure_modes: ["missing target context", "collection delay"]
+    fallback_source: ""
+    status: partial
+    owner: detection-engineering
+    review_date: "2026-12-01"
+
+detection_specifications:
+  - id: DSP-SUPPLY
+    title: "Dependency or source change followed by release artifact publication"
+    scenario_ids: [TS-SUPPLY]
+    detection_use_case_ids: []
+    telemetry_contract_ids: [TC-SUPPLY]
+    attack_techniques: [T1195, T1195]
+    severity: high
+    status: implemented
+    analytic_concept:
+      description: "Detect release activity whose upstream change context requires review."
+      behavior: "supply_chain_change -> artifact_publish"
+      observable_effect: "Two defensive audit events share the same correlation entity and occur in order."
+      entities: ["pipeline", "target"]
+      benign_alternatives: ["approved change with expected authorization context"]
+    correlation:
+      pattern_id: ordered-sequence
+      window: "30m"
+      group_by: ["pipeline.id"]
+    validation_logic:
+      pattern: ordered-sequence
+      group_by: ["pipeline.id"]
+      stages:
+        - all:
+            - field: event.action
+              op: eq
+              value: supply_chain_change
+        - all:
+            - field: event.action
+              op: eq
+              value: artifact_publish
+            - field: target.resource
+              op: exists
+    implementations:
+      - id: sigma-DSP-SUPPLY
+        type: sigma
+        platform: generic
+        status: implemented
+        reference: "reference implementation mapping"
+    sigma:
+      status: experimental
+      logsource:
+        category: application
+      detection:
+        selection:
+          event.action: artifact_publish
+        condition: selection
+    validation_ids: [VAL-SUPPLY]
+    references: []
+    owner: detection-engineering
+    review_date: "2026-12-01"
+
+validations:
+  - id: VAL-SUPPLY
+    title: "Software Supply Chain safe log-replay validation"
+    scenario_ids: [TS-SUPPLY]
+    detection_use_case_ids: []
+    detection_specification_ids: [DSP-SUPPLY]
+    method: log-replay
+    environment: "repository defensive fixture"
+    expected_result: "Exactly one same-entity ordered sequence is detected."
+    fixture: "fixtures/events.jsonl"
+    expected:
+      min_matches: 1
+      max_matches: 1
+    actual_result: "Validated by deterministic fixture test."
+    status: passed
+    evidence_refs: []
+    tested_at: "2026-10-01"
+    owner: detection-engineering

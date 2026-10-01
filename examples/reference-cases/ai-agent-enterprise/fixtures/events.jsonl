@@ -1,0 +1,4 @@
+{"timestamp":"2026-10-01T09:00:00Z","event":{"action":"normal_activity"},"agent":{"id":"normal-01"},"target":{"resource":"routine"}}
+{"timestamp":"2026-10-01T09:05:00Z","event":{"action":"agent_privileged_authorization"},"agent":{"id":"subject-01"},"target":{"resource":"control-plane"}}
+{"timestamp":"2026-10-01T09:09:00Z","event":{"action":"sensitive_connector_action"},"agent":{"id":"subject-01"},"target":{"resource":"critical-resource"}}
+{"timestamp":"2026-10-01T09:12:00Z","event":{"action":"sensitive_connector_action"},"agent":{"id":"other-02"},"target":{"resource":"test-resource"}}

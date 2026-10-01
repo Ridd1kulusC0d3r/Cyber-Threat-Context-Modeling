@@ -285,6 +285,90 @@ def cmd_taxii_pull(args):
     }, indent=2))
 
 
+def cmd_conformance(args):
+    from .conformance import evaluate_conformance
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    result = evaluate_conformance(entities, level=args.level)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    if not result["passed"]:
+        raise SystemExit(2)
+
+
+def cmd_telemetry_health(args):
+    from .telemetry import evaluate_case_telemetry
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    profiles = {}
+    if args.profile:
+        profiles = json.loads(Path(args.profile).read_text(encoding="utf-8"))
+    result = evaluate_case_telemetry(entities, profiles=profiles)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+
+
+def cmd_detection_backlog(args):
+    from .detection import compile_backlog, write_backlog
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    rows = compile_backlog(entities)
+    if args.output:
+        print(write_backlog(rows, args.output))
+    else:
+        print(json.dumps(rows, indent=2, ensure_ascii=False))
+
+
+def cmd_correlation_patterns(args):
+    from .detection import correlation_patterns
+
+    print(json.dumps(correlation_patterns(), indent=2, ensure_ascii=False))
+
+
+def cmd_sigma_export(args):
+    from .detection import write_sigma
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    wrapped = entities.get(args.spec_id)
+    if not wrapped or wrapped["kind"] != "detection_specification":
+        raise SystemExit(f"Unknown Detection Specification: {args.spec_id}")
+    print(write_sigma(wrapped["data"], args.output))
+
+
+def cmd_validation_run(args):
+    from .validation_harness import run_validation
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    result = run_validation(entities, args.validation_id, args.case_dir)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    if not result["passed"]:
+        raise SystemExit(2)
+
+
+def cmd_snapshot(args):
+    from .history import build_snapshot, write_snapshot
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    print(write_snapshot(build_snapshot(entities), args.output))
+
+
+def cmd_snapshot_diff(args):
+    from .history import diff_snapshots, load_snapshot
+
+    result = diff_snapshots(load_snapshot(args.before), load_snapshot(args.after))
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+
+
+def cmd_context_drift(args):
+    from .intelligence_drift import diff_files
+
+    print(json.dumps(diff_files(args.before, args.after), indent=2, ensure_ascii=False))
+
+
 def cmd_context_catalog(args):
     from .context import load_context_catalog
 
@@ -493,6 +577,50 @@ def build_parser():
     p.add_argument("--limit", type=int, default=100)
     p.add_argument("--max-pages", type=int, default=20)
     p.set_defaults(func=cmd_taxii_pull)
+
+    p = sub.add_parser("conformance", help="Evaluate a case against TCE conformance levels")
+    p.add_argument("case_dir")
+    p.add_argument("--level", choices=["core", "detection", "validated", "operational"], default="operational")
+    p.set_defaults(func=cmd_conformance)
+
+    p = sub.add_parser("telemetry-health", help="Score Telemetry Contract readiness and schema mappings")
+    p.add_argument("case_dir")
+    p.add_argument("--profile", help="Optional JSON map of observed fields/status per Telemetry Contract")
+    p.set_defaults(func=cmd_telemetry_health)
+
+    p = sub.add_parser("detection-backlog", help="Generate scenario-to-detection engineering backlog")
+    p.add_argument("case_dir")
+    p.add_argument("--output")
+    p.set_defaults(func=cmd_detection_backlog)
+
+    p = sub.add_parser("correlation-patterns", help="List portable defensive correlation patterns")
+    p.set_defaults(func=cmd_correlation_patterns)
+
+    p = sub.add_parser("sigma-export", help="Export a Detection Specification as Sigma YAML")
+    p.add_argument("case_dir")
+    p.add_argument("spec_id")
+    p.add_argument("--output", default="tce-detection.yml")
+    p.set_defaults(func=cmd_sigma_export)
+
+    p = sub.add_parser("validation-run", help="Run deterministic defensive validation against a fixture/log replay")
+    p.add_argument("case_dir")
+    p.add_argument("validation_id")
+    p.set_defaults(func=cmd_validation_run)
+
+    p = sub.add_parser("snapshot", help="Create a coverage/context/telemetry snapshot for historical drift")
+    p.add_argument("case_dir")
+    p.add_argument("--output", default="tce-snapshot.json")
+    p.set_defaults(func=cmd_snapshot)
+
+    p = sub.add_parser("snapshot-diff", help="Compare two TCE snapshots and surface regressions or drift")
+    p.add_argument("before")
+    p.add_argument("after")
+    p.set_defaults(func=cmd_snapshot_diff)
+
+    p = sub.add_parser("context-drift", help="Compare two RedFrameworks/TCE context-enrichment snapshots")
+    p.add_argument("before")
+    p.add_argument("after")
+    p.set_defaults(func=cmd_context_drift)
 
     p = sub.add_parser("context-catalog", help="List TCE threat-context lenses")
     p.add_argument("--lens-id")

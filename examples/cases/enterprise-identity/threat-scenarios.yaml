@@ -59,6 +59,7 @@ scenarios:
       nist_refs: []
     telemetry_requirements: [TC-001]
     detection_use_cases: [DU-001]
+    detection_specification_ids: [DSP-001]
     validation_ids: [VAL-001]
     residual_risk: "Privileged relationship remains high leverage even after stronger authentication."
     assumptions: []

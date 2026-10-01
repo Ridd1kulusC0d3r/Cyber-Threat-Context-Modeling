@@ -57,6 +57,14 @@ nav:
       - OpenCTI Bidirectional Bridge: opencti-sync.md
       - Entity Resolution: entity-resolution.md
       - TAXII Ingestion: taxii-ingest.md
+  - TCE v0.4:
+      - Detection & Validation as Code: detection-validation-as-code.md
+      - Telemetry Schema Bridges: telemetry-schema-bridges.md
+      - Continuous Threat Context: continuous-threat-context.md
+      - Reference Cases: reference-cases.md
+  - Specification:
+      - TCE 1.0 Draft: specification-draft.md
+      - Conformance: conformance.md
   - Operations:
       - Case Model & CLI: case-model.md
       - Decision Trace: decision-trace.md
