@@ -18,6 +18,7 @@ REFERENCE_FIELDS = {
     "validation_ids",
     "scenario_ids",
     "detection_use_case_ids",
+    "detection_specification_ids",
     "affected_requirement_ids",
     "affected_hypothesis_ids",
     "affected_scenario_ids",
