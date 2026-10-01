@@ -352,6 +352,12 @@ def cmd_snapshot_diff(args):
     print(json.dumps(result, indent=2, ensure_ascii=False))
 
 
+def cmd_context_drift(args):
+    from .intelligence_drift import diff_files
+
+    print(json.dumps(diff_files(args.before, args.after), indent=2, ensure_ascii=False))
+
+
 def cmd_context_catalog(args):
     from .context import load_context_catalog
 
@@ -594,6 +600,11 @@ def build_parser():
     p.add_argument("before")
     p.add_argument("after")
     p.set_defaults(func=cmd_snapshot_diff)
+
+    p = sub.add_parser("context-drift", help="Compare two RedFrameworks/TCE context-enrichment snapshots")
+    p.add_argument("before")
+    p.add_argument("after")
+    p.set_defaults(func=cmd_context_drift)
 
     p = sub.add_parser("context-catalog", help="List TCE threat-context lenses")
     p.add_argument("--lens-id")
