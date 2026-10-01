@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/schemas/threat-context.schema.json",
+  "title": "TCE Threat Context",
+  "type": "object",
+  "required": [
+    "version",
+    "threat_context"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "threat_context": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "lens_id",
+        "relevance",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^CTX-[A-Za-z0-9._-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lens_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relevance": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "candidate",
+            "active",
+            "monitoring",
+            "retired"
+          ]
+        },
+        "crown_jewel_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "architecture_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scenario_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "intelligence_requirement_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "external_adversary_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "external_campaign_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "attack_techniques": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ai_surface_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            "unknown"
+          ]
+        },
+        "freshness": {
+          "enum": [
+            "current",
+            "aging",
+            "stale",
+            "unknown"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
