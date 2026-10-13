@@ -1,0 +1,230 @@
+version: "0.5"
+environment_state:
+  id: ENV-ENTERPRISE
+  name: "Enterprise identity, SaaS, recovery and security-control environment"
+  snapshot_at: "2026-10-13T00:00:00Z"
+  scope: enterprise
+  assets:
+    - id: NODE-SAAS-ADMIN
+      name: "SaaS Administration Plane"
+      type: saas
+      trust_zone: privileged-admin
+      internet_exposure: direct
+      entry_point: true
+      crown_jewel_ids: []
+      control_ids: [CTRL-STRONG-AUTH]
+      telemetry_requirements: [saas-admin-session, admin-config-change]
+      technology_tags: [saas, administration]
+      owner: platform-team
+    - id: NODE-ADMIN-ENDPOINT
+      name: "Privileged Administration Workstation"
+      type: endpoint
+      trust_zone: privileged-admin
+      internet_exposure: indirect
+      entry_point: false
+      crown_jewel_ids: []
+      control_ids: [CTRL-ENDPOINT-HARDENING]
+      telemetry_requirements: [privileged-session, process-audit]
+      technology_tags: [endpoint, privileged-access]
+      owner: identity-team
+    - id: NODE-IDP
+      name: "Identity Provider"
+      type: identity
+      trust_zone: identity-control
+      internet_exposure: indirect
+      entry_point: false
+      crown_jewel_ids: [CJ-001]
+      control_ids: [CTRL-STRONG-AUTH, CTRL-PRIV-SEPARATION]
+      telemetry_requirements: [identity-signin, identity-config-change, privilege-change]
+      technology_tags: [identity, control-plane]
+      owner: identity-team
+    - id: NODE-RECOVERY
+      name: "Recovery Administration"
+      type: recovery
+      trust_zone: recovery
+      internet_exposure: none
+      entry_point: false
+      crown_jewel_ids: []
+      control_ids: [CTRL-RECOVERY-SEPARATION]
+      telemetry_requirements: [recovery-access, restore-activity]
+      technology_tags: [recovery, resilience]
+      owner: resilience-team
+    - id: NODE-SIEM
+      name: "Security Telemetry Platform"
+      type: security-tooling
+      trust_zone: security
+      internet_exposure: none
+      entry_point: false
+      crown_jewel_ids: [CJ-002]
+      control_ids: [CTRL-SIEM-SEPARATION]
+      telemetry_requirements: [pipeline-health, admin-config-change]
+      technology_tags: [siem, telemetry]
+      owner: soc-engineering
+  identities:
+    - id: IDN-VENDOR-ADMIN
+      name: "Delegated vendor administrator"
+      type: external
+      external: true
+      entry_point: true
+      internet_exposure: direct
+      crown_jewel_ids: []
+      control_ids: [CTRL-STRONG-AUTH]
+      telemetry_requirements: [external-admin-session]
+    - id: IDN-PRIV-ADMIN
+      name: "Enterprise privileged administrator"
+      type: human
+      external: false
+      entry_point: false
+      internet_exposure: indirect
+      crown_jewel_ids: []
+      control_ids: [CTRL-STRONG-AUTH, CTRL-PRIV-SEPARATION]
+      telemetry_requirements: [privileged-session]
+  relationships:
+    - id: REL-VENDOR-SAAS
+      from: IDN-VENDOR-ADMIN
+      to: NODE-SAAS-ADMIN
+      type: third_party
+      trust_boundary: delegated-administration
+      bidirectional: false
+      technique_ids: [T1078]
+      control_ids: [CTRL-STRONG-AUTH]
+      required_telemetry: [external-admin-session, saas-admin-session]
+    - id: REL-SAAS-IDP
+      from: NODE-SAAS-ADMIN
+      to: NODE-IDP
+      type: administers
+      trust_boundary: privileged-administration
+      bidirectional: false
+      technique_ids: [T1078, T1098]
+      control_ids: [CTRL-STRONG-AUTH, CTRL-PRIV-SEPARATION]
+      required_telemetry: [saas-admin-session, identity-config-change, privilege-change]
+    - id: REL-ADMIN-ENDPOINT-IDP
+      from: NODE-ADMIN-ENDPOINT
+      to: NODE-IDP
+      type: administers
+      trust_boundary: privileged-administration
+      bidirectional: false
+      technique_ids: [T1078, T1098]
+      control_ids: [CTRL-ENDPOINT-HARDENING, CTRL-PRIV-SEPARATION]
+      required_telemetry: [privileged-session, identity-config-change]
+    - id: REL-PRIV-ADMIN-ENDPOINT
+      from: IDN-PRIV-ADMIN
+      to: NODE-ADMIN-ENDPOINT
+      type: authenticates_to
+      trust_boundary: privileged-session
+      bidirectional: false
+      technique_ids: [T1078]
+      control_ids: [CTRL-STRONG-AUTH]
+      required_telemetry: [privileged-session]
+    - id: REL-IDP-SIEM
+      from: NODE-IDP
+      to: NODE-SIEM
+      type: logs_to
+      trust_boundary: identity-to-security
+      bidirectional: false
+      technique_ids: []
+      control_ids: [CTRL-SIEM-SEPARATION]
+      required_telemetry: [identity-signin, pipeline-health]
+    - id: REL-RECOVERY-IDP
+      from: NODE-RECOVERY
+      to: NODE-IDP
+      type: recovers
+      trust_boundary: recovery-to-identity
+      bidirectional: false
+      technique_ids: []
+      control_ids: [CTRL-RECOVERY-SEPARATION]
+      required_telemetry: [recovery-access, restore-activity]
+  controls:
+    - id: CTRL-STRONG-AUTH
+      name: "Strong authentication for privileged and delegated access"
+      status: active
+      effectiveness: 0.45
+      target_ids: [NODE-SAAS-ADMIN, NODE-IDP, IDN-VENDOR-ADMIN, IDN-PRIV-ADMIN]
+      relationship_ids: [REL-VENDOR-SAAS, REL-SAAS-IDP, REL-PRIV-ADMIN-ENDPOINT]
+    - id: CTRL-PRIV-SEPARATION
+      name: "Privileged access separation"
+      status: active
+      effectiveness: 0.40
+      target_ids: [NODE-IDP, IDN-PRIV-ADMIN]
+      relationship_ids: [REL-SAAS-IDP, REL-ADMIN-ENDPOINT-IDP]
+    - id: CTRL-ENDPOINT-HARDENING
+      name: "Privileged administration endpoint hardening"
+      status: active
+      effectiveness: 0.35
+      target_ids: [NODE-ADMIN-ENDPOINT]
+      relationship_ids: [REL-ADMIN-ENDPOINT-IDP]
+    - id: CTRL-RECOVERY-SEPARATION
+      name: "Independent recovery authority"
+      status: active
+      effectiveness: 0.50
+      target_ids: [NODE-RECOVERY]
+      relationship_ids: [REL-RECOVERY-IDP]
+    - id: CTRL-SIEM-SEPARATION
+      name: "Security telemetry administrative separation"
+      status: active
+      effectiveness: 0.35
+      target_ids: [NODE-SIEM]
+      relationship_ids: [REL-IDP-SIEM]
+  telemetry_sources:
+    - id: TEL-IDP
+      name: "Identity audit"
+      status: healthy
+      target_ids: [NODE-IDP]
+      relationship_ids: [REL-SAAS-IDP, REL-ADMIN-ENDPOINT-IDP]
+      capabilities: [identity-signin, privilege-change, privileged-session]
+      data_components: []
+    - id: TEL-SAAS
+      name: "SaaS administrative audit"
+      status: healthy
+      target_ids: [NODE-SAAS-ADMIN]
+      relationship_ids: [REL-VENDOR-SAAS, REL-SAAS-IDP]
+      capabilities: [saas-admin-session, external-admin-session]
+      data_components: []
+    - id: TEL-ENDPOINT
+      name: "Privileged endpoint telemetry"
+      status: healthy
+      target_ids: [NODE-ADMIN-ENDPOINT]
+      relationship_ids: [REL-PRIV-ADMIN-ENDPOINT, REL-ADMIN-ENDPOINT-IDP]
+      capabilities: [privileged-session, process-audit]
+      data_components: []
+    - id: TEL-SIEM-HEALTH
+      name: "Security telemetry pipeline health"
+      status: healthy
+      target_ids: [NODE-SIEM]
+      relationship_ids: [REL-IDP-SIEM]
+      capabilities: [pipeline-health]
+      data_components: []
+  vulnerability_signals:
+    - id: VULN-SAAS-ADMIN-EXPOSURE
+      target_id: NODE-SAAS-ADMIN
+      cve: ""
+      severity: medium
+      kev: false
+      epss: 0.15
+      note: "Synthetic example signal used to exercise the Horizon scoring model."
+  intelligence_signals:
+    - id: SIG-DELEGATED-CREDENTIAL-PRESSURE
+      kind: credential-exposure
+      scope: targeted
+      target_ids: [IDN-VENDOR-ADMIN]
+      technique_ids: [T1078]
+      severity: high
+      confidence: medium
+      direction: increase
+      observed_at: "2026-10-10T00:00:00Z"
+      half_life_days: 21
+      source_ref: "synthetic-example"
+      note: "Synthetic example, not an assertion about a real organization."
+    - id: SIG-IDENTITY-ABUSE-TREND
+      kind: sector-trend
+      scope: sector
+      target_ids: []
+      technique_ids: [T1078, T1098]
+      severity: medium
+      confidence: medium
+      direction: increase
+      observed_at: "2026-10-05T00:00:00Z"
+      half_life_days: 30
+      source_ref: "synthetic-example"
+      note: "Synthetic example, not an assertion about a real sector."
+  accepted_forecasts: {}
