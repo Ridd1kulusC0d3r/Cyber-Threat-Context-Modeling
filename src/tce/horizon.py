@@ -338,8 +338,9 @@ def _telemetry_state(
             continue
         scopes = set(source.get("target_ids", []) or [])
         rel_scopes = set(source.get("relationship_ids", []) or [])
-        if scopes and not scopes.intersection(nodes):
-            if rel_scopes and not rel_scopes.intersection({r.get("id") for r in relationships}):
+        relationship_scope = {r.get("id") for r in relationships}
+        if scopes or rel_scopes:
+            if not scopes.intersection(nodes) and not rel_scopes.intersection(relationship_scope):
                 continue
         available_capabilities.update(source.get("capabilities", []) or [])
         available_components.update(source.get("data_components", []) or [])
@@ -484,27 +485,49 @@ def generate_candidate_paths(
 
 def weighted_choke_points(paths: list[dict[str, Any]]) -> list[dict[str, Any]]:
     risk = defaultdict(float)
+    leverage = defaultdict(float)
     count = defaultdict(int)
+    transit = defaultdict(int)
+    entry = defaultdict(int)
+    target = defaultdict(int)
     crowns = defaultdict(set)
     total = sum(float(p["forecast"]["proposed_score"]) for p in paths) or 1.0
 
     for path in paths:
         weight = float(path["forecast"]["proposed_score"])
-        for node in path.get("nodes", []):
+        nodes = path.get("nodes", []) or []
+        for index, node in enumerate(nodes):
             risk[node] += weight
             count[node] += 1
             crowns[node].update(path.get("crown_jewel_ids", []) or [])
+            if index == 0:
+                entry[node] += 1
+                leverage[node] += weight * 0.50
+            elif index == len(nodes) - 1:
+                target[node] += 1
+                leverage[node] += weight * 0.35
+            else:
+                transit[node] += 1
+                leverage[node] += weight
 
     output = []
     for node, value in risk.items():
         output.append({
             "node_id": node,
             "weighted_risk": round(value, 1),
+            "defensive_leverage": round(leverage[node], 1),
             "risk_share": round(value / total, 4),
             "candidate_paths": count[node],
+            "transit_paths": transit[node],
+            "entry_paths": entry[node],
+            "target_paths": target[node],
             "crown_jewel_ids": sorted(crowns[node]),
         })
-    return sorted(output, key=lambda row: (row["weighted_risk"], row["candidate_paths"]), reverse=True)
+    return sorted(
+        output,
+        key=lambda row: (row["defensive_leverage"], row["transit_paths"], row["weighted_risk"]),
+        reverse=True,
+    )
 
 
 def detection_by_absence(paths: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -614,21 +637,68 @@ def propose_preemptive_actions(
 
     selected = []
     spent = 0.0
+    portfolio_reduction = None
     if budget is not None:
-        for row in normalized:
-            if spent + row["cost"] <= budget:
-                selected.append(row)
-                spent += row["cost"]
+        residual = {
+            path["id"]: float(path["forecast"]["proposed_score"])
+            for path in paths
+        }
+        remaining = [dict(row) for row in normalized]
+
+        while remaining:
+            affordable = [row for row in remaining if spent + row["cost"] <= budget]
+            if not affordable:
+                break
+
+            ranked = []
+            for row in affordable:
+                marginal = sum(
+                    residual.get(path_id, 0.0) * row["effectiveness"]
+                    for path_id in row.get("path_ids", [])
+                )
+                ranked.append((
+                    marginal / max(row["cost"], 0.1),
+                    marginal,
+                    row,
+                ))
+            ranked.sort(key=lambda item: (item[0], item[1]), reverse=True)
+            ratio, marginal, chosen = ranked[0]
+            if marginal <= 0:
+                break
+
+            chosen = dict(chosen)
+            chosen["marginal_risk_reduction"] = round(marginal, 1)
+            chosen["marginal_benefit_cost"] = round(ratio, 2)
+            selected.append(chosen)
+            spent += chosen["cost"]
+
+            for path_id in chosen.get("path_ids", []):
+                if path_id in residual:
+                    residual[path_id] *= 1.0 - chosen["effectiveness"]
+
+            remaining = [
+                row for row in remaining
+                if not (
+                    row["catalog_id"] == chosen["catalog_id"]
+                    and row.get("target_ids") == chosen.get("target_ids")
+                    and row.get("relationship_ids") == chosen.get("relationship_ids")
+                )
+            ]
+
+        initial = sum(float(path["forecast"]["proposed_score"]) for path in paths)
+        portfolio_reduction = round(initial - sum(residual.values()), 1)
 
     return {
         "candidates": normalized,
         "selected": selected if budget is not None else normalized,
         "budget": budget,
         "spent": round(spent, 2) if budget is not None else None,
+        "estimated_portfolio_risk_reduction": portfolio_reduction,
         "policy": {
             "review_required": True,
             "automatic_control_change": False,
             "score_is_forecast_pressure_not_probability": True,
+            "optimizer_uses_marginal_path_coverage": True,
         },
     }
 
