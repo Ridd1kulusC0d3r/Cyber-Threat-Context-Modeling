@@ -20,7 +20,7 @@ It extends them with operational sub-questions:
 - What is mission-critical?
 - Which assets are crown jewels?
 - Which adversaries and behaviors are relevant?
-- Which attack paths are plausible?
+- Which enterprise exposure paths are plausible or becoming more defensively urgent?
 - Which controls alter those paths?
 - Which events must exist for those paths to be observable?
 - Which detections and correlations prove we can see them?
@@ -35,13 +35,25 @@ A complete TCE assessment should leave behind:
 - Crown-jewel register
 - Architecture / trust-boundary map
 - Threat-context register
+- Enterprise Environment State (for Horizon assessments)
 - Attack-path or Attack Flow model
 - Prioritized scenario backlog
 - Defensive-control mapping
 - Telemetry contract
 - Detection-use-case specification
 - Validation evidence
+- Detection-by-Absence findings
+- Review-gated preemptive-action candidates
 - Residual-risk statement
 - Review date and owner
 
 Start with the [Methodology](methodology.md).
+
+
+## TCE Horizon
+
+For enterprise-wide analysis, TCE Horizon adds a time-stamped Environment State and continuously prioritizes review-only paths from modeled exposure points toward crown jewels using architecture, controls, telemetry, vulnerability pressure and accepted threat intelligence.
+
+Horizon forecast pressure is a defensive prioritization signal, not a prediction that a specific attack will occur.
+
+Start with [TCE Horizon](horizon.md) and [Enterprise Environment State](environment-state.md).
