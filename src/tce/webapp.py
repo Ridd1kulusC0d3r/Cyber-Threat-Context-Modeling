@@ -156,16 +156,29 @@ def create_app(case_dir: str | Path | None = None) -> FastAPI:
         budget: float = Query(default=8, ge=0),
     ):
         from .horizon import horizon_assessment
+        from .standards.attack import AttackIndex
+        from .standards.d3fend import D3FENDIndex
 
         entities, errors = load_case(app.state.case_dir)
         if errors:
             raise HTTPException(status_code=422, detail=errors)
+
+        try:
+            attack_index = AttackIndex.load(sync_if_missing=False)
+        except FileNotFoundError:
+            attack_index = None
+        try:
+            d3fend_index = D3FENDIndex.load(sync_if_missing=False)
+        except FileNotFoundError:
+            d3fend_index = None
+
         try:
             return horizon_assessment(
                 entities,
                 max_hops=max_hops,
                 limit=limit,
-                attack_index=None,
+                attack_index=attack_index,
+                d3fend_index=d3fend_index,
                 budget=budget,
             )
         except (KeyError, ValueError) as exc:
