@@ -6,6 +6,7 @@ import math
 from collections import defaultdict
 from datetime import datetime, timezone
 from importlib import resources
+from itertools import islice
 from pathlib import Path
 from typing import Any
 
@@ -62,6 +63,63 @@ def _control_catalog() -> list[dict[str, Any]]:
     path = resources.files("tce").joinpath("data/horizon-control-catalog.yaml")
     data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     return data.get("actions", []) or []
+
+
+def derive_environment_from_architecture(entities: dict[str, dict]) -> dict[str, Any] | None:
+    architectures = [
+        wrapped["data"]
+        for wrapped in entities.values()
+        if wrapped["kind"] == "architecture"
+    ]
+    if not architectures:
+        return None
+
+    assets: dict[str, dict[str, Any]] = {}
+    relationships = []
+    for architecture in architectures:
+        for node in architecture.get("nodes", []) or []:
+            node_id = node.get("id")
+            if not node_id:
+                continue
+            current = assets.setdefault(node_id, dict(node))
+            current.setdefault("entry_point", str(current.get("internet_exposure", "")).lower() == "direct")
+            current.setdefault("control_ids", [])
+            current.setdefault("telemetry_requirements", [])
+        for index, rel in enumerate(architecture.get("relationships", []) or [], start=1):
+            if not rel.get("from") or not rel.get("to"):
+                continue
+            row = dict(rel)
+            row.setdefault("id", f"REL-DERIVED-{architecture.get('id', 'ARCH')}-{index}")
+            row.setdefault("technique_ids", [])
+            row.setdefault("control_ids", [])
+            row.setdefault("required_telemetry", [])
+            relationships.append(row)
+
+    for wrapped in entities.values():
+        if wrapped["kind"] != "crown_jewel":
+            continue
+        crown = wrapped["data"]
+        for node_id in crown.get("architecture_node_ids", []) or []:
+            if node_id in assets:
+                values = set(assets[node_id].get("crown_jewel_ids", []) or [])
+                values.add(crown["id"])
+                assets[node_id]["crown_jewel_ids"] = sorted(values)
+
+    return {
+        "id": "ENV-DERIVED",
+        "name": "Environment derived from TCE architecture",
+        "snapshot_at": datetime.now(timezone.utc).isoformat(),
+        "scope": "derived",
+        "assets": list(assets.values()),
+        "identities": [],
+        "relationships": relationships,
+        "controls": [],
+        "telemetry_sources": [],
+        "vulnerability_signals": [],
+        "intelligence_signals": [],
+        "accepted_forecasts": {},
+        "derived": True,
+    }
 
 
 def _asset_index(environment: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -150,6 +208,8 @@ def _intelligence_pressure(
     contributions = []
     total = 0.0
     for signal in environment.get("intelligence_signals", []) or []:
+        if str(signal.get("status", "candidate")).lower() not in {"accepted", "active", "validated", "confirmed"}:
+            continue
         targets = set(signal.get("target_ids", []) or [])
         signal_techniques = set(signal.get("technique_ids", []) or [])
         relevant = bool(targets & set(nodes) or signal_techniques & techniques or signal.get("scope") in {"global", "sector"})
@@ -347,7 +407,8 @@ def generate_candidate_paths(
                 continue
             try:
                 paths = nx.all_simple_paths(graph, source=source, target=target, cutoff=max_hops)
-                for nodes in paths:
+                per_pair_cap = max(25, min(250, limit * 3))
+                for nodes in islice(paths, per_pair_cap):
                     relationships = []
                     relation_ids = []
                     for left, right in zip(nodes, nodes[1:]):
@@ -645,7 +706,11 @@ def horizon_assessment(
 ) -> dict[str, Any]:
     envs = environments(entities)
     if not envs:
-        raise ValueError("No environment_state object found in the case")
+        derived = derive_environment_from_architecture(entities)
+        if derived:
+            envs = [derived]
+        else:
+            raise ValueError("No environment_state or architecture object found in the case")
     if environment_id:
         matches = [item for item in envs if item.get("id") == environment_id]
         if not matches:
@@ -661,11 +726,25 @@ def horizon_assessment(
         limit=limit,
         attack_index=attack_index,
     )
+    reached_targets = sorted({path.get("target") for path in paths if path.get("target")})
+    target_nodes = _target_nodes(environment)
+    band_counts = {band: sum(1 for path in paths if path["forecast"]["band"] == band) for band in ("H0", "H1", "H2", "H3")}
     return {
         "environment_id": environment.get("id"),
         "snapshot_at": environment.get("snapshot_at"),
+        "derived_environment": bool(environment.get("derived")),
+        "summary": {
+            "assets_and_identities": len(_asset_index(environment)),
+            "relationships": len(environment.get("relationships", []) or []),
+            "entry_nodes": len(_entry_nodes(environment)),
+            "crown_jewel_nodes": len(target_nodes),
+            "candidate_paths": len(paths),
+            "bands": band_counts,
+        },
         "entry_nodes": _entry_nodes(environment),
-        "crown_jewel_nodes": _target_nodes(environment),
+        "crown_jewel_nodes": target_nodes,
+        "reached_crown_jewel_nodes": reached_targets,
+        "unreached_crown_jewel_nodes": sorted(set(target_nodes) - set(reached_targets)),
         "candidate_paths": paths,
         "choke_points": weighted_choke_points(paths),
         "detection_by_absence": detection_by_absence(paths),
@@ -701,3 +780,95 @@ def write_assessment(assessment: dict[str, Any], output: str | Path) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(assessment, indent=2, ensure_ascii=False), encoding="utf-8")
     return path
+
+
+def _preemptive_action_id(row: dict[str, Any]) -> str:
+    payload = "|".join([
+        str(row.get("catalog_id", "")),
+        ",".join(row.get("target_ids", []) or []),
+        ",".join(row.get("relationship_ids", []) or []),
+    ])
+    digest = hashlib.sha256(payload.encode("utf-8")).hexdigest()[:10].upper()
+    return f"PA-HZN-{digest}"
+
+
+def write_preemptive_actions(
+    assessment: dict[str, Any],
+    output: str | Path,
+    selected_only: bool = True,
+) -> Path:
+    source = assessment.get("preemptive_actions", {})
+    rows = source.get("selected" if selected_only else "candidates", []) or []
+    actions = []
+    for row in rows:
+        item = dict(row)
+        item["id"] = _preemptive_action_id(row)
+        item["rationale"] = (
+            "Review-gated Horizon proposal based on risk-weighted enterprise path coverage; "
+            "estimated reduction is a prioritization aid, not a guaranteed outcome."
+        )
+        actions.append(item)
+
+    path = Path(output)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "version": "0.5",
+        "generated_by": "TCE Horizon",
+        "review_required": True,
+        "preemptive_actions": actions,
+    }
+    path.write_text(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding="utf-8")
+    return path
+
+
+def horizon_diff(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+    old = {row["id"]: row for row in before.get("candidate_paths", []) or []}
+    new = {row["id"]: row for row in after.get("candidate_paths", []) or []}
+    added = sorted(set(new) - set(old))
+    removed = sorted(set(old) - set(new))
+    changed = []
+    for path_id in sorted(set(old) & set(new)):
+        old_score = float((old[path_id].get("forecast") or {}).get("proposed_score", 0))
+        new_score = float((new[path_id].get("forecast") or {}).get("proposed_score", 0))
+        if old_score != new_score:
+            changed.append({
+                "path_id": path_id,
+                "before": old_score,
+                "after": new_score,
+                "delta": round(new_score - old_score, 1),
+                "direction": "increased" if new_score > old_score else "decreased",
+            })
+
+    old_absence = {row["path_id"] for row in before.get("detection_by_absence", []) or []}
+    new_absence = {row["path_id"] for row in after.get("detection_by_absence", []) or []}
+
+    return {
+        "environment_before": before.get("environment_id"),
+        "environment_after": after.get("environment_id"),
+        "paths": {
+            "added": added,
+            "removed": removed,
+            "score_changes": changed,
+        },
+        "detection_by_absence": {
+            "new_blind_paths": sorted(new_absence - old_absence),
+            "resolved_blind_paths": sorted(old_absence - new_absence),
+        },
+        "summary_delta": {
+            "candidate_paths": (after.get("summary", {}).get("candidate_paths", 0) - before.get("summary", {}).get("candidate_paths", 0)),
+            "h0_h1": (
+                after.get("summary", {}).get("bands", {}).get("H0", 0)
+                + after.get("summary", {}).get("bands", {}).get("H1", 0)
+                - before.get("summary", {}).get("bands", {}).get("H0", 0)
+                - before.get("summary", {}).get("bands", {}).get("H1", 0)
+            ),
+        },
+        "review_required": True,
+    }
+
+
+def diff_horizon_files(before: str | Path, after: str | Path) -> dict[str, Any]:
+    return horizon_diff(
+        json.loads(Path(before).read_text(encoding="utf-8")),
+        json.loads(Path(after).read_text(encoding="utf-8")),
+    )
