@@ -103,7 +103,20 @@ def build_graph(entities: dict[str, dict]) -> dict:
                 if isinstance(rel, dict) and rel.get("from") and rel.get("to"):
                     edges.append({"from": rel["from"], "to": rel["to"], "relation": rel.get("type", "related")})
 
-    return {"nodes": nodes, "edges": edges}
+    unique_nodes = {}
+    for node in nodes:
+        unique_nodes.setdefault(node["id"], node)
+
+    unique_edges = []
+    seen_edges = set()
+    for edge in edges:
+        key = (edge["from"], edge["to"], edge.get("relation", "related"))
+        if key in seen_edges:
+            continue
+        seen_edges.add(key)
+        unique_edges.append(edge)
+
+    return {"nodes": list(unique_nodes.values()), "edges": unique_edges}
 
 
 def to_mermaid(graph: dict) -> str:
