@@ -147,6 +147,28 @@ def create_app(case_dir: str | Path | None = None) -> FastAPI:
             "catalog": list(load_context_catalog().values()),
         }
 
+    @app.get("/api/horizon")
+    def horizon(
+        max_hops: int = Query(default=5, ge=1, le=8),
+        limit: int = Query(default=25, ge=1, le=200),
+        budget: float = Query(default=8, ge=0),
+    ):
+        from .horizon import horizon_assessment
+
+        entities, errors = load_case(app.state.case_dir)
+        if errors:
+            raise HTTPException(status_code=422, detail=errors)
+        try:
+            return horizon_assessment(
+                entities,
+                max_hops=max_hops,
+                limit=limit,
+                attack_index=None,
+                budget=budget,
+            )
+        except (KeyError, ValueError) as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+
     @app.get("/api/detection/backlog")
     def detection_backlog():
         from .detection import compile_backlog
@@ -370,6 +392,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
   <div class="nav mono">
     <button class="active" data-tab="overview">Visão geral</button>
     <button data-tab="contexts">Contextos</button>
+    <button data-tab="horizon">Horizonte</button>
     <button data-tab="scenarios">Cenários</button>
     <button data-tab="intelligence">Inteligência</button>
     <button data-tab="attack">ATT&CK</button>
@@ -409,6 +432,27 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
   </div>
   <div class="panel"><h2>Lacunas de contexto</h2><div id="context-gaps" class="list"></div></div>
   <div class="panel"><h2>Catálogo de lentes</h2><div id="context-catalog" class="list"></div></div>
+</section>
+
+<section id="horizon" class="section">
+  <div class="hero">
+    <div class="eyebrow mono">TCE HORIZON · ENTERPRISE EXPOSURE FORECAST</div>
+    <h1 style="font-size:clamp(42px,6vw,82px)">Do ambiente inteiro ao próximo risco defensivo.</h1>
+    <p class="lead">Horizon deriva caminhos candidatos a partir de exposição, confiança, dependências, crown jewels, controles, telemetria e sinais de inteligência aceitos. O score é pressão de prioridade, não probabilidade de ataque, e permanece separado do aceite do analista.</p>
+  </div>
+  <div class="grid" id="horizon-metrics"></div>
+  <div class="row">
+    <div class="panel"><h2>Caminhos prioritários</h2><div id="horizon-paths" class="list"></div></div>
+    <div class="panel"><h2>Choke points ponderados</h2><div id="horizon-chokes" class="list"></div></div>
+  </div>
+  <div class="row">
+    <div class="panel"><h2>Detecção pela Ausência</h2><div id="horizon-absence" class="list"></div></div>
+    <div class="panel"><h2>Ações preemptivas candidatas</h2><div id="horizon-actions" class="list"></div></div>
+  </div>
+  <div class="panel">
+    <h2>Governança</h2>
+    <pre id="horizon-policy">Caminhos e ações são candidatos review-gated. Nenhuma mudança defensiva é aplicada automaticamente.</pre>
+  </div>
 </section>
 
 <section id="scenarios" class="section">
@@ -499,7 +543,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
 </main>
 
 <script>
-const state={caseData:null,status:null,graph:null,contexts:null,engineering:null};
+const state={caseData:null,status:null,graph:null,contexts:null,engineering:null,horizon:null};
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 async function jsonFetch(url,opts){
   const res=await fetch(url,opts);
@@ -565,6 +609,58 @@ function renderContexts(){
   ).join('');
 }
 
+function renderHorizon(){
+  const h=state.horizon;
+  if(!h)return;
+  const s=h.summary||{};
+  const bands=s.bands||{};
+  document.getElementById('horizon-metrics').innerHTML=
+    metric('Ativos + identidades',s.assets_and_identities||0,'estado do ambiente')+
+    metric('Relações',s.relationships||0,'trust / dependency edges')+
+    metric('Entradas',s.entry_nodes||0,'superfícies modeladas')+
+    metric('Crown jewels',s.crown_jewel_nodes||0,'nós críticos')+
+    metric('Caminhos',s.candidate_paths||0,'candidatos')+
+    metric('H0 / H1',(bands.H0||0)+(bands.H1||0),'pressão alta');
+
+  const paths=h.candidate_paths||[];
+  document.getElementById('horizon-paths').innerHTML=paths.length
+    ? paths.slice(0,12).map(x=>item(
+        x.id+' · '+x.source+' → '+x.target,
+        'score '+x.forecast.proposed_score+' · '+(x.nodes||[]).join(' → '),
+        x.forecast.band
+      )).join('')
+    : item('Nenhum caminho candidato','O modelo não encontrou encadeamento dos pontos de entrada aos crown jewels.');
+
+  const chokes=h.choke_points||[];
+  document.getElementById('horizon-chokes').innerHTML=chokes.length
+    ? chokes.slice(0,12).map(x=>item(
+        x.node_id,
+        'leverage '+x.defensive_leverage+' · '+x.candidate_paths+' caminhos · '+x.transit_paths+' como trânsito',
+        Math.round((x.risk_share||0)*100)+'%'
+      )).join('')
+    : item('Sem convergência','Ainda não há caminhos suficientes para calcular choke points.');
+
+  const absence=h.detection_by_absence||[];
+  document.getElementById('horizon-absence').innerHTML=absence.length
+    ? absence.slice(0,12).map(x=>item(
+        x.path_id,
+        'faltando: '+([...(x.missing_telemetry||[]),...(x.missing_attack_data_components||[])].join(', ')||'nenhum'),
+        x.band
+      )).join('')
+    : item('Sem cegueira detectada','Os requisitos de telemetria modelados estão cobertos.');
+
+  const actions=((h.preemptive_actions||{}).selected)||[];
+  document.getElementById('horizon-actions').innerHTML=actions.length
+    ? actions.slice(0,12).map(x=>item(
+        x.name,
+        'alvos: '+((x.target_ids||[]).join(', ')||(x.relationship_ids||[]).join(', '))+' · redução marginal '+(x.marginal_risk_reduction||x.estimated_risk_reduction),
+        'custo '+x.cost
+      )).join('')
+    : item('Sem ação selecionada','Nenhuma ação coube no orçamento ou nenhum gatilho foi aplicável.');
+
+  document.getElementById('horizon-policy').textContent=JSON.stringify(h.policy||{},null,2);
+}
+
 function renderEngineering(){
   const e=state.engineering;
   if(!e)return;
@@ -589,8 +685,8 @@ function renderStatus(){
 }
 async function boot(){
   try{
-    [state.status,state.caseData,state.contexts,state.engineering]=await Promise.all([jsonFetch('/api/status'),jsonFetch('/api/case'),jsonFetch('/api/contexts'),Promise.all([jsonFetch('/api/telemetry/health'),jsonFetch('/api/detection/backlog')]).then(([telemetry,backlog])=>({telemetry,backlog}))]);
-    renderStatus();render();renderContexts();renderEngineering();
+    [state.status,state.caseData,state.contexts,state.engineering,state.horizon]=await Promise.all([jsonFetch('/api/status'),jsonFetch('/api/case'),jsonFetch('/api/contexts'),Promise.all([jsonFetch('/api/telemetry/health'),jsonFetch('/api/detection/backlog')]).then(([telemetry,backlog])=>({telemetry,backlog})),jsonFetch('/api/horizon')]);
+    renderStatus();render();renderContexts();renderEngineering();renderHorizon();
   }catch(e){
     document.getElementById('metric-grid').innerHTML='<div class="error">'+esc(e.message)+'</div>';
   }
