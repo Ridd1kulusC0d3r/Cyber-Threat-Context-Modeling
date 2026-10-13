@@ -389,6 +389,7 @@ def cmd_horizon_export_actions(args):
         max_hops=args.max_hops,
         limit=args.limit,
         attack_index=_horizon_attack_index(args.offline),
+        d3fend_index=_horizon_d3fend_index(args.offline),
         budget=args.budget,
     )
     print(write_preemptive_actions(result, args.output, selected_only=not args.all))
@@ -416,7 +417,12 @@ def cmd_environment_import_csv(args):
 
 
 def cmd_horizon_export(args):
-    from .horizon import environments, horizon_assessment, write_candidate_scenarios
+    from .horizon import (
+        derive_environment_from_architecture,
+        environments,
+        horizon_assessment,
+        write_candidate_scenarios,
+    )
 
     entities, errors = _load(args.case_dir)
     _fail_parse(errors)
@@ -424,7 +430,11 @@ def cmd_horizon_export(args):
     if args.environment_id:
         envs = [item for item in envs if item.get("id") == args.environment_id]
     if not envs:
-        raise SystemExit("No matching environment_state found")
+        derived = derive_environment_from_architecture(entities)
+        if derived and not args.environment_id:
+            envs = [derived]
+        else:
+            raise SystemExit("No matching environment_state or derivable architecture found")
 
     result = horizon_assessment(
         entities,
