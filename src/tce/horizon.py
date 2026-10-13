@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import re
 from collections import defaultdict
 from datetime import datetime, timezone
 from importlib import resources
@@ -335,6 +336,27 @@ def _attack_data_components(attack_index: Any, techniques: set[str]) -> set[str]
     return output
 
 
+def _d3fend_refs(d3fend_index: Any, techniques: set[str], limit: int = 30) -> list[str]:
+    if d3fend_index is None:
+        return []
+    refs = set()
+    for technique_id in sorted(techniques):
+        try:
+            rows = d3fend_index.lookup_attack(technique_id, limit=20)
+        except Exception:
+            continue
+        for row in rows:
+            for cell in row.values():
+                if not isinstance(cell, dict):
+                    continue
+                value = str(cell.get("value", ""))
+                if "d3fend" in value.lower() or "d3f:" in value.lower():
+                    refs.add(value)
+                    if len(refs) >= limit:
+                        return sorted(refs)
+    return sorted(refs)
+
+
 def _telemetry_state(
     environment: dict[str, Any],
     nodes: list[str],
@@ -413,6 +435,7 @@ def generate_candidate_paths(
     limit: int = 50,
     attack_index: Any = None,
     now: datetime | None = None,
+    max_source_target_pairs: int = 2000,
 ) -> list[dict[str, Any]]:
     graph = _graph(environment)
     rel_index = _relationship_index(environment)
@@ -421,10 +444,18 @@ def generate_candidate_paths(
     accepted = environment.get("accepted_forecasts", {}) or {}
     candidates = []
 
+    considered_pairs = 0
+    stop_search = False
     for source in _entry_nodes(environment):
+        if stop_search:
+            break
         for target in _target_nodes(environment):
             if source == target:
                 continue
+            considered_pairs += 1
+            if considered_pairs > max_source_target_pairs:
+                stop_search = True
+                break
             try:
                 paths = nx.all_simple_paths(graph, source=source, target=target, cutoff=max_hops)
                 per_pair_cap = max(25, min(250, limit * 3))
@@ -614,6 +645,7 @@ def propose_preemptive_actions(
     environment: dict[str, Any],
     paths: list[dict[str, Any]],
     budget: float | None = None,
+    d3fend_index: Any = None,
 ) -> dict[str, Any]:
     assets = _asset_index(environment)
     candidates: dict[tuple[str, tuple[str, ...], tuple[str, ...]], dict[str, Any]] = {}
@@ -637,17 +669,22 @@ def propose_preemptive_actions(
                 "cost": float(action.get("cost", 1)),
                 "effectiveness": float(action.get("effectiveness", 0.0)),
                 "defensive_terms": action.get("defensive_terms", []),
+                "technique_ids": set(),
                 "status": "proposed",
                 "review_required": True,
             })
             row["path_ids"].append(path["id"])
             row["crown_jewel_ids"].update(path.get("crown_jewel_ids", []) or [])
+            row["technique_ids"].update(path.get("technique_ids", []) or [])
             row["estimated_risk_reduction"] += path_score * row["effectiveness"]
 
     normalized = []
     for row in candidates.values():
         row["crown_jewel_ids"] = sorted(row["crown_jewel_ids"])
         row["path_ids"] = sorted(set(row["path_ids"]))
+        technique_ids = set(row["technique_ids"])
+        row["technique_ids"] = sorted(technique_ids)
+        row["d3fend_refs"] = _d3fend_refs(d3fend_index, technique_ids)
         row["estimated_risk_reduction"] = round(row["estimated_risk_reduction"], 1)
         row["benefit_cost"] = round(row["estimated_risk_reduction"] / max(row["cost"], 0.1), 2)
         normalized.append(row)
@@ -791,7 +828,9 @@ def horizon_assessment(
     max_hops: int = 5,
     limit: int = 50,
     attack_index: Any = None,
+    d3fend_index: Any = None,
     budget: float | None = None,
+    max_source_target_pairs: int = 2000,
 ) -> dict[str, Any]:
     envs = environments(entities)
     if not envs:
@@ -814,6 +853,7 @@ def horizon_assessment(
         max_hops=max_hops,
         limit=limit,
         attack_index=attack_index,
+        max_source_target_pairs=max_source_target_pairs,
     )
     reached_targets = sorted({path.get("target") for path in paths if path.get("target")})
     target_nodes = _target_nodes(environment)
@@ -837,12 +877,19 @@ def horizon_assessment(
         "candidate_paths": paths,
         "choke_points": weighted_choke_points(paths),
         "detection_by_absence": detection_by_absence(paths),
-        "preemptive_actions": propose_preemptive_actions(environment, paths, budget=budget),
+        "preemptive_actions": propose_preemptive_actions(
+            environment,
+            paths,
+            budget=budget,
+            d3fend_index=d3fend_index,
+        ),
         "policy": {
             "candidate_paths_only": True,
             "analyst_review_required": True,
             "automatic_exploitation": False,
             "accepted_score_is_separate": True,
+            "bounded_search": True,
+            "max_source_target_pairs": max_source_target_pairs,
         },
     }
 
