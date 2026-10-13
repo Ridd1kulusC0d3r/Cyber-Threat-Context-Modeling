@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/schemas/environment-state.schema.json",
+  "title": "TCE Enterprise Environment State",
+  "type": "object",
+  "required": [
+    "version",
+    "environment_state"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "environment_state": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "snapshot_at",
+        "assets",
+        "relationships"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^ENV-[A-Za-z0-9._-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "snapshot_at": {
+          "type": "string"
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "identities": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "telemetry_sources": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "vulnerability_signals": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "intelligence_signals": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "accepted_forecasts": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

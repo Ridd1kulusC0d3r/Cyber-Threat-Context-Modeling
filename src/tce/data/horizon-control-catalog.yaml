@@ -1,0 +1,58 @@
+version: "1.0"
+actions:
+  - id: reduce-external-exposure
+    name: Reduce external exposure
+    triggers:
+      exposure: [direct]
+    action_class: exposure-reduction
+    cost: 2
+    effectiveness: 0.35
+    defensive_terms: [attack-surface-reduction, access-restriction]
+  - id: constrain-privileged-trust
+    name: Constrain privileged trust path
+    triggers:
+      relationship_types: [administers, authenticates_to, federates_with, trusts, controls]
+    action_class: privilege-constraining
+    cost: 3
+    effectiveness: 0.40
+    defensive_terms: [credential-hardening, privilege-separation, authentication-strengthening]
+  - id: segment-remote-path
+    name: Segment remote and cross-zone access
+    triggers:
+      relationship_types: [remote_access, connects_to, controls]
+    action_class: segmentation
+    cost: 3
+    effectiveness: 0.35
+    defensive_terms: [network-isolation, traffic-filtering]
+  - id: improve-observability
+    name: Close telemetry blind spot
+    triggers:
+      telemetry_gap: true
+    action_class: telemetry
+    cost: 1
+    effectiveness: 0.25
+    defensive_terms: [logging, event-correlation, pipeline-health]
+  - id: prioritize-remediation
+    name: Prioritize exposed weakness remediation
+    triggers:
+      vulnerability_signal: true
+    action_class: remediation
+    cost: 2
+    effectiveness: 0.35
+    defensive_terms: [patching, configuration-hardening, exposure-reduction]
+  - id: isolate-recovery-trust
+    name: Isolate recovery authority
+    triggers:
+      node_types: [recovery]
+    action_class: resilience
+    cost: 3
+    effectiveness: 0.30
+    defensive_terms: [recovery-separation, independent-identity, restore-validation]
+  - id: review-third-party-trust
+    name: Review and narrow third-party trust
+    triggers:
+      relationship_types: [third_party, federates_with]
+    action_class: third-party
+    cost: 2
+    effectiveness: 0.30
+    defensive_terms: [delegated-access-review, least-privilege, revocation-readiness]

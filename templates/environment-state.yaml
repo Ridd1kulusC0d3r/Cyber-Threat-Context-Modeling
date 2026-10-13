@@ -1,0 +1,73 @@
+version: "0.5"
+environment_state:
+  id: ENV-001
+  name: ""
+  snapshot_at: ""
+  scope: "enterprise"
+  assets:
+    - id: ASSET-001
+      name: ""
+      type: "identity|endpoint|server|service|saas|cloud|control-plane|network|security-tooling|recovery|data|ot|ai|other"
+      trust_zone: ""
+      internet_exposure: "none|indirect|direct|unknown"
+      entry_point: false
+      crown_jewel_ids: []
+      control_ids: []
+      telemetry_requirements: []
+      technology_tags: []
+      owner: ""
+  identities:
+    - id: IDN-001
+      name: ""
+      type: "human|service|machine|agent|external"
+      external: false
+      entry_point: false
+      internet_exposure: "none|indirect|direct|unknown"
+      crown_jewel_ids: []
+      control_ids: []
+      telemetry_requirements: []
+  relationships:
+    - id: REL-001
+      from: ASSET-001
+      to: ASSET-002
+      type: "authenticates_to|administers|federates_with|trusts|remote_access|controls|depends_on|connects_to|third_party|stores|syncs|recovers|logs_to|other"
+      trust_boundary: ""
+      bidirectional: false
+      technique_ids: []
+      control_ids: []
+      required_telemetry: []
+  controls:
+    - id: CTRL-001
+      name: ""
+      status: active
+      effectiveness: 0.5
+      target_ids: []
+      relationship_ids: []
+  telemetry_sources:
+    - id: TEL-001
+      name: ""
+      status: healthy
+      target_ids: []
+      relationship_ids: []
+      capabilities: []
+      data_components: []
+  vulnerability_signals:
+    - id: VULN-001
+      target_id: ASSET-001
+      cve: ""
+      severity: high
+      kev: false
+      epss: 0.0
+  intelligence_signals:
+    - id: SIG-001
+      kind: "sector-trend|credential-exposure|campaign|vulnerability|brand-abuse|other"
+      scope: sector
+      target_ids: []
+      technique_ids: []
+      severity: medium
+      confidence: medium
+      direction: increase
+      observed_at: ""
+      half_life_days: 30
+      source_ref: ""
+  accepted_forecasts: {}
