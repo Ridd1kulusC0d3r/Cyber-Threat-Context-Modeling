@@ -49,7 +49,7 @@ def _clean(row: dict[str, str]) -> dict[str, Any]:
             output[key] = _list(value)
         elif key in {"entry_point", "external", "bidirectional", "kev"}:
             output[key] = _bool(value)
-        elif key in {"effectiveness", "epss"}:
+        elif key in {"effectiveness", "epss", "information_credibility", "relevance", "half_life_days"}:
             output[key] = float(value)
         else:
             output[key] = str(value).strip()
@@ -66,6 +66,8 @@ def environment_from_csv(
     snapshot_at: str = "",
     controls_csv: str | Path | None = None,
     telemetry_csv: str | Path | None = None,
+    vulnerabilities_csv: str | Path | None = None,
+    intelligence_csv: str | Path | None = None,
 ) -> Path:
     assets = []
     identities = []
@@ -80,6 +82,8 @@ def environment_from_csv(
     relationships = [_clean(row) for row in _rows(relationships_csv)]
     controls = [_clean(row) for row in _rows(controls_csv)]
     telemetry = [_clean(row) for row in _rows(telemetry_csv)]
+    vulnerabilities = [_clean(row) for row in _rows(vulnerabilities_csv)]
+    intelligence = [_clean(row) for row in _rows(intelligence_csv)]
 
     snapshot_at = snapshot_at or datetime.now(timezone.utc).isoformat()
 
@@ -95,8 +99,8 @@ def environment_from_csv(
             "relationships": relationships,
             "controls": controls,
             "telemetry_sources": telemetry,
-            "vulnerability_signals": [],
-            "intelligence_signals": [],
+            "vulnerability_signals": vulnerabilities,
+            "intelligence_signals": intelligence,
             "accepted_forecasts": {},
         },
     }
