@@ -47,3 +47,19 @@ jobs:
           for case in examples/reference-cases/*; do
             tce validate "$case"
           done
+      - name: v0.5 Horizon smoke tests
+        run: |
+          tce horizon-conformance examples/cases/enterprise-identity
+          tce horizon-assess examples/cases/enterprise-identity --offline --output /tmp/horizon.json
+          tce horizon-absence examples/cases/enterprise-identity --offline > /tmp/horizon-absence.json
+          tce horizon-chokepoints examples/cases/enterprise-identity --offline > /tmp/horizon-chokes.json
+          tce horizon-actions examples/cases/enterprise-identity --budget 8 --offline > /tmp/horizon-actions.json
+          tce horizon-export examples/cases/enterprise-identity --offline --output /tmp/horizon-scenarios.yaml
+          tce horizon-export-actions examples/cases/enterprise-identity --budget 8 --offline --output /tmp/horizon-preemptive-actions.yaml
+          tce horizon-diff /tmp/horizon.json /tmp/horizon.json > /tmp/horizon-diff.json
+          tce environment-import-csv \
+            --assets examples/environment-import/assets.csv \
+            --relationships examples/environment-import/relationships.csv \
+            --controls examples/environment-import/controls.csv \
+            --telemetry examples/environment-import/telemetry.csv \
+            --output /tmp/imported-environment.yaml
