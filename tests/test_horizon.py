@@ -188,16 +188,32 @@ class HorizonTests(unittest.TestCase):
                 "R1,A,B,connects_to,edge-to-core,network-connection\n",
                 encoding="utf-8",
             )
+            vulnerabilities = tmp / "vulnerabilities.csv"
+            intelligence = tmp / "intelligence.csv"
+            vulnerabilities.write_text(
+                "id,target_id,cve,severity,kev,epss\n"
+                "V1,A,,medium,false,0.2\n",
+                encoding="utf-8",
+            )
+            intelligence.write_text(
+                "id,kind,scope,target_ids,technique_ids,severity,confidence,status,information_credibility,relevance,half_life_days\n"
+                "S1,sector-trend,sector,A,T1078,medium,medium,candidate,0.7,1.0,30\n",
+                encoding="utf-8",
+            )
             output = tmp / "environment.yaml"
             environment_from_csv(
                 assets,
                 relationships,
                 output,
                 snapshot_at="2026-10-13T00:00:00Z",
+                vulnerabilities_csv=vulnerabilities,
+                intelligence_csv=intelligence,
             )
             data = yaml.safe_load(output.read_text(encoding="utf-8"))
             self.assertEqual(data["environment_state"]["assets"][0]["id"], "A")
             self.assertEqual(data["environment_state"]["relationships"][0]["id"], "R1")
+            self.assertEqual(data["environment_state"]["vulnerability_signals"][0]["id"], "V1")
+            self.assertEqual(data["environment_state"]["intelligence_signals"][0]["status"], "candidate")
 
 
 if __name__ == "__main__":
