@@ -1,0 +1,3 @@
+id,name,status,effectiveness,target_ids,relationship_ids
+CTRL-AUTH,Strong Authentication,active,0.45,ASSET-EDGE;ASSET-IDP;IDN-EXT,REL-EXT-EDGE;REL-EDGE-IDP
+CTRL-PRIV,Privileged Access Separation,active,0.40,ASSET-IDP,REL-EDGE-IDP
