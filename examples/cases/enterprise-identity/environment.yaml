@@ -210,6 +210,9 @@ environment_state:
       technique_ids: [T1078]
       severity: high
       confidence: medium
+      source_reliability: C
+      information_credibility: 0.8
+      relevance: 1.0
       direction: increase
       status: accepted
       observed_at: "2026-10-10T00:00:00Z"
