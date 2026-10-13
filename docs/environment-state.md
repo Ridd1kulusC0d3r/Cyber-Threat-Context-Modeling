@@ -64,6 +64,8 @@ tce environment-import-csv \
   --relationships relationships.csv \
   --controls controls.csv \
   --telemetry telemetry.csv \
+  --vulnerabilities vulnerabilities.csv \
+  --intelligence intelligence.csv \
   --environment-id ENV-PROD \
   --name "Production enterprise" \
   --output environment.yaml
@@ -100,6 +102,24 @@ id,name,status,target_ids,relationship_ids,capabilities,data_components
 ~~~
 
 Data components may contain ATT&CK Data Component names when known.
+
+### Vulnerability signals CSV
+
+~~~text
+id,target_id,cve,severity,kev,epss,note
+~~~
+
+Use this as the normalized defensive handoff from vulnerability management. KEV and EPSS values remain inputs to prioritization, not proof that exploitation has or will occur.
+
+### Intelligence / OSINT signals CSV
+
+~~~text
+id,kind,scope,target_ids,technique_ids,severity,confidence,source_reliability,information_credibility,relevance,direction,status,observed_at,half_life_days,source_ref
+~~~
+
+This provides a generic bridge for authorized defensive feeds such as CTI, credential-exposure monitoring, external attack-surface management, brand/typosquat monitoring, sector trends, and other reviewed signals.
+
+Imported signals should normally begin as candidate. Only accepted/active/validated/confirmed signals affect Horizon forecast pressure.
 
 ## Typical defensive collection sources
 
