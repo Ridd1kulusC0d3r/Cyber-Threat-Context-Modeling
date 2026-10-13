@@ -140,21 +140,53 @@ def _relationship_index(environment: dict[str, Any]) -> dict[str, dict[str, Any]
     }
 
 
+def _merge_edge(existing: dict[str, Any] | None, rel: dict[str, Any]) -> dict[str, Any]:
+    if not existing:
+        row = dict(rel)
+        row["relationship_id"] = rel.get("id")
+        row["relationship_ids"] = [rel.get("id")] if rel.get("id") else []
+        return row
+
+    row = dict(existing)
+    current_type = str(row.get("type", "other")).lower()
+    new_type = str(rel.get("type", "other")).lower()
+    if RELATION_PRESSURE.get(new_type, 0.5) > RELATION_PRESSURE.get(current_type, 0.5):
+        row["type"] = rel.get("type")
+        row["relationship_id"] = rel.get("id")
+
+    row["relationship_ids"] = sorted({
+        *(row.get("relationship_ids", []) or []),
+        *([rel.get("id")] if rel.get("id") else []),
+    })
+    for field in ("technique_ids", "control_ids", "required_telemetry"):
+        row[field] = sorted({
+            *(row.get(field, []) or []),
+            *(rel.get(field, []) or []),
+        })
+    row["parallel_relationships_merged"] = True
+    return row
+
+
+def _add_graph_edge(graph: nx.DiGraph, rel: dict[str, Any]) -> None:
+    source, target = rel.get("from"), rel.get("to")
+    if not source or not target or source not in graph or target not in graph:
+        return
+    if rel.get("enabled", True) is False:
+        return
+    existing = graph.get_edge_data(source, target)
+    graph.add_edge(source, target, **_merge_edge(existing, rel))
+
+
 def _graph(environment: dict[str, Any]) -> nx.DiGraph:
     graph = nx.DiGraph()
     for node_id, item in _asset_index(environment).items():
         graph.add_node(node_id, **item)
     for rel in environment.get("relationships", []) or []:
-        source, target = rel.get("from"), rel.get("to")
-        if not source or not target or source not in graph or target not in graph:
-            continue
-        if rel.get("enabled", True) is False:
-            continue
-        graph.add_edge(source, target, relationship_id=rel.get("id"), **rel)
+        _add_graph_edge(graph, rel)
         if rel.get("bidirectional"):
             reverse = dict(rel)
-            reverse["from"], reverse["to"] = target, source
-            graph.add_edge(target, source, relationship_id=rel.get("id"), **reverse)
+            reverse["from"], reverse["to"] = rel.get("to"), rel.get("from")
+            _add_graph_edge(graph, reverse)
     return graph
 
 
@@ -463,10 +495,9 @@ def generate_candidate_paths(
                     relationships = []
                     relation_ids = []
                     for left, right in zip(nodes, nodes[1:]):
-                        edge = graph.get_edge_data(left, right) or {}
+                        edge = dict(graph.get_edge_data(left, right) or {})
                         rel_id = edge.get("relationship_id")
-                        relation = rel_index.get(rel_id, edge)
-                        relationships.append(relation)
+                        relationships.append(edge)
                         if rel_id:
                             relation_ids.append(rel_id)
 
@@ -857,6 +888,7 @@ def horizon_assessment(
     )
     reached_targets = sorted({path.get("target") for path in paths if path.get("target")})
     target_nodes = _target_nodes(environment)
+    source_target_pairs = len(_entry_nodes(environment)) * len(target_nodes)
     band_counts = {band: sum(1 for path in paths if path["forecast"]["band"] == band) for band in ("H0", "H1", "H2", "H3")}
     return {
         "environment_id": environment.get("id"),
@@ -868,6 +900,8 @@ def horizon_assessment(
             "entry_nodes": len(_entry_nodes(environment)),
             "crown_jewel_nodes": len(target_nodes),
             "candidate_paths": len(paths),
+            "source_target_pairs": source_target_pairs,
+            "search_truncated_by_pair_cap": source_target_pairs > max_source_target_pairs,
             "bands": band_counts,
         },
         "entry_nodes": _entry_nodes(environment),
