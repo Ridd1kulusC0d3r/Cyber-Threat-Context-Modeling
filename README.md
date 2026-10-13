@@ -7,7 +7,7 @@
 [![D3FEND](https://img.shields.io/badge/MITRE-D3FEND-1f6f67)](https://d3fend.mitre.org/)
 [![Attack Flow](https://img.shields.io/badge/CTID-Attack%20Flow-334155)](https://center-for-threat-informed-defense.github.io/attack-flow/)
 [![Docs](https://img.shields.io/badge/docs-MkDocs-4051b5)](./docs/)
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/colab/TCE_v0_4_Detection_Validation_Workbench.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/colab/TCE_v0_5_Horizon_Workbench.ipynb)
 
 ## Why this repository exists
 
@@ -25,13 +25,13 @@ This is the repository's **Zero-Point Detection** principle.
 flowchart LR
     A[Mission & Crown Jewels] --> B[Architecture & Trust Boundaries]
     B --> C[Threat Context]
-    C --> H[Horizon Environment State]
-    H --> D[Candidate Enterprise Paths / Attack Flow]
+    C --> Z[Horizon Environment State]
+    Z --> D[Candidate Enterprise Paths / Attack Flow]
     D --> E[Telemetry Contract]
     E --> F[Detection Hypotheses]
     F --> G[Analytics & Correlation]
-    G --> H[Use Cases / Cases]
-    H --> I[Validation]
+    G --> U[Use Cases / Cases]
+    U --> I[Validation]
     I --> J[CTI Feedback]
     J --> C
 ~~~
@@ -398,6 +398,7 @@ The Colab notebook starts it automatically and prints a proxied `*.prod.colab.de
 The UI provides:
 
 - case health and summary metrics;
+- Horizon enterprise paths, risk-weighted choke points, Detection by Absence and preemptive action candidates;
 - prioritized P0–P3 scenarios;
 - detection coverage and defensive choke points;
 - hypotheses, gaps and decisions;
