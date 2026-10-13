@@ -292,6 +292,13 @@ def _horizon_attack_index(offline: bool):
     return AttackIndex.load(sync_if_missing=True)
 
 
+def _horizon_d3fend_index(offline: bool):
+    if offline:
+        return None
+    from .standards.d3fend import D3FENDIndex
+    return D3FENDIndex.load(sync_if_missing=True)
+
+
 def cmd_horizon_conformance(args):
     from .conformance import evaluate_horizon_conformance
 
@@ -315,6 +322,7 @@ def cmd_horizon_assess(args):
         max_hops=args.max_hops,
         limit=args.limit,
         attack_index=attack,
+        d3fend_index=_horizon_d3fend_index(args.offline),
         budget=args.budget,
     )
     if args.output:
@@ -364,6 +372,7 @@ def cmd_horizon_actions(args):
         max_hops=args.max_hops,
         limit=args.limit,
         attack_index=_horizon_attack_index(args.offline),
+        d3fend_index=_horizon_d3fend_index(args.offline),
         budget=args.budget,
     )
     print(json.dumps(result["preemptive_actions"], indent=2, ensure_ascii=False))
