@@ -8,6 +8,8 @@ preemptive_action:
   path_ids: []
   crown_jewel_ids: []
   defensive_terms: []
+  technique_ids: []
+  d3fend_refs: []
   estimated_risk_reduction: 0
   cost: 1
   status: proposed
