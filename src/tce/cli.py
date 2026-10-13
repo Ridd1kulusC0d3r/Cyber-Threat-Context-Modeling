@@ -429,6 +429,8 @@ def cmd_environment_import_csv(args):
         snapshot_at=args.snapshot_at,
         controls_csv=args.controls,
         telemetry_csv=args.telemetry,
+        vulnerabilities_csv=args.vulnerabilities,
+        intelligence_csv=args.intelligence,
     ))
 
 
@@ -821,6 +823,8 @@ def build_parser():
     p.add_argument("--relationships", required=True)
     p.add_argument("--controls")
     p.add_argument("--telemetry")
+    p.add_argument("--vulnerabilities")
+    p.add_argument("--intelligence")
     p.add_argument("--environment-id", default="ENV-IMPORTED")
     p.add_argument("--name", default="Imported enterprise environment")
     p.add_argument("--snapshot-at", default="")
