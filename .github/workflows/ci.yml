@@ -62,4 +62,6 @@ jobs:
             --relationships examples/environment-import/relationships.csv \
             --controls examples/environment-import/controls.csv \
             --telemetry examples/environment-import/telemetry.csv \
+            --vulnerabilities examples/environment-import/vulnerabilities.csv \
+            --intelligence examples/environment-import/intelligence.csv \
             --output /tmp/imported-environment.yaml
