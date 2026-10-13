@@ -4,6 +4,7 @@ from pathlib import Path
 
 import yaml
 
+from tce.conformance import evaluate_horizon_conformance
 from tce.environment_import import environment_from_csv
 from tce.horizon import (
     candidate_scenarios,
@@ -25,6 +26,10 @@ class HorizonTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.entities, cls.parse_errors = load_case(CASE_DIR)
+
+    def test_horizon_conformance(self):
+        result = evaluate_horizon_conformance(self.entities)
+        self.assertTrue(result["passed"])
 
     def test_environment_loads_and_validates(self):
         self.assertFalse(self.parse_errors)
