@@ -84,6 +84,24 @@ decay = 0.5 ^ (age_days / half_life_days)
 
 This prevents old intelligence from becoming immortal merely because a spreadsheet survived longer than its assumptions.
 
+## RedFrameworks intelligence bridge
+
+TCE already uses RedFrameworks v6 as a review-gated domain-context provider. Horizon can convert a saved context-enrichment snapshot into **candidate intelligence signals**:
+
+~~~bash
+tce context-enrich examples/cases/enterprise-identity \
+  --output redframeworks-context.json
+
+tce horizon-intel-candidates \
+  examples/cases/enterprise-identity \
+  redframeworks-context.json \
+  --output horizon-intelligence-candidates.yaml
+~~~
+
+The bridge carries context, domain pack, actor/campaign IDs, crown jewels, environment targets, ATT&CK techniques and source quality into candidate signal objects.
+
+Those signals are deliberately written with status `candidate`. They do not influence Horizon until an analyst reviews them and promotes relevant information into the Environment State. An actor being present in a sector/domain pack is not evidence that the actor is targeting the organization.
+
 ## Vulnerability pressure
 
 A vulnerability signal can include target asset, CVE when known, severity, CISA KEV state and EPSS. KEV raises the defensive pressure floor. EPSS is an input to prioritization, not a promise that exploitation will occur.
@@ -117,7 +135,7 @@ Horizon blind paths are also appended to the normal Detection Backlog as telemet
 
 The built-in defensive catalog can propose exposure reduction, privileged-trust constraints, segmentation, telemetry closure, remediation priority, recovery isolation and third-party trust review.
 
-Every action remains proposed and review-gated.
+Every action remains proposed and review-gated. When D3FEND is available, Horizon also attaches defensive D3FEND references associated with the ATT&CK behaviors covered by each action candidate.
 
 When a budget is supplied, the optimizer uses **marginal path coverage**. Overlapping controls receive declining incremental benefit instead of each pretending to eliminate the same risk independently.
 
