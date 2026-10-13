@@ -25,6 +25,23 @@ def _contexts(entities):
     return [w["data"] for w in entities.values() if w["kind"] == "threat_context"]
 
 
+def _horizon(entities):
+    if not any(w["kind"] == "environment_state" for w in entities.values()):
+        return None
+    try:
+        from .horizon import horizon_assessment
+
+        return horizon_assessment(
+            entities,
+            max_hops=5,
+            limit=25,
+            attack_index=None,
+            budget=8,
+        )
+    except (ValueError, KeyError):
+        return None
+
+
 def markdown_report(entities: dict[str, dict], audience: str = "all") -> str:
     counts = _counts(entities)
     scores = scored_scenarios(entities)
@@ -34,6 +51,7 @@ def markdown_report(entities: dict[str, dict], audience: str = "all") -> str:
     hypotheses = _hypotheses(entities)
     decisions = _decisions(entities)
     contexts = _contexts(entities)
+    horizon = _horizon(entities)
 
     lines = [
         f"# TCE {audience.title()} Report" if audience != "all" else "# TCE Case Report",
@@ -59,39 +77,150 @@ def markdown_report(entities: dict[str, dict], audience: str = "all") -> str:
             "|---|---:|---|---|---|",
         ]
         for item in scores:
-            lines.append(f"| {item['id']} | {item['score']:.2f} | {item['band']} | {item['confidence']} | {item['title']} |")
+            lines.append(
+                f"| {item['id']} | {item['score']:.2f} | {item['band']} | "
+                f"{item['confidence']} | {item['title']} |"
+            )
+
+        if horizon:
+            summary = horizon.get("summary", {})
+            bands = summary.get("bands", {})
+            lines += [
+                "",
+                "### Horizon enterprise forecast",
+                "",
+                f"- Environment: {horizon.get('environment_id')}",
+                f"- Candidate paths: {summary.get('candidate_paths', 0)}",
+                f"- H0/H1 paths: {bands.get('H0', 0) + bands.get('H1', 0)}",
+                f"- Detection-by-Absence paths: {len(horizon.get('detection_by_absence', []) or [])}",
+                f"- Unreached crown-jewel nodes: {len(horizon.get('unreached_crown_jewel_nodes', []) or [])}",
+                "",
+                "| Horizon path | Score | Band | Crown jewels |",
+                "|---|---:|---|---|",
+            ]
+            for path in (horizon.get("candidate_paths", []) or [])[:10]:
+                lines.append(
+                    f"| {path.get('id')} | {path.get('forecast', {}).get('proposed_score')} | "
+                    f"{path.get('forecast', {}).get('band')} | "
+                    f"{', '.join(path.get('crown_jewel_ids', []))} |"
+                )
+
         lines += ["", "### Decisions", ""]
         for decision in decisions:
-            lines.append(f"- **{decision.get('id')}** {decision.get('title', '')}: {decision.get('status', 'unknown')}")
+            lines.append(
+                f"- **{decision.get('id')}** {decision.get('title', '')}: "
+                f"{decision.get('status', 'unknown')}"
+            )
 
     if audience in {"all", "cti"}:
-        lines += ["", "## Intelligence", "", "### Hypotheses", "", "| ID | Confidence | Status | Statement |", "|---|---|---|---|"]
+        lines += [
+            "",
+            "## Intelligence",
+            "",
+            "### Hypotheses",
+            "",
+            "| ID | Confidence | Status | Statement |",
+            "|---|---|---|---|",
+        ]
         for hyp in hypotheses:
-            lines.append(f"| {hyp.get('id')} | {hyp.get('confidence', 'unknown')} | {hyp.get('status', 'unknown')} | {hyp.get('statement', '')} |")
+            lines.append(
+                f"| {hyp.get('id')} | {hyp.get('confidence', 'unknown')} | "
+                f"{hyp.get('status', 'unknown')} | {hyp.get('statement', '')} |"
+            )
+
+        if horizon:
+            lines += ["", "### Accepted Horizon intelligence contributions", ""]
+            seen = set()
+            for path in (horizon.get("candidate_paths", []) or []):
+                for signal in path.get("intelligence_signals", []) or []:
+                    signal_id = signal.get("id")
+                    if not signal_id or signal_id in seen:
+                        continue
+                    seen.add(signal_id)
+                    lines.append(
+                        f"- **{signal_id}**: value={signal.get('value')} "
+                        f"confidence={signal.get('confidence')} "
+                        f"source_reliability={signal.get('source_reliability')}"
+                    )
+
         lines += ["", "### Intelligence gaps", ""]
         for gap in gaps:
             if gap["type"] == "intelligence":
-                lines.append(f"- **{gap['id']}** [{gap['priority']}]: {gap['description']}")
+                lines.append(
+                    f"- **{gap['id']}** [{gap['priority']}]: {gap['description']}"
+                )
 
     if audience in {"all", "architecture"}:
-        lines += ["", "## Architecture and choke points", "", "### Threat contexts", "", "| ID | Lens | Confidence | Relevance |", "|---|---|---|---|"]
+        lines += [
+            "",
+            "## Architecture and choke points",
+            "",
+            "### Threat contexts",
+            "",
+            "| ID | Lens | Confidence | Relevance |",
+            "|---|---|---|---|",
+        ]
         for context in contexts:
             lines.append(
-                f"| {context.get('id')} | {context.get('lens_id', '')} | {context.get('confidence', 'unknown')} | {context.get('relevance', '')} |"
+                f"| {context.get('id')} | {context.get('lens_id', '')} | "
+                f"{context.get('confidence', 'unknown')} | "
+                f"{context.get('relevance', '')} |"
             )
-        lines += ["", "### Defensive choke points", "", "| Architecture node | P0/P1 paths |", "|---|---:|"]
+
+        lines += [
+            "",
+            "### Accepted-scenario defensive choke points",
+            "",
+            "| Architecture node | P0/P1 paths |",
+            "|---|---:|",
+        ]
         for item in choke[:15]:
             lines.append(f"| {item['node']} | {item['critical_paths']} |")
 
+        if horizon:
+            lines += [
+                "",
+                "### Horizon risk-weighted choke points",
+                "",
+                "| Node | Defensive leverage | Candidate paths | Transit paths |",
+                "|---|---:|---:|---:|",
+            ]
+            for item in (horizon.get("choke_points", []) or [])[:15]:
+                lines.append(
+                    f"| {item.get('node_id')} | {item.get('defensive_leverage')} | "
+                    f"{item.get('candidate_paths')} | {item.get('transit_paths')} |"
+                )
+
     if audience in {"all", "soc"}:
-        lines += ["", "## Detection coverage", "", "| Dimension | Coverage |", "|---|---:|"]
+        lines += [
+            "",
+            "## Detection coverage",
+            "",
+            "| Dimension | Coverage |",
+            "|---|---:|",
+        ]
         for dim, value in coverage.items():
             rendered = "unknown" if value is None else f"{value}%"
             lines.append(f"| {dim} | {rendered} |")
+
         lines += ["", "### Telemetry / detection / validation gaps", ""]
         for gap in gaps:
             if gap["type"] != "intelligence":
-                lines.append(f"- **{gap['id']}** [{gap['type']}]: {gap['description']}")
+                lines.append(
+                    f"- **{gap['id']}** [{gap['type']}]: {gap['description']}"
+                )
+
+        if horizon:
+            lines += ["", "### Horizon Detection by Absence", ""]
+            for gap in (horizon.get("detection_by_absence", []) or [])[:15]:
+                missing = [
+                    *(gap.get("missing_telemetry", []) or []),
+                    *(gap.get("missing_attack_data_components", []) or []),
+                ]
+                lines.append(
+                    f"- **{gap.get('path_id')}** [{gap.get('band')}]: "
+                    f"{', '.join(missing) if missing else 'no missing requirement'}"
+                )
 
     if audience == "all":
         lines += ["", "## Inventory", "", "| Entity | Count |", "|---|---:|"]
@@ -102,7 +231,9 @@ def markdown_report(entities: dict[str, dict], audience: str = "all") -> str:
         "",
         "## Interpretation",
         "",
-        "This report is a decision aid. Scores and percentages must be reviewed with architecture, business impact, evidence quality, and validation results.",
+        "This report is a decision aid. Scores and percentages must be reviewed with "
+        "architecture, business impact, evidence quality, intelligence freshness, and "
+        "validation results. Horizon forecast pressure is not attack probability.",
         "",
     ]
     return "\n".join(lines)
@@ -116,35 +247,82 @@ def dashboard_html(entities: dict[str, dict]) -> str:
     choke = choke_points(entities)
     decisions = _decisions(entities)
     contexts = _contexts(entities)
+    horizon = _horizon(entities)
 
-    band_counts = {band: sum(1 for item in scores if item["band"] == band) for band in ("P0", "P1", "P2", "P3")}
+    band_counts = {
+        band: sum(1 for item in scores if item["band"] == band)
+        for band in ("P0", "P1", "P2", "P3")
+    }
     gap_counts = {}
     for gap in gaps:
         gap_counts[gap["type"]] = gap_counts.get(gap["type"], 0) + 1
 
     def card(label, value):
-        return f'<div class="card"><div class="label">{escape(label)}</div><div class="value">{escape(str(value))}</div></div>'
+        return (
+            f'<div class="card"><div class="label">{escape(label)}</div>'
+            f'<div class="value">{escape(str(value))}</div></div>'
+        )
 
     scenario_rows = "".join(
-        f"<tr><td>{escape(str(s['id']))}</td><td>{s['score']:.2f}</td><td>{s['band']}</td><td>{escape(str(s['confidence']))}</td><td>{escape(str(s['title']))}</td></tr>"
+        f"<tr><td>{escape(str(s['id']))}</td><td>{s['score']:.2f}</td>"
+        f"<td>{s['band']}</td><td>{escape(str(s['confidence']))}</td>"
+        f"<td>{escape(str(s['title']))}</td></tr>"
         for s in scores[:15]
     )
     choke_rows = "".join(
-        f"<tr><td>{escape(str(c['node']))}</td><td>{c['critical_paths']}</td></tr>"
-        for c in choke[:10]
+        f"<tr><td>{escape(str(item['node']))}</td><td>{item['critical_paths']}</td></tr>"
+        for item in choke[:10]
     )
     context_rows = "".join(
-        f"<tr><td>{escape(str(x.get('id')))}</td><td>{escape(str(x.get('lens_id', '')))}</td><td>{escape(str(x.get('confidence', 'unknown')))}</td><td>{escape(str(x.get('relevance', '')))}</td></tr>"
+        f"<tr><td>{escape(str(x.get('id')))}</td>"
+        f"<td>{escape(str(x.get('lens_id', '')))}</td>"
+        f"<td>{escape(str(x.get('confidence', 'unknown')))}</td>"
+        f"<td>{escape(str(x.get('relevance', '')))}</td></tr>"
         for x in contexts
     )
     decision_rows = "".join(
-        f"<tr><td>{escape(str(d.get('id')))}</td><td>{escape(str(d.get('status', 'unknown')))}</td><td>{escape(str(d.get('title', '')))}</td></tr>"
+        f"<tr><td>{escape(str(d.get('id')))}</td>"
+        f"<td>{escape(str(d.get('status', 'unknown')))}</td>"
+        f"<td>{escape(str(d.get('title', '')))}</td></tr>"
         for d in decisions
     )
     coverage_rows = "".join(
-        f"<tr><td>{escape(dim)}</td><td>{'unknown' if value is None else str(value) + '%'}</td></tr>"
+        f"<tr><td>{escape(dim)}</td>"
+        f"<td>{'unknown' if value is None else str(value) + '%'}</td></tr>"
         for dim, value in coverage.items()
     )
+
+    horizon_cards = []
+    horizon_section = ""
+    if horizon:
+        summary = horizon.get("summary", {})
+        bands = summary.get("bands", {})
+        horizon_cards = [
+            card("Horizon Paths", summary.get("candidate_paths", 0)),
+            card("H0 / H1", bands.get("H0", 0) + bands.get("H1", 0)),
+            card("Blind Paths", len(horizon.get("detection_by_absence", []) or [])),
+        ]
+        path_rows = "".join(
+            f"<tr><td>{escape(str(x.get('id')))}</td>"
+            f"<td>{escape(str(x.get('forecast', {}).get('proposed_score')))}</td>"
+            f"<td>{escape(str(x.get('forecast', {}).get('band')))}</td>"
+            f"<td>{escape(' → '.join(x.get('nodes', [])))}</td></tr>"
+            for x in (horizon.get("candidate_paths", []) or [])[:15]
+        )
+        horizon_choke_rows = "".join(
+            f"<tr><td>{escape(str(x.get('node_id')))}</td>"
+            f"<td>{escape(str(x.get('defensive_leverage')))}</td>"
+            f"<td>{escape(str(x.get('candidate_paths')))}</td></tr>"
+            for x in (horizon.get("choke_points", []) or [])[:10]
+        )
+        horizon_section = (
+            "<section><h2>Horizon candidate paths</h2><table><thead><tr>"
+            "<th>ID</th><th>Score</th><th>Band</th><th>Path</th>"
+            f"</tr></thead><tbody>{path_rows}</tbody></table></section>"
+            "<section><h2>Horizon choke points</h2><table><thead><tr>"
+            "<th>Node</th><th>Defensive leverage</th><th>Paths</th>"
+            f"</tr></thead><tbody>{horizon_choke_rows}</tbody></table></section>"
+        )
 
     cards = "".join([
         card("Crown Jewels", counts.get("crown_jewel", 0)),
@@ -154,6 +332,7 @@ def dashboard_html(entities: dict[str, dict]) -> str:
         card("P0 / P1", band_counts["P0"] + band_counts["P1"]),
         card("Open Gaps", len(gaps)),
         card("Decisions", counts.get("decision", 0)),
+        *horizon_cards,
     ])
 
     return f"""<!doctype html>
@@ -183,10 +362,11 @@ th {{ color:#53656b; font-size:13px; }}
 <h1>Threat Context Engineering</h1>
 <p class="sub">Analyst attention dashboard generated from the TCE case model.</p>
 <div class="grid">{cards}</div>
+{horizon_section}
 <section><h2>Threat contexts</h2><table><thead><tr><th>ID</th><th>Lens</th><th>Confidence</th><th>Relevance</th></tr></thead><tbody>{context_rows}</tbody></table></section>
 <section><h2>Prioritized scenarios</h2><table><thead><tr><th>ID</th><th>Score</th><th>Band</th><th>Confidence</th><th>Title</th></tr></thead><tbody>{scenario_rows}</tbody></table></section>
 <section><h2>Detection coverage</h2><table><thead><tr><th>Dimension</th><th>Coverage</th></tr></thead><tbody>{coverage_rows}</tbody></table></section>
-<section><h2>Defensive choke points</h2><table><thead><tr><th>Architecture node</th><th>P0/P1 paths</th></tr></thead><tbody>{choke_rows}</tbody></table></section>
+<section><h2>Accepted-scenario defensive choke points</h2><table><thead><tr><th>Architecture node</th><th>P0/P1 paths</th></tr></thead><tbody>{choke_rows}</tbody></table></section>
 <section><h2>Open gap types</h2><p>{escape(str(gap_counts))}</p></section>
 <section><h2>Decisions</h2><table><thead><tr><th>ID</th><th>Status</th><th>Decision</th></tr></thead><tbody>{decision_rows}</tbody></table></section>
 </main>
