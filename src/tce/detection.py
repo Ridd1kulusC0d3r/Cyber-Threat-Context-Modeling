@@ -113,6 +113,34 @@ def compile_backlog(entities: dict[str, dict]) -> list[dict[str, Any]]:
                 "implementation_states": sorted(implementation_states),
             })
 
+    if any(wrapped["kind"] == "environment_state" for wrapped in entities.values()):
+        from .horizon import horizon_assessment
+
+        try:
+            horizon = horizon_assessment(
+                entities,
+                max_hops=5,
+                limit=50,
+                attack_index=None,
+            )
+            for gap in horizon.get("detection_by_absence", []) or []:
+                backlog.append({
+                    "scenario_id": None,
+                    "horizon_path_id": gap.get("path_id"),
+                    "band": gap.get("band"),
+                    "score": gap.get("proposed_score"),
+                    "work_type": "telemetry-blind-path",
+                    "priority": "highest" if gap.get("band") in {"H0", "H1"} else "normal",
+                    "reason": "Detection by Absence: enterprise exposure path has missing telemetry requirements.",
+                    "missing_telemetry": gap.get("missing_telemetry", []),
+                    "missing_attack_data_components": gap.get("missing_attack_data_components", []),
+                    "crown_jewel_ids": gap.get("crown_jewel_ids", []),
+                    "technique_ids": gap.get("technique_ids", []),
+                    "review_required": True,
+                })
+        except (ValueError, KeyError):
+            pass
+
     order = {"P0": 0, "P1": 1, "P2": 2, "P3": 3}
     return sorted(
         backlog,
