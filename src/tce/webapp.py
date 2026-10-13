@@ -70,6 +70,8 @@ def _case_payload(case_dir: Path) -> dict[str, Any]:
             "detections": _entity_count(entities, "detection_use_case"),
             "detection_specs": _entity_count(entities, "detection_specification"),
             "telemetry_contracts": _entity_count(entities, "telemetry_contract"),
+            "environments": _entity_count(entities, "environment_state"),
+            "preemptive_actions": _entity_count(entities, "preemptive_action"),
             "gaps": len(gaps),
             "decisions": _entity_count(entities, "decision"),
         },
@@ -109,7 +111,7 @@ def create_app(case_dir: str | Path | None = None) -> FastAPI:
     root = Path(case_dir or os.getenv("TCE_CASE_DIR", "examples/cases/enterprise-identity")).resolve()
     app = FastAPI(
         title="Threat Context Engineering Workbench",
-        version="0.4.0",
+        version="0.5.0",
         docs_url="/api/docs",
         redoc_url=None,
     )
