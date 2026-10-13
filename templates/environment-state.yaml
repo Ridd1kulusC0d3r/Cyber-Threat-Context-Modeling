@@ -66,8 +66,13 @@ environment_state:
       technique_ids: []
       severity: medium
       confidence: medium
+      source_reliability: C
+      information_credibility: 0.7
+      relevance: 1.0
       direction: increase
+      status: candidate
       observed_at: ""
+      expires_at: ""
       half_life_days: 30
       source_ref: ""
   accepted_forecasts: {}
