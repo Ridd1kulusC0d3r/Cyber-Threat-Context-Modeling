@@ -211,6 +211,7 @@ environment_state:
       severity: high
       confidence: medium
       direction: increase
+      status: accepted
       observed_at: "2026-10-10T00:00:00Z"
       half_life_days: 21
       source_ref: "synthetic-example"
