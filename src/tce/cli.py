@@ -395,6 +395,22 @@ def cmd_horizon_export_actions(args):
     print(write_preemptive_actions(result, args.output, selected_only=not args.all))
 
 
+def cmd_horizon_intel_candidates(args):
+    from .horizon_intelligence import (
+        load_enrichment,
+        write_redframeworks_signal_candidates,
+    )
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    enrichment = load_enrichment(args.enrichment)
+    print(write_redframeworks_signal_candidates(
+        entities,
+        enrichment,
+        args.output,
+    ))
+
+
 def cmd_horizon_diff(args):
     from .horizon import diff_horizon_files
 
@@ -788,6 +804,12 @@ def build_parser():
     p.add_argument("--all", action="store_true", help="Export all candidates instead of budget-selected actions")
     p.add_argument("--output", default="horizon-preemptive-actions.yaml")
     p.set_defaults(func=cmd_horizon_export_actions)
+
+    p = sub.add_parser("horizon-intel-candidates", help="Convert review-gated RedFrameworks context enrichment into Horizon signal candidates")
+    p.add_argument("case_dir")
+    p.add_argument("enrichment")
+    p.add_argument("--output", default="horizon-intelligence-candidates.yaml")
+    p.set_defaults(func=cmd_horizon_intel_candidates)
 
     p = sub.add_parser("horizon-diff", help="Compare two Horizon assessment snapshots")
     p.add_argument("before")
