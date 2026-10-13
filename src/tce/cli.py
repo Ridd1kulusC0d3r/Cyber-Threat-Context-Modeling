@@ -292,6 +292,17 @@ def _horizon_attack_index(offline: bool):
     return AttackIndex.load(sync_if_missing=True)
 
 
+def cmd_horizon_conformance(args):
+    from .conformance import evaluate_horizon_conformance
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    result = evaluate_horizon_conformance(entities)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    if not result["passed"]:
+        raise SystemExit(2)
+
+
 def cmd_horizon_assess(args):
     from .horizon import horizon_assessment, write_assessment
 
@@ -708,6 +719,10 @@ def build_parser():
     p.add_argument("--limit", type=int, default=100)
     p.add_argument("--max-pages", type=int, default=20)
     p.set_defaults(func=cmd_taxii_pull)
+
+    p = sub.add_parser("horizon-conformance", help="Evaluate the optional TCE-Horizon enterprise extension")
+    p.add_argument("case_dir")
+    p.set_defaults(func=cmd_horizon_conformance)
 
     p = sub.add_parser("horizon-assess", help="Map enterprise exposure paths and forecast defensive pressure")
     p.add_argument("case_dir")
