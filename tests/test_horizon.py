@@ -67,6 +67,29 @@ class HorizonTests(unittest.TestCase):
         self.assertTrue(all("defensive_leverage" in row for row in rows))
         self.assertTrue(any(row["node_id"] == "NODE-IDP" for row in rows))
 
+    def test_d3fend_action_enrichment(self):
+        class FakeD3FEND:
+            def lookup_attack(self, technique_id, limit=20):
+                return [{
+                    "defense": {
+                        "value": f"https://d3fend.mitre.org/technique/D3-TEST-{technique_id}"
+                    }
+                }]
+
+        result = horizon_assessment(
+            self.entities,
+            limit=25,
+            attack_index=None,
+            d3fend_index=FakeD3FEND(),
+            budget=5,
+        )
+        refs = {
+            ref
+            for row in result["preemptive_actions"]["candidates"]
+            for ref in row.get("d3fend_refs", [])
+        }
+        self.assertTrue(any("d3fend.mitre.org" in ref for ref in refs))
+
     def test_budget_optimizer_uses_marginal_coverage(self):
         result = horizon_assessment(
             self.entities,
