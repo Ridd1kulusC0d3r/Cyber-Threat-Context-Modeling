@@ -41,6 +41,7 @@ RELATION_TECHNIQUE_HINTS = {
 }
 
 CONFIDENCE = {"low": 0.4, "medium": 0.65, "high": 0.85, "confirmed": 1.0}
+SOURCE_RELIABILITY = {"a": 1.0, "b": 0.85, "c": 0.70, "d": 0.50, "e": 0.30, "f": 0.15}
 
 
 def environments(entities: dict[str, dict]) -> list[dict[str, Any]]:
@@ -189,6 +190,14 @@ def _severity_value(value: Any) -> float:
     }.get(str(value).lower(), 0.5)
 
 
+def _reliability_value(value: Any) -> float:
+    if isinstance(value, (int, float)):
+        return min(max(float(value), 0.0), 1.0)
+    if value is None:
+        return 0.70
+    return SOURCE_RELIABILITY.get(str(value).strip().lower(), 0.70)
+
+
 def _parse_time(value: str | None) -> datetime | None:
     if not value:
         return None
@@ -216,14 +225,21 @@ def _intelligence_pressure(
         if not relevant:
             continue
 
+        expires = _parse_time(signal.get("expires_at"))
+        if expires and now > expires:
+            continue
+
         severity = _severity_value(signal.get("severity", 0.5))
         confidence = CONFIDENCE.get(str(signal.get("confidence", "medium")).lower(), 0.65)
+        reliability = _reliability_value(signal.get("source_reliability"))
+        credibility = _severity_value(signal.get("information_credibility", 1.0))
+        relevance = _severity_value(signal.get("relevance", 1.0))
         observed = _parse_time(signal.get("observed_at"))
         half_life = max(float(signal.get("half_life_days", 30) or 30), 1.0)
         age_days = max((now - observed).total_seconds() / 86400.0, 0.0) if observed else 0.0
         decay = 0.5 ** (age_days / half_life)
         direction = -1.0 if str(signal.get("direction", "increase")).lower() in {"decrease", "negative"} else 1.0
-        value = severity * confidence * decay * direction
+        value = severity * confidence * reliability * credibility * relevance * decay * direction
         total += value
         contributions.append({
             "id": signal.get("id"),
@@ -231,6 +247,9 @@ def _intelligence_pressure(
             "value": round(value, 4),
             "decay": round(decay, 4),
             "confidence": signal.get("confidence", "medium"),
+            "source_reliability": signal.get("source_reliability", "C"),
+            "information_credibility": signal.get("information_credibility", 1.0),
+            "relevance": signal.get("relevance", 1.0),
             "source_ref": signal.get("source_ref"),
         })
     return min(max(total, 0.0), 1.0), contributions
@@ -900,13 +919,29 @@ def horizon_diff(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any
     for path_id in sorted(set(old) & set(new)):
         old_score = float((old[path_id].get("forecast") or {}).get("proposed_score", 0))
         new_score = float((new[path_id].get("forecast") or {}).get("proposed_score", 0))
-        if old_score != new_score:
+        old_components = (old[path_id].get("forecast") or {}).get("components", {}) or {}
+        new_components = (new[path_id].get("forecast") or {}).get("components", {}) or {}
+        component_delta = {}
+        for key in sorted(set(old_components) | set(new_components)):
+            before_value = float(old_components.get(key, 0) or 0)
+            after_value = float(new_components.get(key, 0) or 0)
+            delta = round(after_value - before_value, 4)
+            if delta:
+                component_delta[key] = delta
+
+        if old_score != new_score or component_delta:
             changed.append({
                 "path_id": path_id,
                 "before": old_score,
                 "after": new_score,
                 "delta": round(new_score - old_score, 1),
-                "direction": "increased" if new_score > old_score else "decreased",
+                "direction": "increased" if new_score > old_score else ("decreased" if new_score < old_score else "component-change"),
+                "component_delta": component_delta,
+                "drivers": [
+                    key
+                    for key, value in sorted(component_delta.items(), key=lambda item: abs(item[1]), reverse=True)
+                    if abs(value) >= 0.01
+                ][:4],
             })
 
     old_absence = {row["path_id"] for row in before.get("detection_by_absence", []) or []}
