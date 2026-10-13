@@ -1,0 +1,3 @@
+id,name,status,target_ids,relationship_ids,capabilities,data_components
+TEL-SAAS,SaaS Administrative Audit,healthy,ASSET-EDGE,REL-EXT-EDGE;REL-EDGE-IDP,admin-session;external-admin-session,
+TEL-IDP,Identity Audit,healthy,ASSET-IDP,REL-EDGE-IDP,identity-signin,
