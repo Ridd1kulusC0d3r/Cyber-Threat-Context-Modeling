@@ -358,6 +358,43 @@ def cmd_horizon_actions(args):
     print(json.dumps(result["preemptive_actions"], indent=2, ensure_ascii=False))
 
 
+def cmd_horizon_export_actions(args):
+    from .horizon import horizon_assessment, write_preemptive_actions
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    result = horizon_assessment(
+        entities,
+        environment_id=args.environment_id,
+        max_hops=args.max_hops,
+        limit=args.limit,
+        attack_index=_horizon_attack_index(args.offline),
+        budget=args.budget,
+    )
+    print(write_preemptive_actions(result, args.output, selected_only=not args.all))
+
+
+def cmd_horizon_diff(args):
+    from .horizon import diff_horizon_files
+
+    print(json.dumps(diff_horizon_files(args.before, args.after), indent=2, ensure_ascii=False))
+
+
+def cmd_environment_import_csv(args):
+    from .environment_import import environment_from_csv
+
+    print(environment_from_csv(
+        args.assets,
+        args.relationships,
+        args.output,
+        environment_id=args.environment_id,
+        name=args.name,
+        snapshot_at=args.snapshot_at,
+        controls_csv=args.controls,
+        telemetry_csv=args.telemetry,
+    ))
+
+
 def cmd_horizon_export(args):
     from .horizon import environments, horizon_assessment, write_candidate_scenarios
 
@@ -706,6 +743,33 @@ def build_parser():
     p.add_argument("--budget", type=float, default=8)
     p.add_argument("--offline", action="store_true")
     p.set_defaults(func=cmd_horizon_actions)
+
+    p = sub.add_parser("horizon-export-actions", help="Export review-gated preemptive defensive actions")
+    p.add_argument("case_dir")
+    p.add_argument("--environment-id")
+    p.add_argument("--max-hops", type=int, default=5)
+    p.add_argument("--limit", type=int, default=50)
+    p.add_argument("--budget", type=float, default=8)
+    p.add_argument("--offline", action="store_true")
+    p.add_argument("--all", action="store_true", help="Export all candidates instead of budget-selected actions")
+    p.add_argument("--output", default="horizon-preemptive-actions.yaml")
+    p.set_defaults(func=cmd_horizon_export_actions)
+
+    p = sub.add_parser("horizon-diff", help="Compare two Horizon assessment snapshots")
+    p.add_argument("before")
+    p.add_argument("after")
+    p.set_defaults(func=cmd_horizon_diff)
+
+    p = sub.add_parser("environment-import-csv", help="Build enterprise environment_state YAML from CSV inventories")
+    p.add_argument("--assets", required=True)
+    p.add_argument("--relationships", required=True)
+    p.add_argument("--controls")
+    p.add_argument("--telemetry")
+    p.add_argument("--environment-id", default="ENV-IMPORTED")
+    p.add_argument("--name", default="Imported enterprise environment")
+    p.add_argument("--snapshot-at", default="")
+    p.add_argument("--output", default="environment.yaml")
+    p.set_defaults(func=cmd_environment_import_csv)
 
     p = sub.add_parser("horizon-export", help="Export Horizon paths as review-only TCE scenario candidates")
     p.add_argument("case_dir")
