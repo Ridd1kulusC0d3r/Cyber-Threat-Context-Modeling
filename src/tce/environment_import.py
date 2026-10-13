@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -79,6 +80,8 @@ def environment_from_csv(
     relationships = [_clean(row) for row in _rows(relationships_csv)]
     controls = [_clean(row) for row in _rows(controls_csv)]
     telemetry = [_clean(row) for row in _rows(telemetry_csv)]
+
+    snapshot_at = snapshot_at or datetime.now(timezone.utc).isoformat()
 
     payload = {
         "version": "0.5",
