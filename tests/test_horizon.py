@@ -6,6 +6,7 @@ import yaml
 
 from tce.conformance import evaluate_horizon_conformance
 from tce.environment_import import environment_from_csv
+from tce.horizon_intelligence import redframeworks_signal_candidates
 from tce.horizon import (
     candidate_scenarios,
     diff_horizon_files,
@@ -119,6 +120,34 @@ class HorizonTests(unittest.TestCase):
         self.assertFalse(errors)
         result = horizon_assessment(entities, attack_index=None)
         self.assertTrue(result["derived_environment"])
+
+    def test_redframeworks_candidates_remain_review_gated(self):
+        enrichment = {
+            "contexts": [
+                {
+                    "context_id": "CTX-IDENTITY",
+                    "domain_packs": [
+                        {
+                            "domain_pack_id": "identity",
+                            "found": True,
+                            "adversaries": [
+                                {"id": "apt29", "source_tier": "A"}
+                            ],
+                            "campaigns": [
+                                {"id": "solarwinds-compromise", "source_tier": "A"}
+                            ],
+                            "source": {"updated": "2026-10-01"},
+                        }
+                    ],
+                }
+            ]
+        }
+        rows = redframeworks_signal_candidates(self.entities, enrichment)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["status"], "candidate")
+        self.assertTrue(rows[0]["review_required"])
+        self.assertIn("NODE-IDP", rows[0]["target_ids"])
+        self.assertIn("T1078", rows[0]["technique_ids"])
 
     def test_csv_environment_import(self):
         with tempfile.TemporaryDirectory() as tmp:
