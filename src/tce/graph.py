@@ -25,6 +25,8 @@ REFERENCE_FIELDS = {
     "crown_jewel_ids",
     "threat_context_ids",
     "architecture_ids",
+    "environment_ids",
+    "preemptive_action_ids",
 }
 
 
@@ -63,6 +65,33 @@ def build_graph(entities: dict[str, dict]) -> dict:
                 if target in known:
                     edges.append({"from": entity_id, "to": target, "relation": "contradicts"})
 
+        if wrapped["kind"] == "environment_state":
+            environment_id = entity_id
+            environment_nodes = {}
+            for item in (wrapped["data"].get("assets", []) or []) + (wrapped["data"].get("identities", []) or []):
+                node_id = item.get("id")
+                if not node_id:
+                    continue
+                environment_nodes[node_id] = item
+                nodes.append({
+                    "id": node_id,
+                    "kind": "environment_node",
+                    "label": item.get("name", node_id),
+                })
+                edges.append({"from": environment_id, "to": node_id, "relation": "contains"})
+                for crown_id in item.get("crown_jewel_ids", []) or []:
+                    if crown_id in known:
+                        edges.append({"from": node_id, "to": crown_id, "relation": "supports_crown_jewel"})
+            for rel in wrapped["data"].get("relationships", []) or []:
+                source = rel.get("from")
+                target = rel.get("to")
+                if source in environment_nodes and target in environment_nodes:
+                    edges.append({
+                        "from": source,
+                        "to": target,
+                        "relation": rel.get("type", "related"),
+                    })
+
         if wrapped["kind"] == "architecture":
             architecture_id = entity_id
             for node in wrapped["data"].get("nodes", []) or []:
@@ -74,7 +103,20 @@ def build_graph(entities: dict[str, dict]) -> dict:
                 if isinstance(rel, dict) and rel.get("from") and rel.get("to"):
                     edges.append({"from": rel["from"], "to": rel["to"], "relation": rel.get("type", "related")})
 
-    return {"nodes": nodes, "edges": edges}
+    unique_nodes = {}
+    for node in nodes:
+        unique_nodes.setdefault(node["id"], node)
+
+    unique_edges = []
+    seen_edges = set()
+    for edge in edges:
+        key = (edge["from"], edge["to"], edge.get("relation", "related"))
+        if key in seen_edges:
+            continue
+        seen_edges.add(key)
+        unique_edges.append(edge)
+
+    return {"nodes": list(unique_nodes.values()), "edges": unique_edges}
 
 
 def to_mermaid(graph: dict) -> str:

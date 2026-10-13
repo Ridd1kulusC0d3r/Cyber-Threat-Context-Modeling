@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/schemas/preemptive-action.schema.json",
+  "title": "TCE Preemptive Defensive Action",
+  "type": "object",
+  "required": [
+    "version",
+    "preemptive_action"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "preemptive_action": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "action_class",
+        "status",
+        "review_required"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^PA-[A-Za-z0-9._-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action_class": {
+          "type": "string"
+        },
+        "target_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "relationship_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "path_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "crown_jewel_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "estimated_risk_reduction": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "approved",
+            "implemented",
+            "validated",
+            "rejected"
+          ]
+        },
+        "review_required": {
+          "type": "boolean"
+        },
+        "technique_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "d3fend_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "defensive_terms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,19 @@
+version: "0.5"
+preemptive_action:
+  id: PA-001
+  name: ""
+  action_class: ""
+  target_ids: []
+  relationship_ids: []
+  path_ids: []
+  crown_jewel_ids: []
+  defensive_terms: []
+  technique_ids: []
+  d3fend_refs: []
+  estimated_risk_reduction: 0
+  cost: 1
+  status: proposed
+  review_required: true
+  rationale: ""
+  owner: ""
+  review_date: ""

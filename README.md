@@ -1,13 +1,13 @@
 # Cyber Threat Context Modeling
 
-> **Threat Context Engineering (TCE)**: from business mission and crown jewels to attack paths, telemetry, detections, validation, and continuous threat intelligence.
+> **Threat Context Engineering (TCE)**: from business mission and crown jewels to enterprise exposure paths, threat intelligence, telemetry, detections, validation, preemptive action, and continuous defensive decisions.
 
 [![Method](https://img.shields.io/badge/method-TCE-0ea5a4)](#the-method)
 [![ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK-red)](https://attack.mitre.org/)
 [![D3FEND](https://img.shields.io/badge/MITRE-D3FEND-1f6f67)](https://d3fend.mitre.org/)
 [![Attack Flow](https://img.shields.io/badge/CTID-Attack%20Flow-334155)](https://center-for-threat-informed-defense.github.io/attack-flow/)
 [![Docs](https://img.shields.io/badge/docs-MkDocs-4051b5)](./docs/)
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/colab/TCE_v0_4_Detection_Validation_Workbench.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/colab/TCE_v0_5_Horizon_Workbench.ipynb)
 
 ## Why this repository exists
 
@@ -25,12 +25,13 @@ This is the repository's **Zero-Point Detection** principle.
 flowchart LR
     A[Mission & Crown Jewels] --> B[Architecture & Trust Boundaries]
     B --> C[Threat Context]
-    C --> D[Attack Paths / Attack Flow]
+    C --> Z[Horizon Environment State]
+    Z --> D[Candidate Enterprise Paths / Attack Flow]
     D --> E[Telemetry Contract]
     E --> F[Detection Hypotheses]
     F --> G[Analytics & Correlation]
-    G --> H[Use Cases / Cases]
-    H --> I[Validation]
+    G --> U[Use Cases / Cases]
+    U --> I[Validation]
     I --> J[CTI Feedback]
     J --> C
 ~~~
@@ -190,6 +191,7 @@ The CLI currently provides semantic validation, priority scoring, graph export, 
 ## First-class analytical objects
 
 - **Threat Context** — the lens that connects mission, crown jewels, architecture, external CTI, behavior, exposure, defensive requirements and time.
+- **Environment State** — a time-stamped enterprise graph of assets, identities, trust, controls, telemetry, vulnerability and accepted intelligence signals.
 - **Intelligence Requirement** — the question tied to a decision.
 - **Evidence** — observed, assessed, inferred, assumed, or unknown information with provenance.
 - **Threat Hypothesis** — a falsifiable proposition with supporting and contradicting evidence.
@@ -200,6 +202,7 @@ The CLI currently provides semantic validation, priority scoring, graph export, 
 - **Validation** — evidence that a control or detection behaves as expected.
 - **Intelligence Gap** — an unknown turned into managed collection work.
 - **Decision** — the defensive action connected back to the analytical chain.
+- **Preemptive Action** — a review-gated defensive proposal linking controls to enterprise paths, crown jewels, estimated reduction and cost.
 
 
 ## TCE v0.3 — AI + operational knowledge graph
@@ -328,6 +331,59 @@ Threat Context
 
 Validation operates on defensive event fixtures and log-replay data. The repository does not need command-level attack execution to prove that a detection model is internally consistent.
 
+## TCE v0.5 — Horizon: predictive and preemptive enterprise defense
+
+v0.5 adds **TCE Horizon**, the enterprise layer that moves threat modeling beyond a single application.
+
+Horizon models the current environment as a directed defensive graph of assets, identities, trust relationships, crown jewels, controls, telemetry, vulnerability pressure and accepted intelligence signals. It then produces bounded, review-only candidate paths toward crown jewels and explains why those paths deserve attention.
+
+~~~text
+Enterprise State
+  -> Exposure / Trust Graph
+  -> Candidate Paths
+  -> Forecast Pressure
+  -> Risk-weighted Choke Points
+  -> Detection by Absence
+  -> Preemptive Action Candidates
+  -> Analyst Review
+  -> normal TCE Scenario / Telemetry / Detection / Validation / Decision
+~~~
+
+Forecast pressure is **not attack probability**. Proposed machine scores remain separate from analyst-accepted scores.
+
+~~~bash
+tce horizon-conformance examples/cases/enterprise-identity
+
+tce horizon-assess examples/cases/enterprise-identity --offline
+tce horizon-chokepoints examples/cases/enterprise-identity --offline
+tce horizon-absence examples/cases/enterprise-identity --offline
+tce horizon-actions examples/cases/enterprise-identity --budget 8 --offline
+
+tce horizon-export examples/cases/enterprise-identity \
+  --offline --output horizon-scenario-candidates.yaml
+
+tce horizon-export-actions examples/cases/enterprise-identity \
+  --budget 8 --offline --output horizon-preemptive-actions.yaml
+~~~
+
+### Detection by Absence
+
+Horizon automatically compares the telemetry needed by a candidate path with the telemetry modeled as actually available. When ATT&CK enrichment is enabled, it also compares current ATT&CK Detection Strategy / Data Component requirements through TCE's existing ATT&CK STIX index.
+
+Blind paths enter the ordinary Detection Backlog as telemetry-blind-path work items.
+
+### Predictive intelligence without pretending to know the future
+
+Accepted intelligence signals can be weighted by severity, analytical confidence, source reliability, information credibility, context relevance and time decay. Vulnerability pressure accepts KEV and EPSS-ready inputs.
+
+External intelligence remains review-gated. Candidate intelligence never becomes organization-specific attribution simply because an API returned JSON with great confidence.
+
+### Preemptive action optimization
+
+The defensive action engine proposes controls against the paths they affect and can select a portfolio under a cost budget using marginal path coverage. Overlapping actions get diminishing incremental benefit rather than double-counting the same modeled risk.
+
+See [TCE Horizon](docs/horizon.md), [Enterprise Environment State](docs/environment-state.md), and [Detection by Absence](docs/detection-by-absence.md).
+
 ## Colab web workbench
 
 TCE now includes a lightweight dark frontend designed to run **inside the same Colab VM** on port `3000`.
@@ -342,6 +398,7 @@ The Colab notebook starts it automatically and prints a proxied `*.prod.colab.de
 The UI provides:
 
 - case health and summary metrics;
+- Horizon enterprise paths, risk-weighted choke points, Detection by Absence and preemptive action candidates;
 - prioritized P0–P3 scenarios;
 - detection coverage and defensive choke points;
 - hypotheses, gaps and decisions;
@@ -398,9 +455,9 @@ The project is intended for defensive architecture, threat-informed detection, a
 
 ## Status
 
-**v0.4.0 — Detection & Validation as Code**
+**v0.5.0 — Horizon: predictive and preemptive enterprise defense**
 
-The method now carries a prioritized Threat Context and attack path into executable Telemetry Contracts, platform-neutral Detection Specifications, safe validation fixtures, detection backlog generation, historical coverage/drift tracking and conformance checks. RedFrameworks, ATT&CK, D3FEND, Attack Flow, OpenCTI, TAXII, the operational knowledge graph, GLiNER and Qwen remain integrated around that evidence boundary.
+The method now adds an enterprise Environment State and Horizon layer over the existing TCE pipeline. It can discover review-only exposure paths toward crown jewels, combine accepted time-decayed intelligence with vulnerability, control and telemetry context, calculate risk-weighted choke points, find Detection-by-Absence blind spots, propose budget-aware preemptive defensive actions, and feed approved candidates back into the normal detection and validation lifecycle. RedFrameworks, ATT&CK, D3FEND, Attack Flow, OpenCTI, TAXII, the operational knowledge graph, GLiNER and Qwen remain integrated around the evidence boundary.
 
 ## Contributing
 

@@ -56,6 +56,8 @@ Not every case requires actor attribution, campaign attribution, AI assistance, 
 | Validation | VAL- | yes for validation conformance |
 | Intelligence Gap | GAP- | recommended |
 | Decision | DEC- | recommended |
+| Environment State | ENV- | TCE-Horizon extension |
+| Preemptive Action | PA- | TCE-Horizon extension |
 
 ## 5. Conformance levels
 
@@ -101,7 +103,27 @@ AI SHALL NOT silently alter immutable evidence or automatically promote candidat
 
 TCE is designed for defensive architecture, detection engineering, threat intelligence and authorized validation. A conforming implementation does not require command-level adversary execution procedures.
 
-## 11. Draft stabilization work
+## 11. TCE-Horizon extension
+
+TCE-Horizon is an optional enterprise extension for predictive and preemptive defensive analysis.
+
+A Horizon-conformant implementation SHALL preserve the normal TCE evidence boundary and SHALL NOT treat a machine-generated path score as attack probability or accepted analyst judgment.
+
+The extension introduces:
+
+- a time-stamped Environment State containing assets, identities, trust/dependency relationships, controls, telemetry, vulnerability signals and intelligence signals;
+- bounded candidate-path discovery from modeled exposure points toward crown-jewel nodes;
+- a proposed forecast-pressure score distinct from analyst-accepted scoring;
+- risk-weighted choke-point analysis;
+- Detection by Absence across local telemetry requirements and optional ATT&CK Data Components;
+- review-gated Preemptive Action candidates;
+- explainable drift between Horizon snapshots.
+
+Only intelligence signals in an explicitly accepted/active/validated/confirmed lifecycle state SHOULD affect forecast pressure. Candidate external intelligence MUST remain non-authoritative until analyst review.
+
+A Horizon implementation MUST NOT automatically execute defensive changes merely because an optimizer recommends them.
+
+## 12. Draft stabilization work
 
 Before final 1.0:
 

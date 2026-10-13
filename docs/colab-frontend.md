@@ -14,6 +14,7 @@ The Colab notebook performs this automatically and asks Colab for the proxied UR
 The current UI contains:
 
 - **Visão geral** — crown jewels, hypotheses, scenarios, P0/P1 counts, gaps, detections, coverage, choke points and decisions.
+- **Horizonte** — enterprise candidate paths, H0/H1 forecast pressure, risk-weighted choke points, Detection by Absence and review-gated preemptive actions.
 - **Engenharia** — Telemetry Health, Detection Backlog and deterministic Validation Harness.
 - **Cenários** — priority band, weighted score, confidence and open gaps.
 - **Inteligência** — threat hypotheses with analytical state and confidence.
@@ -30,7 +31,8 @@ flowchart LR
     F --> C[TCE Case YAML/JSON]
     F --> A[ATT&CK / D3FEND cache]
     F --> AI[GLiNER + Qwen]
-    F --> G[TCE Graph]
+    F --> H[TCE Horizon]
+    H --> G[TCE Graph]
     F --> E[STIX / Navigator / Attack Flow]
 ~~~
 

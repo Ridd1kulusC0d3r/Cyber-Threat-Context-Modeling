@@ -1,0 +1,2 @@
+id,kind,scope,target_ids,technique_ids,severity,confidence,source_reliability,information_credibility,relevance,direction,status,observed_at,half_life_days,source_ref
+SIG-DEMO-001,credential-exposure,targeted,IDN-EXT,T1078,high,medium,C,0.8,1.0,increase,candidate,2026-10-10T00:00:00Z,21,synthetic-example

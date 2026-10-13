@@ -86,16 +86,42 @@
 - [x] Six executable reference cases
 - [x] Executable TCE conformance levels
 
-## v0.5 — Analyst workspace
+## v0.5 — Horizon: predictive and preemptive enterprise defense
+
+- [x] Enterprise Environment State object and schema
+- [x] Asset, identity, trust/dependency, control and telemetry model
+- [x] CSV environment bootstrap
+- [x] Bounded enterprise exposure-path discovery
+- [x] Proposed versus analyst-accepted forecast boundary
+- [x] Time-decayed intelligence pressure with source quality
+- [x] Vulnerability pressure with KEV / EPSS-ready inputs
+- [x] Risk-weighted enterprise choke points
+- [x] Detection by Absence
+- [x] ATT&CK Data Component enrichment through the existing STIX index
+- [x] Detection Backlog integration for blind paths
+- [x] Preemptive defensive action catalog
+- [x] Budget-aware marginal path-coverage optimizer
+- [x] Review-only TCE scenario candidate export
+- [x] Review-only preemptive-action export
+- [x] Horizon snapshot diff with explainable score drivers
+- [x] Architecture fallback for cases without an Environment State
+- [x] TCE-Horizon extension conformance
+- [x] Horizon web-workbench view
+- [x] Synthetic enterprise identity reference environment
+- [x] Unit and API tests
+
+## v0.6 — Analyst workspace
 
 - [ ] Interactive web case editor
-- [ ] Attack-path explorer
-- [ ] Crown-jewel view
-- [ ] Choke-point explorer
+- [x] Horizon path explorer
+- [ ] Full accepted-scenario Attack Path editor
+- [ ] Crown-jewel dependency view
+- [x] Risk-weighted choke-point explorer
 - [ ] Evidence and hypothesis board
-- [ ] Coverage dashboard
+- [x] Coverage / Detection by Absence dashboard
 - [ ] Decision Trace explorer
 - [ ] Import/export UI
+- [ ] Analyst workflow for accepting/rejecting Horizon candidates
 
 ## v1.0 — Reproducible TCE
 

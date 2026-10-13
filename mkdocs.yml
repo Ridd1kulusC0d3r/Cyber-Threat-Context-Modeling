@@ -62,6 +62,10 @@ nav:
       - Telemetry Schema Bridges: telemetry-schema-bridges.md
       - Continuous Threat Context: continuous-threat-context.md
       - Reference Cases: reference-cases.md
+  - TCE v0.5 Horizon:
+      - Horizon Method: horizon.md
+      - Enterprise Environment State: environment-state.md
+      - Detection by Absence: detection-by-absence.md
   - Specification:
       - TCE 1.0 Draft: specification-draft.md
       - Conformance: conformance.md

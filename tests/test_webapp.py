@@ -35,6 +35,14 @@ class WebAppTests(unittest.TestCase):
         self.assertGreaterEqual(data["assessment"]["modeled_contexts"], 3)
         self.assertGreaterEqual(len(data["catalog"]), 20)
 
+    def test_horizon(self):
+        response = self.client.get("/api/horizon")
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["environment_id"], "ENV-ENTERPRISE")
+        self.assertGreater(payload["summary"]["candidate_paths"], 0)
+        self.assertIn("preemptive_actions", payload)
+
     def test_detection_backlog(self):
         response = self.client.get("/api/detection/backlog")
         self.assertEqual(response.status_code, 200)

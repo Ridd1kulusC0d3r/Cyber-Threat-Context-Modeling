@@ -21,6 +21,8 @@ SINGULAR_KEYS = {
     "decision": "decision",
     "validation": "validation",
     "threat_context": "threat_context",
+    "environment_state": "environment_state",
+    "preemptive_action": "preemptive_action",
 }
 
 PLURAL_KEYS = {
@@ -38,6 +40,8 @@ PLURAL_KEYS = {
     "decisions": "decision",
     "validations": "validation",
     "threat_contexts": "threat_context",
+    "environment_states": "environment_state",
+    "preemptive_actions": "preemptive_action",
 }
 
 

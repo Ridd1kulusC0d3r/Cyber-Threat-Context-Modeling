@@ -97,3 +97,49 @@ def evaluate_conformance(entities: dict[str, dict], level: str = "operational") 
         "checks": checks,
         "failed_checks": [row["check"] for row in failed],
     }
+
+
+def evaluate_horizon_conformance(entities: dict[str, dict]) -> dict[str, Any]:
+    checks: list[dict[str, Any]] = []
+
+    def check(name: str, passed: bool, detail: str):
+        checks.append({"check": name, "passed": bool(passed), "detail": detail})
+
+    environments = _kind(entities, "environment_state")
+    check("horizon.environment", bool(environments), "At least one enterprise Environment State exists.")
+
+    if environments:
+        environment = environments[0]
+        nodes = (environment.get("assets", []) or []) + (environment.get("identities", []) or [])
+        entry_nodes = [
+            item for item in nodes
+            if item.get("entry_point")
+            or str(item.get("internet_exposure", "")).lower() == "direct"
+            or item.get("external") is True
+        ]
+        crown_nodes = [item for item in nodes if item.get("crown_jewel_ids")]
+        signals = environment.get("intelligence_signals", []) or []
+
+        check("horizon.entry-points", bool(entry_nodes), "At least one modeled entry/exposure node exists.")
+        check("horizon.crown-jewel-nodes", bool(crown_nodes), "At least one environment node maps to a Crown Jewel.")
+        check("horizon.relationships", bool(environment.get("relationships")), "Enterprise trust/dependency relationships are modeled.")
+        check("horizon.controls", bool(environment.get("controls")), "Defensive controls are modeled with effectiveness.")
+        check("horizon.telemetry", bool(environment.get("telemetry_sources")), "Telemetry sources are modeled for absence analysis.")
+        check(
+            "horizon.signal-status",
+            all(str(signal.get("status", "candidate")).lower() in {"candidate", "accepted", "active", "validated", "confirmed", "expired"} for signal in signals),
+            "Every intelligence signal has an explicit review lifecycle state.",
+        )
+        check(
+            "horizon.accepted-forecast-boundary",
+            isinstance(environment.get("accepted_forecasts", {}), dict),
+            "Accepted analyst forecasts are stored separately from proposed scores.",
+        )
+
+    failed = [row for row in checks if not row["passed"]]
+    return {
+        "extension": "TCE-Horizon",
+        "passed": not failed,
+        "checks": checks,
+        "failed_checks": [row["check"] for row in failed],
+    }

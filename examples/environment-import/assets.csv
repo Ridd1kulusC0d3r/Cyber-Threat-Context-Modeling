@@ -1,0 +1,4 @@
+record_kind,id,name,type,trust_zone,internet_exposure,entry_point,crown_jewel_ids,control_ids,telemetry_requirements,technology_tags,owner
+asset,ASSET-EDGE,Public SaaS Admin,saas,edge,direct,true,,CTRL-AUTH,admin-session;config-change,saas;admin,platform-team
+asset,ASSET-IDP,Identity Control Plane,identity,identity-control,indirect,false,CJ-001,CTRL-AUTH;CTRL-PRIV,identity-signin;config-change,identity;control-plane,identity-team
+identity,IDN-EXT,Delegated External Admin,external,external,direct,true,,CTRL-AUTH,external-admin-session,third-party,platform-team

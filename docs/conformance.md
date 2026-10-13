@@ -16,6 +16,16 @@ Run:
     tce conformance CASE_DIR --level validated
     tce conformance CASE_DIR --level operational
 
+## Optional TCE-Horizon extension
+
+TCE-Horizon is orthogonal to the linear Core → Detection → Validated → Operational levels.
+
+Run:
+
+    tce horizon-conformance CASE_DIR
+
+The extension checks for an enterprise Environment State, entry/exposure points, crown-jewel mappings, trust/dependency relationships, defensive controls, telemetry sources, explicit intelligence-signal lifecycle states, and the separation of accepted forecasts from proposed machine scores.
+
 ## Current repository checks
 
 The CI pipeline additionally verifies:

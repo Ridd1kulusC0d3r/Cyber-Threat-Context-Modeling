@@ -1,0 +1,2 @@
+id,target_id,cve,severity,kev,epss,note
+VULN-DEMO-001,ASSET-EDGE,,medium,false,0.15,Synthetic example for Horizon import

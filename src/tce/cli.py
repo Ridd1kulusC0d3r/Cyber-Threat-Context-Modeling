@@ -285,6 +285,185 @@ def cmd_taxii_pull(args):
     }, indent=2))
 
 
+def _horizon_attack_index(offline: bool):
+    if offline:
+        return None
+    from .standards.attack import AttackIndex
+    return AttackIndex.load(sync_if_missing=True)
+
+
+def _horizon_d3fend_index(offline: bool):
+    if offline:
+        return None
+    from .standards.d3fend import D3FENDIndex
+    return D3FENDIndex.load(sync_if_missing=True)
+
+
+def cmd_horizon_conformance(args):
+    from .conformance import evaluate_horizon_conformance
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    result = evaluate_horizon_conformance(entities)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    if not result["passed"]:
+        raise SystemExit(2)
+
+
+def cmd_horizon_assess(args):
+    from .horizon import horizon_assessment, write_assessment
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    attack = _horizon_attack_index(args.offline)
+    result = horizon_assessment(
+        entities,
+        environment_id=args.environment_id,
+        max_hops=args.max_hops,
+        limit=args.limit,
+        attack_index=attack,
+        d3fend_index=_horizon_d3fend_index(args.offline),
+        budget=args.budget,
+    )
+    if args.output:
+        print(write_assessment(result, args.output))
+    else:
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+
+
+def cmd_horizon_absence(args):
+    from .horizon import horizon_assessment
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    result = horizon_assessment(
+        entities,
+        environment_id=args.environment_id,
+        max_hops=args.max_hops,
+        limit=args.limit,
+        attack_index=_horizon_attack_index(args.offline),
+    )
+    print(json.dumps(result["detection_by_absence"], indent=2, ensure_ascii=False))
+
+
+def cmd_horizon_chokepoints(args):
+    from .horizon import horizon_assessment
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    result = horizon_assessment(
+        entities,
+        environment_id=args.environment_id,
+        max_hops=args.max_hops,
+        limit=args.limit,
+        attack_index=_horizon_attack_index(args.offline),
+    )
+    print(json.dumps(result["choke_points"], indent=2, ensure_ascii=False))
+
+
+def cmd_horizon_actions(args):
+    from .horizon import horizon_assessment
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    result = horizon_assessment(
+        entities,
+        environment_id=args.environment_id,
+        max_hops=args.max_hops,
+        limit=args.limit,
+        attack_index=_horizon_attack_index(args.offline),
+        d3fend_index=_horizon_d3fend_index(args.offline),
+        budget=args.budget,
+    )
+    print(json.dumps(result["preemptive_actions"], indent=2, ensure_ascii=False))
+
+
+def cmd_horizon_export_actions(args):
+    from .horizon import horizon_assessment, write_preemptive_actions
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    result = horizon_assessment(
+        entities,
+        environment_id=args.environment_id,
+        max_hops=args.max_hops,
+        limit=args.limit,
+        attack_index=_horizon_attack_index(args.offline),
+        d3fend_index=_horizon_d3fend_index(args.offline),
+        budget=args.budget,
+    )
+    print(write_preemptive_actions(result, args.output, selected_only=not args.all))
+
+
+def cmd_horizon_intel_candidates(args):
+    from .horizon_intelligence import (
+        load_enrichment,
+        write_redframeworks_signal_candidates,
+    )
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    enrichment = load_enrichment(args.enrichment)
+    print(write_redframeworks_signal_candidates(
+        entities,
+        enrichment,
+        args.output,
+    ))
+
+
+def cmd_horizon_diff(args):
+    from .horizon import diff_horizon_files
+
+    print(json.dumps(diff_horizon_files(args.before, args.after), indent=2, ensure_ascii=False))
+
+
+def cmd_environment_import_csv(args):
+    from .environment_import import environment_from_csv
+
+    print(environment_from_csv(
+        args.assets,
+        args.relationships,
+        args.output,
+        environment_id=args.environment_id,
+        name=args.name,
+        snapshot_at=args.snapshot_at,
+        controls_csv=args.controls,
+        telemetry_csv=args.telemetry,
+        vulnerabilities_csv=args.vulnerabilities,
+        intelligence_csv=args.intelligence,
+    ))
+
+
+def cmd_horizon_export(args):
+    from .horizon import (
+        derive_environment_from_architecture,
+        environments,
+        horizon_assessment,
+        write_candidate_scenarios,
+    )
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+    envs = environments(entities)
+    if args.environment_id:
+        envs = [item for item in envs if item.get("id") == args.environment_id]
+    if not envs:
+        derived = derive_environment_from_architecture(entities)
+        if derived and not args.environment_id:
+            envs = [derived]
+        else:
+            raise SystemExit("No matching environment_state or derivable architecture found")
+
+    result = horizon_assessment(
+        entities,
+        environment_id=args.environment_id,
+        max_hops=args.max_hops,
+        limit=args.limit,
+        attack_index=_horizon_attack_index(args.offline),
+    )
+    print(write_candidate_scenarios(result, envs[0], args.output))
+
+
 def cmd_conformance(args):
     from .conformance import evaluate_conformance
 
@@ -577,6 +756,89 @@ def build_parser():
     p.add_argument("--limit", type=int, default=100)
     p.add_argument("--max-pages", type=int, default=20)
     p.set_defaults(func=cmd_taxii_pull)
+
+    p = sub.add_parser("horizon-conformance", help="Evaluate the optional TCE-Horizon enterprise extension")
+    p.add_argument("case_dir")
+    p.set_defaults(func=cmd_horizon_conformance)
+
+    p = sub.add_parser("horizon-assess", help="Map enterprise exposure paths and forecast defensive pressure")
+    p.add_argument("case_dir")
+    p.add_argument("--environment-id")
+    p.add_argument("--max-hops", type=int, default=5)
+    p.add_argument("--limit", type=int, default=50)
+    p.add_argument("--budget", type=float)
+    p.add_argument("--offline", action="store_true", help="Skip ATT&CK data-component enrichment")
+    p.add_argument("--output")
+    p.set_defaults(func=cmd_horizon_assess)
+
+    p = sub.add_parser("horizon-absence", help="Find candidate paths with missing telemetry or ATT&CK data components")
+    p.add_argument("case_dir")
+    p.add_argument("--environment-id")
+    p.add_argument("--max-hops", type=int, default=5)
+    p.add_argument("--limit", type=int, default=50)
+    p.add_argument("--offline", action="store_true")
+    p.set_defaults(func=cmd_horizon_absence)
+
+    p = sub.add_parser("horizon-chokepoints", help="Rank enterprise nodes by risk-weighted path convergence")
+    p.add_argument("case_dir")
+    p.add_argument("--environment-id")
+    p.add_argument("--max-hops", type=int, default=5)
+    p.add_argument("--limit", type=int, default=50)
+    p.add_argument("--offline", action="store_true")
+    p.set_defaults(func=cmd_horizon_chokepoints)
+
+    p = sub.add_parser("horizon-actions", help="Propose review-gated defensive actions and optimize within a budget")
+    p.add_argument("case_dir")
+    p.add_argument("--environment-id")
+    p.add_argument("--max-hops", type=int, default=5)
+    p.add_argument("--limit", type=int, default=50)
+    p.add_argument("--budget", type=float, default=8)
+    p.add_argument("--offline", action="store_true")
+    p.set_defaults(func=cmd_horizon_actions)
+
+    p = sub.add_parser("horizon-export-actions", help="Export review-gated preemptive defensive actions")
+    p.add_argument("case_dir")
+    p.add_argument("--environment-id")
+    p.add_argument("--max-hops", type=int, default=5)
+    p.add_argument("--limit", type=int, default=50)
+    p.add_argument("--budget", type=float, default=8)
+    p.add_argument("--offline", action="store_true")
+    p.add_argument("--all", action="store_true", help="Export all candidates instead of budget-selected actions")
+    p.add_argument("--output", default="horizon-preemptive-actions.yaml")
+    p.set_defaults(func=cmd_horizon_export_actions)
+
+    p = sub.add_parser("horizon-intel-candidates", help="Convert review-gated RedFrameworks context enrichment into Horizon signal candidates")
+    p.add_argument("case_dir")
+    p.add_argument("enrichment")
+    p.add_argument("--output", default="horizon-intelligence-candidates.yaml")
+    p.set_defaults(func=cmd_horizon_intel_candidates)
+
+    p = sub.add_parser("horizon-diff", help="Compare two Horizon assessment snapshots")
+    p.add_argument("before")
+    p.add_argument("after")
+    p.set_defaults(func=cmd_horizon_diff)
+
+    p = sub.add_parser("environment-import-csv", help="Build enterprise environment_state YAML from CSV inventories")
+    p.add_argument("--assets", required=True)
+    p.add_argument("--relationships", required=True)
+    p.add_argument("--controls")
+    p.add_argument("--telemetry")
+    p.add_argument("--vulnerabilities")
+    p.add_argument("--intelligence")
+    p.add_argument("--environment-id", default="ENV-IMPORTED")
+    p.add_argument("--name", default="Imported enterprise environment")
+    p.add_argument("--snapshot-at", default="")
+    p.add_argument("--output", default="environment.yaml")
+    p.set_defaults(func=cmd_environment_import_csv)
+
+    p = sub.add_parser("horizon-export", help="Export Horizon paths as review-only TCE scenario candidates")
+    p.add_argument("case_dir")
+    p.add_argument("--environment-id")
+    p.add_argument("--max-hops", type=int, default=5)
+    p.add_argument("--limit", type=int, default=25)
+    p.add_argument("--offline", action="store_true")
+    p.add_argument("--output", default="horizon-scenario-candidates.yaml")
+    p.set_defaults(func=cmd_horizon_export)
 
     p = sub.add_parser("conformance", help="Evaluate a case against TCE conformance levels")
     p.add_argument("case_dir")
