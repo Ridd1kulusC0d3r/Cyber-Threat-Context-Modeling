@@ -73,6 +73,24 @@
         },
         "review_required": {
           "type": "boolean"
+        },
+        "technique_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "d3fend_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "defensive_terms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "additionalProperties": true
