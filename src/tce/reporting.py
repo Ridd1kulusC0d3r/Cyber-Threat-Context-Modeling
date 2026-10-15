@@ -54,7 +54,7 @@ def markdown_report(entities: dict[str, dict], audience: str = "all") -> str:
     horizon = _horizon(entities)
 
     lines = [
-        f"# TCE {audience.title()} Report" if audience != "all" else "# TCE Case Report",
+        f"# TCEM {audience.title()} Report" if audience != "all" else "# TCEM Case Report",
         "",
         f"Generated: {datetime.now(timezone.utc).isoformat()}",
         "",
@@ -340,7 +340,7 @@ def dashboard_html(entities: dict[str, dict]) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TCE Analyst Dashboard</title>
+<title>TCEM Analyst Dashboard</title>
 <style>
 body {{ font-family: Inter, system-ui, sans-serif; margin:0; background:#f5f7f8; color:#172024; }}
 main {{ max-width:1200px; margin:auto; padding:32px; }}
@@ -359,8 +359,8 @@ th {{ color:#53656b; font-size:13px; }}
 </head>
 <body>
 <main>
-<h1>Threat Context Engineering</h1>
-<p class="sub">Analyst attention dashboard generated from the TCE case model.</p>
+<h1>TCEM — Threat Context Engineering Method</h1>
+<p class="sub">Analyst attention dashboard generated from the TCEM case model.</p>
 <div class="grid">{cards}</div>
 {horizon_section}
 <section><h2>Threat contexts</h2><table><thead><tr><th>ID</th><th>Lens</th><th>Confidence</th><th>Relevance</th></tr></thead><tbody>{context_rows}</tbody></table></section>
