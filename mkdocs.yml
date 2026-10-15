@@ -1,12 +1,12 @@
-site_name: Cyber Threat Context Modeling
-site_description: Threat Context Engineering — from crown jewels to defensive decisions
+site_name: TCEM — Threat Context Engineering Method
+site_description: TCEM formalizes Threat Context Engineering from threat context to defensive decisions
 repo_url: https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling
 repo_name: Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling
 
 theme:
   name: material
-  logo: assets/tce-mark.svg
-  favicon: assets/tce-mark.svg
+  logo: assets/tcem-mark.svg
+  favicon: assets/tcem-mark.svg
   font: false
   palette:
     - scheme: slate
@@ -39,12 +39,14 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Method:
+  - TCEM Method:
+      - Naming & Architecture: nomenclature.md
       - Principles: principles.md
       - Analyst Workflow: analyst-workflow.md
-      - Methodology: methodology.md
+      - TCEM Method: methodology.md
       - Context Model: context-model.md
-      - Threat Context Matrix: threat-context-matrix.md
+      - TCEM Operational Matrix: operational-matrix.md
+      - Context Lens Layer: threat-context-matrix.md
       - RedFrameworks v6 Context: redframeworks-context.md
       - Knowledge Graph: knowledge-graph.md
       - Interoperability: interoperability.md
@@ -59,9 +61,9 @@ nav:
       - Defensive Choke Points: choke-points.md
       - Defensive Engineering: defensive-engineering.md
       - Telemetry Contract: telemetry-contract.md
-      - Detection Engineering: detection-engineering.md
+      - TCEM Detection: detection-engineering.md
       - Coverage Model: coverage-model.md
-  - TCE v0.3:
+  - TCEM v0.3:
       - Colab AI Workbench: ai-colab.md
       - Colab Web Workbench: colab-frontend.md
       - Standards Automation: standards-automation.md
@@ -71,17 +73,17 @@ nav:
       - OpenCTI Bidirectional Bridge: opencti-sync.md
       - Entity Resolution: entity-resolution.md
       - TAXII Ingestion: taxii-ingest.md
-  - TCE v0.4:
+  - TCEM v0.4:
       - Detection & Validation as Code: detection-validation-as-code.md
       - Telemetry Schema Bridges: telemetry-schema-bridges.md
       - Continuous Threat Context: continuous-threat-context.md
       - Reference Cases: reference-cases.md
-  - TCE v0.5 Horizon:
+  - TCEM v0.5 Horizon:
       - Horizon Method: horizon.md
       - Enterprise Environment State: environment-state.md
       - Detection by Absence: detection-by-absence.md
   - Specification:
-      - TCE 1.0 Draft: specification-draft.md
+      - TCEM Specification 1.0 Draft: specification-draft.md
       - Conformance: conformance.md
   - Security & Data Handling:
       - Public Repository Data Safety: public-repository-safety.md
