@@ -5,9 +5,22 @@ repo_name: Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling
 
 theme:
   name: material
+  logo: assets/tce-mark.svg
+  favicon: assets/tce-mark.svg
+  font: false
+  palette:
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
   features:
     - navigation.sections
-    - navigation.expand
+    - navigation.tabs
+    - navigation.tracking
     - navigation.top
     - content.code.copy
     - content.tabs.link
@@ -15,6 +28,7 @@ theme:
 markdown_extensions:
   - admonition
   - attr_list
+  - md_in_html
   - tables
   - pymdownx.details
   - pymdownx.superfences:
@@ -76,3 +90,6 @@ nav:
       - Decision Trace: decision-trace.md
       - Reporting: reporting.md
       - Analyst Dashboard: dashboard.md
+
+extra_css:
+  - stylesheets/extra.css

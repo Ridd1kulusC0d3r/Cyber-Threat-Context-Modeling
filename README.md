@@ -1,13 +1,39 @@
-# Cyber Threat Context Modeling
+<p align="center">
+  <img src="docs/assets/tce-cover.svg" alt="Threat Context Engineering — from mission to evidence-backed defense" width="100%">
+</p>
 
-> **Threat Context Engineering (TCE)**: from business mission and crown jewels to enterprise exposure paths, threat intelligence, telemetry, detections, validation, preemptive action, and continuous defensive decisions.
+<h1 align="center">Cyber Threat Context Modeling</h1>
+<p align="center"><strong>Connect threat intelligence, architecture and detection in one traceable decision system.</strong></p>
+<p align="center">
+  <a href="#quick-start">Get started</a> ·
+  <a href="docs/methodology.md">Explore the method</a> ·
+  <a href="docs/horizon.md">Discover Horizon</a> ·
+  <a href="docs/reference-cases.md">Run a reference case</a>
+</p>
 
-[![Method](https://img.shields.io/badge/method-TCE-0ea5a4)](#the-method)
-[![ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK-red)](https://attack.mitre.org/)
-[![D3FEND](https://img.shields.io/badge/MITRE-D3FEND-1f6f67)](https://d3fend.mitre.org/)
-[![Attack Flow](https://img.shields.io/badge/CTID-Attack%20Flow-334155)](https://center-for-threat-informed-defense.github.io/attack-flow/)
-[![Docs](https://img.shields.io/badge/docs-MkDocs-4051b5)](./docs/)
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/colab/TCE_v0_5_Horizon_Workbench.ipynb)
+<p align="center">
+  <img src="https://img.shields.io/badge/TCE-v0.5.0-5de4d4?style=flat-square&amp;labelColor=102638" alt="TCE v0.5.0">
+  <a href="https://attack.mitre.org/"><img src="https://img.shields.io/badge/vocabulary-ATT%26CK-f0bc69?style=flat-square&amp;labelColor=102638" alt="ATT&amp;CK vocabulary"></a>
+  <a href="https://d3fend.mitre.org/"><img src="https://img.shields.io/badge/defense-D3FEND-5de4d4?style=flat-square&amp;labelColor=102638" alt="D3FEND defensive vocabulary"></a>
+  <a href="https://colab.research.google.com/github/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/colab/TCE_v0_5_Horizon_Workbench.ipynb"><img src="https://img.shields.io/badge/Open_workbench-Colab-f0bc69?style=flat-square&amp;labelColor=102638" alt="Open workbench in Colab"></a>
+</p>
+
+---
+
+> **Model the threat before the first log.** Decide what must be observable, then engineer detections around attack sequences.
+
+| **01 · Understand** | **02 · Engineer** | **03 · Decide** |
+| :--- | :--- | :--- |
+| Connect mission, crown jewels, architecture and evidence. | Turn plausible attack paths into controls, telemetry contracts and detections. | Validate coverage, expose gaps and trace each defensive decision. |
+| [Threat context →](docs/threat-context-matrix.md) | [Detection as code →](docs/detection-validation-as-code.md) | [Decision Trace →](docs/decision-trace.md) |
+
+### Choose your entry point
+
+- **Learn the method:** start with the [analyst workflow](docs/analyst-workflow.md).
+- **Try the toolkit:** follow the [quick start](#quick-start) and [CLI commands](#analyst-toolkit).
+- **Explore enterprise defense:** inspect [Horizon](docs/horizon.md) and [Detection by Absence](docs/detection-by-absence.md).
+
+**Analytical boundaries:** priority ≠ confidence; forecast pressure ≠ attack probability. AI and external intelligence remain review candidates until accepted by an analyst.
 
 ## Why this repository exists
 
@@ -22,18 +48,17 @@ This project connects all three.
 This is the repository's **Zero-Point Detection** principle.
 
 ~~~mermaid
-flowchart LR
-    A[Mission & Crown Jewels] --> B[Architecture & Trust Boundaries]
-    B --> C[Threat Context]
-    C --> Z[Horizon Environment State]
-    Z --> D[Candidate Enterprise Paths / Attack Flow]
-    D --> E[Telemetry Contract]
-    E --> F[Detection Hypotheses]
-    F --> G[Analytics & Correlation]
-    G --> U[Use Cases / Cases]
-    U --> I[Validation]
-    I --> J[CTI Feedback]
-    J --> C
+flowchart TB
+    A["Mission & crown jewels"] --> B["Architecture & threat context"]
+    B --> C["Evidence & candidate paths"]
+    C --> D["Controls & telemetry contracts"]
+    D --> E["Detections & validation"]
+    E --> F["Defensive decisions"]
+    F -->|"Gaps & intelligence feedback"| B
+    classDef context fill:#102638,stroke:#5de4d4,color:#f2f6fc
+    classDef decision fill:#30271b,stroke:#f0bc69,color:#fff3da
+    class A,B,C,D,E context
+    class F decision
 ~~~
 
 ## The method
@@ -129,30 +154,16 @@ The default model scores each dimension from 0–5:
 
 See [Prioritization Model](docs/prioritization.md).
 
-## Repository structure
+## Explore the repository
 
-    .
-    ├── README.md
-    ├── docs/
-    │   ├── index.md
-    │   ├── methodology.md
-    │   ├── prioritization.md
-    │   └── detection-engineering.md
-    ├── awesome/
-    │   └── README.md
-    ├── templates/
-    │   ├── crown-jewels.yaml
-    │   ├── threat-scenario.yaml
-    │   └── detection-use-case.yaml
-    ├── examples/
-    │   └── enterprise-ransomware-path.md
-    ├── .github/
-    │   └── workflows/
-    │       └── docs.yml
-    ├── mkdocs.yml
-    ├── requirements-docs.txt
-    ├── CONTRIBUTING.md
-    └── SECURITY.md
+| Start here | What you will find |
+| :--- | :--- |
+| [Method & workflow](docs/methodology.md) | The analytical process, from mission to decision |
+| [Horizon](docs/horizon.md) | Enterprise paths, blind spots and defensive action candidates |
+| [Reference cases](docs/reference-cases.md) | Identity, cloud, supply chain, AI agents, SaaS and ICS/OT |
+| [Templates](templates/) | Reusable analytical artifacts |
+| [Analyst toolkit](docs/case-model.md) | Case model and CLI operations |
+| [Knowledge base](awesome/README.md) | Frameworks, tools, research and learning resources |
 
 ## Quick start
 
@@ -204,6 +215,11 @@ The CLI currently provides semantic validation, priority scoring, graph export, 
 - **Decision** — the defensive action connected back to the analytical chain.
 - **Preemptive Action** — a review-gated defensive proposal linking controls to enterprise paths, crown jewels, estimated reduction and cost.
 
+
+## Capability evolution
+
+<details>
+<summary><strong>Explore v0.3 → v0.5: AI, interoperability, detection as code and Horizon</strong></summary>
 
 ## TCE v0.3 — AI + operational knowledge graph
 
@@ -383,6 +399,9 @@ External intelligence remains review-gated. Candidate intelligence never becomes
 The defensive action engine proposes controls against the paths they affect and can select a portfolio under a cost budget using marginal path coverage. Overlapping actions get diminishing incremental benefit rather than double-counting the same modeled risk.
 
 See [TCE Horizon](docs/horizon.md), [Enterprise Environment State](docs/environment-state.md), and [Detection by Absence](docs/detection-by-absence.md).
+
+
+</details>
 
 ## Colab web workbench
 

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="640" viewBox="0 0 1440 640" role="img" aria-labelledby="title desc">
+<title id="title">Threat Context Engineering</title><desc id="desc">From mission to evidence-backed defense. Context, paths, telemetry and decisions.</desc>
+<defs><pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#17283c" stroke-width="1"/></pattern><linearGradient id="bg"><stop stop-color="#09111f"/><stop offset="1" stop-color="#10263a"/></linearGradient></defs>
+<rect width="1440" height="640" rx="24" fill="url(#bg)"/><rect width="1440" height="640" rx="24" fill="url(#grid)"/>
+<path d="M64 64H132" stroke="#5de4d4" stroke-width="5"/>
+<g font-family="DejaVu Sans,Arial,sans-serif"><text x="152" y="71" font-size="17" fill="#5de4d4" letter-spacing="4">TCE / THREAT-INFORMED DEFENSE</text>
+<text x="64" y="176" font-size="68" font-weight="bold" fill="#f2f6fc">Threat Context</text><text x="64" y="254" font-size="68" font-weight="bold" fill="#f2f6fc">Engineering.</text>
+<text x="68" y="317" font-size="25" fill="#b7c8dc">From mission to evidence-backed defense.</text>
+<text x="68" y="360" font-size="19" fill="#b7c8dc">Model the path. Design visibility. Validate the decision.</text>
+<rect x="68" y="404" width="239" height="38" rx="19" fill="#143c40"/><text x="88" y="429" font-size="14" fill="#7ef4e2" letter-spacing="2">ZERO-POINT DETECTION</text>
+<g fill="none" stroke="#2e6476" stroke-width="2"><circle cx="1120" cy="258" r="160"/><circle cx="1120" cy="258" r="112" stroke-dasharray="5 10"/><path d="M960 258H1280M1120 98V418M1007 145L1233 371M1007 371L1233 145"/></g>
+<path d="M1007 371L1120 258L1233 145" fill="none" stroke="#5de4d4" stroke-width="4"/>
+<g fill="#09111f" stroke="#5de4d4" stroke-width="3"><circle cx="1007" cy="371" r="9"/><circle cx="1233" cy="145" r="9"/><circle cx="1120" cy="258" r="38"/></g><path d="M1103 258L1115 270L1139 244" fill="none" stroke="#5de4d4" stroke-width="4"/>
+<circle cx="1007" cy="145" r="7" fill="#f0bc69"/><circle cx="1280" cy="258" r="7" fill="#f0bc69"/>
+<text x="1120" y="461" text-anchor="middle" font-size="13" fill="#b7c8dc" letter-spacing="3">CONTEXT → DECISION</text>
+<path d="M64 500H1376" stroke="#294057"/>
+<text x="68" y="548" font-size="15" fill="#5de4d4">01 / CONTEXT</text><text x="412" y="548" font-size="15" fill="#5de4d4">02 / ATTACK PATHS</text><text x="756" y="548" font-size="15" fill="#5de4d4">03 / OBSERVABILITY</text><text x="1100" y="548" font-size="15" fill="#f0bc69">04 / DECISIONS</text>
+<text x="68" y="580" font-size="16" fill="#b7c8dc">Mission &amp; crown jewels</text><text x="412" y="580" font-size="16" fill="#b7c8dc">Evidence &amp; hypotheses</text><text x="756" y="580" font-size="16" fill="#b7c8dc">Telemetry &amp; detection</text><text x="1100" y="580" font-size="16" fill="#b7c8dc">Validation &amp; feedback</text></g></svg>

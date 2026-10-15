@@ -1,10 +1,60 @@
-# Threat Context Engineering
+---
+hide:
+  - toc
+---
 
-**Threat Context Engineering (TCE)** is a threat-informed defense method that turns organizational context and threat intelligence into defensive engineering decisions.
+![Threat Context Engineering — from mission to evidence-backed defense](assets/tce-cover.svg)
 
-The method is built around a simple premise:
+# Intelligence that changes defensive decisions.
 
-> A useful threat model must eventually change architecture, telemetry, detections, validation, or risk decisions.
+Connect mission, architecture, threat evidence and detection engineering in one traceable workflow. **Threat Context Engineering (TCE)** makes the path from analytical question to defensive action explicit.
+
+[Explore the method](methodology.md){ .md-button .md-button--primary }
+[Run the workbench](colab-frontend.md){ .md-button }
+
+## Three ways into TCE
+
+<div class="grid cards" markdown>
+
+-   **01 / Understand the context**
+
+    ---
+
+    Map crown jewels, trust boundaries, intelligence requirements and evidence before selecting controls.
+
+    [Start the analyst workflow →](analyst-workflow.md)
+
+-   **02 / Engineer visibility**
+
+    ---
+
+    Translate threat paths into telemetry contracts, detection specifications and reproducible validation.
+
+    [Explore detection as code →](detection-validation-as-code.md)
+
+-   **03 / Act with traceability**
+
+    ---
+
+    Find enterprise blind spots and choke points. Review proposed actions and record why each decision was made.
+
+    [Discover TCE Horizon →](horizon.md)
+
+</div>
+
+!!! tip "Zero-Point Detection"
+    Model the threat **before the first log**. Ask what must be observable if an attack path happens, then design the telemetry and detection requirements.
+
+## From context to operational evidence
+
+| Understand | Engineer | Validate & decide |
+| :--- | :--- | :--- |
+| Mission, architecture, evidence and hypotheses | Attack paths, defensive controls, telemetry and detections | Validation evidence, intelligence gaps and Decision Trace |
+
+[Browse executable reference cases](reference-cases.md){ .md-button }
+
+!!! note "Keep uncertainty visible"
+    Priority is separate from confidence. Horizon forecast pressure is **not attack probability**. AI suggestions and external intelligence require analyst review.
 
 ## The four inherited questions
 
