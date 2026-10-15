@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tce-toolkit"
-version = "0.5.0"
-description = "Threat Context Engineering analyst toolkit"
+version = "0.5.1"
+description = "TCEM — Threat Context Engineering Method analyst toolkit"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -43,6 +43,7 @@ colab = [
 ]
 
 [project.scripts]
+tcem = "tce.cli:main"
 tce = "tce.cli:main"
 
 [tool.setuptools.packages.find]
