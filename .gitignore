@@ -1,0 +1,26 @@
+# Local-only assessments and client material
+private-cases/
+client-cases/
+customer-cases/
+confidential/
+restricted/
+.env
+.env.*
+!.env.example
+*.private.yaml
+*.private.json
+*.private.md
+*.pem
+*.key
+*.p12
+*.pfx
+*.tfstate
+*.tfstate.*
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+build/
+dist/
+site/
+.venv/
