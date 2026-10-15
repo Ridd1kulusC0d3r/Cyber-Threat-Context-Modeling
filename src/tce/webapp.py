@@ -111,7 +111,7 @@ def create_app(case_dir: str | Path | None = None) -> FastAPI:
     root = Path(case_dir or os.getenv("TCE_CASE_DIR", "examples/cases/enterprise-identity")).resolve()
     app = FastAPI(
         title="Threat Context Engineering Workbench",
-        version="0.5.0",
+        version="0.5.1",
         docs_url="/api/docs",
         redoc_url=None,
     )
@@ -420,9 +420,9 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
 <main>
 <section id="overview" class="section active">
   <div class="hero">
-    <div class="eyebrow mono">TCE · ZERO-POINT DETECTION · COLAB WORKBENCH</div>
+    <div class="eyebrow mono">TCEM · ZERO-POINT DETECTION · COLAB WORKBENCH</div>
     <h1>Do contexto à decisão defensiva.</h1>
-    <p class="lead">Crown jewels, hipóteses, attack paths, telemetria e detecção no mesmo fluxo. O frontend lê o TCE Case diretamente da VM do Colab; GLiNER e Qwen continuam como camada de apoio, nunca como autores silenciosos da evidência.</p>
+    <p class="lead">Crown jewels, hipóteses, attack paths, telemetria e detecção no mesmo fluxo. O frontend lê o TCEM Case diretamente da VM do Colab; GLiNER e Qwen continuam como camada de apoio, nunca como autores silenciosos da evidência.</p>
   </div>
   <div class="grid" id="metric-grid"></div>
   <div class="row">
@@ -437,7 +437,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
 
 <section id="contexts" class="section">
   <div class="hero">
-    <div class="eyebrow mono">THREAT CONTEXT MATRIX</div>
+    <div class="eyebrow mono">TCEM OPERATIONAL MATRIX · CONTEXT LAYER</div>
     <h1 style="font-size:clamp(42px,6vw,82px)">O cenário muda quando o contexto muda.</h1>
     <p class="lead">Missão, arquitetura, confiança, CTI, exposição, telemetria, evidência, resiliência e tempo são tratados como dimensões explícitas. RedFrameworks v6 fornece candidatos externos; relevância local continua evidence-gated.</p>
   </div>
@@ -451,7 +451,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
 
 <section id="horizon" class="section">
   <div class="hero">
-    <div class="eyebrow mono">TCE HORIZON · ENTERPRISE EXPOSURE FORECAST</div>
+    <div class="eyebrow mono">TCEM HORIZON · ENTERPRISE EXPOSURE FORECAST</div>
     <h1 style="font-size:clamp(42px,6vw,82px)">Do ambiente inteiro ao próximo risco defensivo.</h1>
     <p class="lead">Horizon deriva caminhos candidatos a partir de exposição, confiança, dependências, crown jewels, controles, telemetria e sinais de inteligência aceitos. O score é pressão de prioridade, não probabilidade de ataque, e permanece separado do aceite do analista.</p>
   </div>
@@ -505,7 +505,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
       <button class="btn primary" id="validation-run">Executar fixture</button>
       <span class="loader" id="validation-loader">validando...</span>
     </div>
-    <pre id="validation-result">Executa somente os fixtures/log-replay configurados no TCE Case.</pre>
+    <pre id="validation-result">Executa somente os fixtures/log-replay configurados no TCEM Case.</pre>
   </div>
 </section>
 
