@@ -1,6 +1,6 @@
-# TCE Context Model
+# TCEM Context Model
 
-Threat Context Engineering works best when analysis is treated as a connected model rather than a stack of documents.
+TCEM treats Threat Context Engineering as a connected model rather than a stack of documents.
 
 ## Core model
 
@@ -59,7 +59,7 @@ Actor or campaign attribution is optional. A trust weakness can justify a defens
 
 RedFrameworks v6 supplies external context candidates such as domain packs, adversary profiles, campaigns, detection intelligence, validation references, AI security surfaces and CTI sources.
 
-TCE decides whether those candidates are relevant to an organization-specific case.
+TCEM decides whether those candidates are relevant to an organization-specific case.
 
 ~~~text
 RedFrameworks v6
@@ -68,7 +68,7 @@ RedFrameworks v6
 candidate context
     |
     v
-TCE evidence + analyst review
+TCEM evidence + analyst review
     |
     v
 Threat Context
