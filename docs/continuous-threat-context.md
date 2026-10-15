@@ -1,6 +1,6 @@
-# Continuous Threat Context
+# TCEM Operational Matrix — Continuous Context & Drift
 
-TCE distinguishes two kinds of drift.
+The TCEM Operational Matrix distinguishes internal model drift from external intelligence drift so context remains operational rather than becoming a frozen diagram.
 
 ## Internal model drift
 
