@@ -1,6 +1,6 @@
 # Colab Web Workbench
 
-The TCE frontend is deliberately small and runs on the same Google Colab VM as the analyst toolkit.
+The TCEM frontend is deliberately small and runs on the same Google Colab VM as the analyst toolkit.
 
 ## Start locally
 
@@ -20,7 +20,7 @@ The current UI contains:
 - **Inteligência** — threat hypotheses with analytical state and confidence.
 - **ATT&CK** — Detection Strategy, Analytic, Data Component and D3FEND lookup, plus standards synchronization.
 - **IA** — Evidence Packet analysis using GLiNER and Qwen.
-- **Grafo** — nodes and relationships from the TCE Case.
+- **Grafo** — nodes and relationships from the TCEM Case.
 - **Exports** — STIX 2.1, ATT&CK Navigator and Attack Flow.
 
 ## Architecture
@@ -28,15 +28,15 @@ The current UI contains:
 ~~~mermaid
 flowchart LR
     B[Browser / Colab Proxy :3000] --> F[FastAPI frontend]
-    F --> C[TCE Case YAML/JSON]
+    F --> C[TCEM Case YAML/JSON]
     F --> A[ATT&CK / D3FEND cache]
     F --> AI[GLiNER + Qwen]
-    F --> H[TCE Horizon]
-    H --> G[TCE Graph]
+    F --> H[TCEM Horizon]
+    H --> G[TCEM Graph]
     F --> E[STIX / Navigator / Attack Flow]
 ~~~
 
-The browser does not maintain a separate database. FastAPI calls the existing TCE modules and case files directly.
+The browser does not maintain a separate database. FastAPI calls the existing TCEM implementation modules and case files directly.
 
 ## Security boundary
 
