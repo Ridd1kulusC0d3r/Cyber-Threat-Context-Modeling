@@ -1,6 +1,6 @@
 # Telemetry Schema Bridges
 
-TCE Telemetry Contracts use conceptual field names first.
+TCEM Telemetry Contracts use conceptual field names first.
 
 A conceptual requirement such as:
 

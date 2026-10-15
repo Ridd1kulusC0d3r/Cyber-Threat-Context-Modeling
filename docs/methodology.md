@@ -1,6 +1,6 @@
-# TCE Methodology
+# TCEM — Threat Context Engineering Method
 
-Threat Context Engineering is a continuous analytical and defensive-engineering loop.
+Threat Context Engineering (TCE) is the umbrella discipline. Threat Context Engineering Method (TCEM) is its formal continuous analytical and defensive-engineering method.
 
 ## Phase 0 — Mission and decision context
 
@@ -35,13 +35,13 @@ Crown jewels may be identities, data, cryptographic material, build pipelines, c
 
 Record business function, owner, impact, dependencies, recovery needs, privileged paths, architecture nodes, and controls.
 
-## Cross-cutting layer — Threat Context Matrix
+## Cross-cutting layer — TCEM Operational Matrix
 
 Before and during architecture analysis, select the contexts that make the case materially different.
 
-A Threat Context is not a framework label. It links mission, crown jewels, architecture, external intelligence, behavior, exposure, defensive requirements, evidence and time.
+The **TCEM Operational Matrix** is the multidimensional operating view that links mission, crown jewels, architecture, external intelligence, ATT&CK behavior, exposure, observability, detection, D3FEND-aligned defensive options, validation, Decision Trace and time.
 
-Use the built-in lenses to test whether the case needs explicit treatment for identity, cloud, AI, web/API, software supply chain, detection/validation, ICS/OT, IoT/embedded, endpoint, network, data, collaboration, third-party/SaaS, containers, developer/CI/CD, cryptography, resilience, human/process, mobile, telecommunications or the security control plane.
+Its context-lens layer uses the built-in lenses to test whether the case needs explicit treatment for identity, cloud, AI, web/API, software supply chain, detection/validation, ICS/OT, IoT/embedded, endpoint, network, data, collaboration, third-party/SaaS, containers, developer/CI/CD, cryptography, resilience, human/process, mobile, telecommunications or the security control plane.
 
 External RedFrameworks v6 domain packs can seed candidate context, but actor/campaign relevance remains evidence-gated.
 
@@ -105,7 +105,7 @@ ATT&CK provides behavior vocabulary. Attack Flow or an equivalent graph can repr
 
 ## Phase 7 — Prioritization
 
-Use the TCE Priority Model to score:
+Use the TCEM Priority Model to score:
 
 - crown-jewel criticality;
 - threat relevance;
@@ -199,4 +199,4 @@ Defensive decisions become explicit objects linked to:
 - validation;
 - open gaps.
 
-The final product is not a threat-model document. It is a traceable defensive decision system.
+The final product is not a threat-model document. It is a traceable defensive decision system operated through TCEM.

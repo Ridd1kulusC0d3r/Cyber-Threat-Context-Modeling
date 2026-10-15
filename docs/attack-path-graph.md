@@ -1,6 +1,6 @@
 # Attack Paths as a Graph
 
-A Mermaid diagram is useful for communication. TCE also represents the same problem as data.
+A Mermaid diagram is useful for communication. TCEM also represents the same problem as data.
 
 ~~~mermaid
 flowchart LR

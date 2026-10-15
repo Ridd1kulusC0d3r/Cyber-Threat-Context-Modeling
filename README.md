@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="docs/assets/tce-cover.svg" alt="Threat Context Engineering — from mission to evidence-backed defense" width="100%">
+  <img src="docs/assets/tcem-cover.svg" alt="TCEM — Threat Context Engineering Method" width="100%">
 </p>
 
-<h1 align="center">Cyber Threat Context Modeling</h1>
-<p align="center"><strong>Connect threat intelligence, architecture and detection in one traceable decision system.</strong></p>
+<h1 align="center">TCEM — Threat Context Engineering Method</h1>
+<p align="center"><strong>The formal method for turning threat context into traceable defensive engineering decisions.</strong></p>
 <p align="center">
   <a href="#quick-start">Get started</a> ·
   <a href="docs/methodology.md">Explore the method</a> ·
@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/TCE-v0.5.0-5de4d4?style=flat-square&amp;labelColor=102638" alt="TCE v0.5.0">
+  <img src="https://img.shields.io/badge/TCEM-v0.5.1-5de4d4?style=flat-square&amp;labelColor=102638" alt="TCEM v0.5.1">
   <a href="https://attack.mitre.org/"><img src="https://img.shields.io/badge/vocabulary-ATT%26CK-f0bc69?style=flat-square&amp;labelColor=102638" alt="ATT&amp;CK vocabulary"></a>
   <a href="https://d3fend.mitre.org/"><img src="https://img.shields.io/badge/defense-D3FEND-5de4d4?style=flat-square&amp;labelColor=102638" alt="D3FEND defensive vocabulary"></a>
   <a href="https://colab.research.google.com/github/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/colab/TCE_v0_5_Horizon_Workbench.ipynb"><img src="https://img.shields.io/badge/Open_workbench-Colab-f0bc69?style=flat-square&amp;labelColor=102638" alt="Open workbench in Colab"></a>
@@ -37,7 +37,7 @@
 
 ## Why this repository exists
 
-Traditional threat modeling is often trapped at design time. Detection engineering is often trapped after telemetry exists. CTI is often trapped in reports. TCE turns those disconnected activities into one traceable decision system.
+Traditional threat modeling is often trapped at design time. Detection engineering is often trapped after telemetry exists. CTI is often trapped in reports. **Threat Context Engineering (TCE)** is the umbrella discipline; **Threat Context Engineering Method (TCEM)** is the formal method that turns those disconnected activities into one traceable decision system.
 
 This project connects all three.
 
@@ -61,11 +61,21 @@ flowchart TB
     class F decision
 ~~~
 
-## The method
+## Naming and method architecture
 
-The proposed method is called **Threat Context Engineering (TCE)**.
+**Threat Context Engineering (TCE)** is the umbrella discipline: the broader practice of engineering defensive decisions from threat context.
 
-TCE is broader than application threat modeling. It combines:
+**Threat Context Engineering Method (TCEM)** is the formal method implemented by this repository.
+
+| Name | Role |
+|---|---|
+| **Threat Context Engineering — TCE** | Discipline / umbrella concept |
+| **Threat Context Engineering Method — TCEM** | Formal method |
+| **TCEM Detection** | Telemetry + detection engineering |
+| **TCEM Operational Matrix** | Decision Trace + drift + continuous operations + multidimensional MITRE-aligned context |
+| **TCEM Specification 1.0** | Formal specification |
+
+TCEM is broader than application threat modeling. It combines:
 
 1. **Mission and decision context** — what must be protected and what decision the analysis must support.
 2. **Intelligence Requirements** — the questions that must be answered to support that decision.
@@ -80,7 +90,7 @@ TCE is broader than application threat modeling. It combines:
 11. **Validation and coverage** — evidence that telemetry, detections, controls, and response behave as expected.
 12. **Decision Trace and continuous feedback** — every defensive decision remains traceable to requirements, evidence, hypotheses, scenarios, gaps, and validation.
 
-### TCE operating pipeline
+### TCEM operating pipeline
 
 | Stage | Main question | Output |
 |---|---|---|
@@ -101,7 +111,7 @@ TCE is broader than application threat modeling. It combines:
 
 ## What makes this different
 
-TCE intentionally joins areas that are usually treated as separate disciplines:
+TCEM intentionally joins areas that are usually treated as separate disciplines:
 
 - **Threat Modeling Manifesto** for the four core questions and iterative mindset.
 - **MITRE ATT&CK** for adversary behavior vocabulary.
@@ -113,7 +123,7 @@ TCE intentionally joins areas that are usually treated as separate disciplines:
 - **Detection engineering** as a first-class design output, not an afterthought.
 - **CTI** as continuous evidence, not decoration at the end of a risk document.
 
-TCE is **framework-compatible, not framework-dependent**.
+TCEM is **framework-compatible, not framework-dependent**.
 
 ## Zero-Point Detection
 
@@ -131,7 +141,7 @@ Instead of asking only:
 
 > "What logs do we already have?"
 
-TCE asks:
+TCEM asks:
 
 > "What must we be able to observe if this attack path happens?"
 
@@ -139,7 +149,7 @@ That changes telemetry from a passive data source into an explicit security requ
 
 ## Prioritization
 
-TCE separates **priority** from **confidence**.
+TCEM separates **priority** from **confidence**.
 
 A scenario can be high priority even when evidence is incomplete, and strong evidence does not automatically mean high business impact.
 
@@ -181,7 +191,7 @@ See [Prioritization Model](docs/prioritization.md).
 
 ## Analyst toolkit
 
-Install the repository in editable mode and operate directly on a TCE Case:
+Install the repository in editable mode and operate directly on a TCEM Case:
 
 ~~~bash
 pip install -e .
@@ -221,7 +231,7 @@ The CLI currently provides semantic validation, priority scoring, graph export, 
 <details>
 <summary><strong>Explore v0.3 → v0.5: AI, interoperability, detection as code and Horizon</strong></summary>
 
-## TCE v0.3 — AI + operational knowledge graph
+## TCEM v0.3 — AI + operational knowledge graph
 
 v0.3 adds a Colab-ready intelligence workbench:
 
@@ -232,7 +242,7 @@ v0.3 adds a Colab-ready intelligence workbench:
 - D3FEND inferred defensive mappings;
 - Attack Flow STIX 2.1 export;
 - ATT&CK Navigator layer export;
-- TCE STIX 2.1 export and an explicit-review OpenCTI bridge;
+- TCEM STIX 2.1 export and an explicit-review OpenCTI bridge;
 - operational knowledge graph export to JSON, GraphML and RDF/Turtle.
 
 ~~~bash
@@ -246,14 +256,14 @@ tce export-stix examples/cases/enterprise-identity --output case.stix.json
 OpenCTI is dry-run by default. AI outputs are review candidates by default.
 
 
-## TCE v0.3.1 — intelligence synchronization
+## TCEM v0.3.1 — intelligence synchronization
 
 The remaining v0.3 interoperability layer is now operational:
 
 - ATT&CK **Detection Strategies**, **Analytics**, **Data Components**, log sources and mutable elements;
 - Attack Flow **import and export**;
-- OpenCTI → local snapshot → entity resolution → TCE evidence-candidate workflow;
-- reviewed TCE → STIX → OpenCTI publication path;
+- OpenCTI → local snapshot → entity resolution → TCEM evidence-candidate workflow;
+- reviewed TCEM → STIX → OpenCTI publication path;
 - read-only TAXII 2.1 collection ingestion;
 - deterministic entity resolution before CTI is linked into the case.
 
@@ -274,7 +284,7 @@ All inbound intelligence remains **candidate material until analyst review**. Ex
 
 
 
-## TCE v0.3.2 — Threat Context Matrix
+## TCEM v0.3.2 — Threat Context Matrix
 
 TCE now treats **Threat Context** as a first-class analytical object instead of assuming that every threat model is primarily an application or architecture model.
 
@@ -304,7 +314,7 @@ tce context-enrich examples/cases/enterprise-identity --output context-intellige
 External actor, campaign, detection and validation metadata remains **candidate context** until local evidence establishes relevance.
 
 
-## TCE v0.4 — Detection & Validation as Code
+## TCEM v0.4 — Detection & Validation as Code
 
 v0.4 closes the operational loop from prioritized threat scenario to reproducible defensive evidence.
 
@@ -347,9 +357,9 @@ Threat Context
 
 Validation operates on defensive event fixtures and log-replay data. The repository does not need command-level attack execution to prove that a detection model is internally consistent.
 
-## TCE v0.5 — Horizon: predictive and preemptive enterprise defense
+## TCEM v0.5 — Horizon: predictive and preemptive enterprise defense
 
-v0.5 adds **TCE Horizon**, the enterprise layer that moves threat modeling beyond a single application.
+v0.5 adds **TCEM Horizon**, the enterprise layer that moves threat modeling beyond a single application.
 
 Horizon models the current environment as a directed defensive graph of assets, identities, trust relationships, crown jewels, controls, telemetry, vulnerability pressure and accepted intelligence signals. It then produces bounded, review-only candidate paths toward crown jewels and explains why those paths deserve attention.
 
@@ -362,7 +372,7 @@ Enterprise State
   -> Detection by Absence
   -> Preemptive Action Candidates
   -> Analyst Review
-  -> normal TCE Scenario / Telemetry / Detection / Validation / Decision
+  -> normal TCEM Scenario / Telemetry / Detection / Validation / Decision
 ~~~
 
 Forecast pressure is **not attack probability**. Proposed machine scores remain separate from analyst-accepted scores.
@@ -384,7 +394,7 @@ tce horizon-export-actions examples/cases/enterprise-identity \
 
 ### Detection by Absence
 
-Horizon automatically compares the telemetry needed by a candidate path with the telemetry modeled as actually available. When ATT&CK enrichment is enabled, it also compares current ATT&CK Detection Strategy / Data Component requirements through TCE's existing ATT&CK STIX index.
+Horizon automatically compares the telemetry needed by a candidate path with the telemetry modeled as actually available. When ATT&CK enrichment is enabled, it also compares current ATT&CK Detection Strategy / Data Component requirements through TCEM's existing ATT&CK STIX index.
 
 Blind paths enter the ordinary Detection Backlog as telemetry-blind-path work items.
 
@@ -398,7 +408,7 @@ External intelligence remains review-gated. Candidate intelligence never becomes
 
 The defensive action engine proposes controls against the paths they affect and can select a portfolio under a cost budget using marginal path coverage. Overlapping actions get diminishing incremental benefit rather than double-counting the same modeled risk.
 
-See [TCE Horizon](docs/horizon.md), [Enterprise Environment State](docs/environment-state.md), and [Detection by Absence](docs/detection-by-absence.md).
+See [TCEM Horizon](docs/horizon.md), [Enterprise Environment State](docs/environment-state.md), and [Detection by Absence](docs/detection-by-absence.md).
 
 
 </details>

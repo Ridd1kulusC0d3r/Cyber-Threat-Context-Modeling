@@ -1,4 +1,4 @@
-# TCE Prioritization Model
+# TCEM Prioritization Model
 
 The default scoring model is intentionally simple enough for workshops and structured enough to automate later.
 
@@ -17,7 +17,7 @@ Score each dimension from **0 to 5**.
 
 ## Formula
 
-**TCE Priority = 0.25C + 0.20R + 0.15F + 0.15E + 0.10W + 0.15D**
+**TCEM Priority = 0.25C + 0.20R + 0.15F + 0.15E + 0.10W + 0.15D**
 
 Where each variable is scored from 0–5.
 

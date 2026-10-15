@@ -1,6 +1,6 @@
 # Reference Cases
 
-TCE v0.4 includes executable defensive reference cases that prove the method across different threat contexts.
+TCEM v0.4 includes executable defensive reference cases that prove the method across different threat contexts.
 
 | Case | Primary context | Defensive focus |
 |---|---|---|

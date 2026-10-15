@@ -1,6 +1,6 @@
 # Enterprise Environment State
 
-The ENV object is the Horizon representation of the enterprise as it exists at a point in time. It complements, rather than replaces, the TCE architecture model.
+The ENV object is the Horizon representation of the enterprise as it exists at a point in time. It complements, rather than replaces, the TCEM architecture model.
 
 ## Architecture versus Environment State
 

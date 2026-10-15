@@ -3,16 +3,16 @@ hide:
   - toc
 ---
 
-![Threat Context Engineering — from mission to evidence-backed defense](assets/tce-cover.svg)
+![TCEM — Threat Context Engineering Method](assets/tcem-cover.svg)
 
 # Intelligence that changes defensive decisions.
 
-Connect mission, architecture, threat evidence and detection engineering in one traceable workflow. **Threat Context Engineering (TCE)** makes the path from analytical question to defensive action explicit.
+**Threat Context Engineering (TCE)** is the umbrella discipline. **Threat Context Engineering Method (TCEM)** is the formal workflow that connects mission, architecture, threat intelligence, MITRE-aligned behavior, telemetry, detection, validation and defensive decisions.
 
 [Explore the method](methodology.md){ .md-button .md-button--primary }
 [Run the workbench](colab-frontend.md){ .md-button }
 
-## Three ways into TCE
+## Three ways into TCEM
 
 <div class="grid cards" markdown>
 
@@ -38,7 +38,7 @@ Connect mission, architecture, threat evidence and detection engineering in one 
 
     Find enterprise blind spots and choke points. Review proposed actions and record why each decision was made.
 
-    [Discover TCE Horizon →](horizon.md)
+    [Discover TCEM Horizon →](horizon.md)
 
 </div>
 
@@ -58,7 +58,7 @@ Connect mission, architecture, threat evidence and detection engineering in one 
 
 ## The four inherited questions
 
-TCE keeps the four questions popularized by the Threat Modeling Manifesto:
+TCEM keeps the four questions popularized by the Threat Modeling Manifesto:
 
 1. What are we working on?
 2. What can go wrong?
@@ -79,7 +79,7 @@ It extends them with operational sub-questions:
 
 ## Core artifacts
 
-A complete TCE assessment should leave behind:
+A complete TCEM assessment should leave behind:
 
 - Mission map
 - Crown-jewel register
@@ -100,10 +100,10 @@ A complete TCE assessment should leave behind:
 Start with the [Methodology](methodology.md).
 
 
-## TCE Horizon
+## TCEM Horizon
 
-For enterprise-wide analysis, TCE Horizon adds a time-stamped Environment State and continuously prioritizes review-only paths from modeled exposure points toward crown jewels using architecture, controls, telemetry, vulnerability pressure and accepted threat intelligence.
+For enterprise-wide analysis, TCEM Horizon adds a time-stamped Environment State and continuously prioritizes review-only paths from modeled exposure points toward crown jewels using architecture, controls, telemetry, vulnerability pressure and accepted threat intelligence.
 
 Horizon forecast pressure is a defensive prioritization signal, not a prediction that a specific attack will occur.
 
-Start with [TCE Horizon](horizon.md) and [Enterprise Environment State](environment-state.md).
+Start with [TCEM Horizon](horizon.md) and [Enterprise Environment State](environment-state.md).

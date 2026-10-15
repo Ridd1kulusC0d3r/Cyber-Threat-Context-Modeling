@@ -1,6 +1,6 @@
 # ATT&CK Detection Strategy Automation
 
-TCE now reads the current ATT&CK STIX objects for:
+TCEM reads the current ATT&CK STIX objects for:
 
 - ATT&CK techniques;
 - Detection Strategies;
@@ -42,7 +42,7 @@ and relationships:
 - includes_analytic
 - requires_data_component
 
-This allows the TCE graph to answer a much more useful question than "do we map T1078?":
+This allows the TCEM graph to answer a much more useful question than "do we map T1078?":
 
 > Which ATT&CK detection strategies and concrete telemetry components are relevant to this organization-specific attack path, and which of those telemetry requirements do we actually satisfy?
 

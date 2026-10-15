@@ -32,7 +32,7 @@ def export_case_stix(entities: dict[str, dict]) -> dict:
         "id": creator,
         "created": timestamp,
         "modified": timestamp,
-        "name": "Threat Context Engineering",
+        "name": "TCEM — Threat Context Engineering Method",
         "identity_class": "organization",
     }]
 

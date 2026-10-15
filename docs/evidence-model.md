@@ -1,6 +1,6 @@
 # Evidence Model
 
-TCE keeps **observations, assessments, inferences, assumptions, and unknowns** distinct.
+TCEM keeps **observations, assessments, inferences, assumptions, and unknowns** distinct.
 
 | State | Meaning |
 |---|---|

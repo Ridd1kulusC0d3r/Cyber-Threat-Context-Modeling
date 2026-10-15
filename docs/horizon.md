@@ -1,10 +1,10 @@
-# TCE Horizon
+# TCEM Horizon
 
-**TCE Horizon** is the predictive and preemptive enterprise layer of Threat Context Engineering.
+**TCEM Horizon** is the predictive and preemptive enterprise layer of Threat Context Engineering.
 
 Traditional threat modeling often starts with one application. Horizon starts with the **enterprise environment state**: assets, identities, trust relationships, exposure, crown jewels, controls, telemetry, vulnerability pressure, and accepted intelligence signals.
 
-The goal is not to claim that TCE can predict the next attacker with certainty. The useful goal is to continuously identify which modeled paths toward crown jewels are becoming more defensively urgent, explain why, find where they converge, expose visibility gaps, and propose review-gated actions before an incident forces the decision.
+The goal is not to claim that TCEM can predict the next attacker with certainty. The useful goal is to continuously identify which modeled paths toward crown jewels are becoming more defensively urgent, explain why, find where they converge, expose visibility gaps, and propose review-gated actions before an incident forces the decision.
 
 ## Operating model
 
@@ -86,7 +86,7 @@ This prevents old intelligence from becoming immortal merely because a spreadshe
 
 ## RedFrameworks intelligence bridge
 
-TCE already uses RedFrameworks v6 as a review-gated domain-context provider. Horizon can convert a saved context-enrichment snapshot into **candidate intelligence signals**:
+TCEM already uses RedFrameworks v6 as a review-gated domain-context provider. Horizon can convert a saved context-enrichment snapshot into **candidate intelligence signals**:
 
 ~~~bash
 tce context-enrich examples/cases/enterprise-identity \
@@ -120,7 +120,7 @@ For every candidate path Horizon asks:
 
 It compares local telemetry requirements with actual enterprise telemetry capabilities and, when ATT&CK data is available, current Detection Strategy / Data Component requirements from the repository's existing ATT&CK STIX index.
 
-No extra mitreattack-python dependency is required. TCE already parses current ATT&CK STIX and its defensive metadata, so a second parser would mostly create a second maintenance problem.
+No extra mitreattack-python dependency is required. TCEM already parses current ATT&CK STIX and its defensive metadata, so a second parser would mostly create a second maintenance problem.
 
 ~~~bash
 tce horizon-absence examples/cases/enterprise-identity --offline
@@ -160,7 +160,7 @@ The lifecycle is:
 ~~~text
 Environment State
   -> Horizon path candidate
-  -> TCE scenario candidate
+  -> TCEM scenario candidate
   -> analyst review
   -> telemetry / detection / validation
   -> decision

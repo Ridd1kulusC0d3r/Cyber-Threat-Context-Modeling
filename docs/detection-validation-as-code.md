@@ -1,6 +1,6 @@
-# Detection & Validation as Code
+# TCEM Detection — Detection & Validation as Code
 
-TCE v0.4 turns the chain from threat context to defensive evidence into executable, reviewable data.
+TCEM v0.4 turns the chain from threat context to defensive evidence into executable, reviewable data.
 
 ## Detection Specification
 
@@ -22,7 +22,7 @@ The object uses the `DSP-*` namespace so it does not collide with ATT&CK Detecti
 
 ## Correlation patterns
 
-TCE ships a small defensive pattern library:
+TCEM ships a small defensive pattern library:
 
 - single-event;
 - ordered-sequence;
@@ -38,7 +38,7 @@ A Detection Specification may include a Sigma mapping.
 
     tce sigma-export CASE_DIR DSP-001 --output dsp-001.yml
 
-Sigma is an implementation format, not the TCE source of truth.
+Sigma is an implementation format, not the TCEM source of truth.
 
 ## Validation harness
 

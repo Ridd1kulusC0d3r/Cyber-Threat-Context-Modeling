@@ -13,4 +13,4 @@ flowchart LR
     I --> V[Validation Evidence]
 ~~~
 
-TCE uses D3FEND as a defensive knowledge source, not as a decorative mapping table.
+TCEM uses D3FEND as a defensive knowledge source, not as a decorative mapping table.

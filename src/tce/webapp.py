@@ -110,8 +110,8 @@ def _status_payload(case_dir: Path) -> dict[str, Any]:
 def create_app(case_dir: str | Path | None = None) -> FastAPI:
     root = Path(case_dir or os.getenv("TCE_CASE_DIR", "examples/cases/enterprise-identity")).resolve()
     app = FastAPI(
-        title="Threat Context Engineering Workbench",
-        version="0.5.0",
+        title="TCEM — Threat Context Engineering Method Workbench",
+        version="0.5.1",
         docs_url="/api/docs",
         redoc_url=None,
     )
@@ -148,6 +148,20 @@ def create_app(case_dir: str | Path | None = None) -> FastAPI:
             "assessment": assess_contexts(entities),
             "catalog": list(load_context_catalog().values()),
         }
+
+    @app.get("/api/operational-matrix")
+    def operational_matrix():
+        from .operational_matrix import build_operational_matrix
+        from .standards.attack import AttackIndex
+
+        entities, errors = load_case(app.state.case_dir)
+        if errors:
+            raise HTTPException(status_code=422, detail=errors)
+        try:
+            attack_index = AttackIndex.load(sync_if_missing=False)
+        except FileNotFoundError:
+            attack_index = None
+        return build_operational_matrix(entities, attack_index=attack_index)
 
     @app.get("/api/horizon")
     def horizon(
@@ -400,13 +414,14 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
 <body>
 <header>
   <div class="top">
-    <div class="mark mono">TCE</div>
-    <div class="brand"><strong>THREAT CONTEXT ENGINEERING</strong><span class="mono">Intelligence & Defensive Engineering Workbench</span></div>
+    <div class="mark mono">TCEM</div>
+    <div class="brand"><strong>THREAT CONTEXT ENGINEERING METHOD</strong><span class="mono">TCE discipline · Intelligence & Defensive Engineering Workbench</span></div>
     <div class="statusbar mono" id="statusbar"><span class="pill">carregando estado...</span></div>
   </div>
   <div class="nav mono">
     <button class="active" data-tab="overview">Visão geral</button>
     <button data-tab="contexts">Contextos</button>
+    <button data-tab="matrix">Matriz</button>
     <button data-tab="horizon">Horizonte</button>
     <button data-tab="scenarios">Cenários</button>
     <button data-tab="intelligence">Inteligência</button>
@@ -420,9 +435,9 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
 <main>
 <section id="overview" class="section active">
   <div class="hero">
-    <div class="eyebrow mono">TCE · ZERO-POINT DETECTION · COLAB WORKBENCH</div>
+    <div class="eyebrow mono">TCEM · ZERO-POINT DETECTION · COLAB WORKBENCH</div>
     <h1>Do contexto à decisão defensiva.</h1>
-    <p class="lead">Crown jewels, hipóteses, attack paths, telemetria e detecção no mesmo fluxo. O frontend lê o TCE Case diretamente da VM do Colab; GLiNER e Qwen continuam como camada de apoio, nunca como autores silenciosos da evidência.</p>
+    <p class="lead">Crown jewels, hipóteses, attack paths, telemetria e detecção no mesmo fluxo. O frontend lê o TCEM Case diretamente da VM do Colab; GLiNER e Qwen continuam como camada de apoio, nunca como autores silenciosos da evidência.</p>
   </div>
   <div class="grid" id="metric-grid"></div>
   <div class="row">
@@ -437,7 +452,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
 
 <section id="contexts" class="section">
   <div class="hero">
-    <div class="eyebrow mono">THREAT CONTEXT MATRIX</div>
+    <div class="eyebrow mono">TCEM OPERATIONAL MATRIX · CONTEXT LAYER</div>
     <h1 style="font-size:clamp(42px,6vw,82px)">O cenário muda quando o contexto muda.</h1>
     <p class="lead">Missão, arquitetura, confiança, CTI, exposição, telemetria, evidência, resiliência e tempo são tratados como dimensões explícitas. RedFrameworks v6 fornece candidatos externos; relevância local continua evidence-gated.</p>
   </div>
@@ -449,9 +464,29 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
   <div class="panel"><h2>Catálogo de lentes</h2><div id="context-catalog" class="list"></div></div>
 </section>
 
+<section id="matrix" class="section">
+  <div class="hero">
+    <div class="eyebrow mono">TCEM OPERATIONAL MATRIX · MITRE-ALIGNED OPERATING VIEW</div>
+    <h1 style="font-size:clamp(42px,6vw,82px)">Contexto que vira operação.</h1>
+    <p class="lead">Missão, Threat Context, ATT&CK, observabilidade, TCEM Detection, validação, Decision Trace e drift no mesmo quadro. A matriz separa visibilidade de detecção e evita transformar um heatmap ATT&CK em modelo de ameaça por decreto.</p>
+  </div>
+  <div class="grid" id="matrix-dimensions"></div>
+  <div class="panel">
+    <h2>Cenários operacionais</h2>
+    <table>
+      <thead><tr><th>Cenário</th><th>Prioridade</th><th>Contexto</th><th>ATT&CK</th><th>Telemetria</th><th>TCEM Detection</th><th>Validação</th><th>Decisão</th></tr></thead>
+      <tbody id="matrix-body"></tbody>
+    </table>
+  </div>
+  <div class="panel">
+    <h2>Cobertura multidimensional</h2>
+    <div id="matrix-coverage"></div>
+  </div>
+</section>
+
 <section id="horizon" class="section">
   <div class="hero">
-    <div class="eyebrow mono">TCE HORIZON · ENTERPRISE EXPOSURE FORECAST</div>
+    <div class="eyebrow mono">TCEM HORIZON · ENTERPRISE EXPOSURE FORECAST</div>
     <h1 style="font-size:clamp(42px,6vw,82px)">Do ambiente inteiro ao próximo risco defensivo.</h1>
     <p class="lead">Horizon deriva caminhos candidatos a partir de exposição, confiança, dependências, crown jewels, controles, telemetria e sinais de inteligência aceitos. O score é pressão de prioridade, não probabilidade de ataque, e permanece separado do aceite do analista.</p>
   </div>
@@ -505,7 +540,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
       <button class="btn primary" id="validation-run">Executar fixture</button>
       <span class="loader" id="validation-loader">validando...</span>
     </div>
-    <pre id="validation-result">Executa somente os fixtures/log-replay configurados no TCE Case.</pre>
+    <pre id="validation-result">Executa somente os fixtures/log-replay configurados no TCEM Case.</pre>
   </div>
 </section>
 
@@ -558,7 +593,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
 </main>
 
 <script>
-const state={caseData:null,status:null,graph:null,contexts:null,engineering:null,horizon:null};
+const state={caseData:null,status:null,graph:null,contexts:null,matrix:null,engineering:null,horizon:null};
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 async function jsonFetch(url,opts){
   const res=await fetch(url,opts);
@@ -622,6 +657,34 @@ function renderContexts(){
   document.getElementById('context-catalog').innerHTML=catalog.map(x=>
     item(x.name,x.description,(x.redframeworks_domain_pack?'RF:'+x.redframeworks_domain_pack:x.class))
   ).join('');
+}
+
+function renderMatrix(){
+  const m=state.matrix;
+  if(!m)return;
+  document.getElementById('matrix-dimensions').innerHTML=(m.dimensions||[]).map(x=>
+    metric(x.label,x.count,'operational dimension')
+  ).join('');
+
+  const rows=m.rows||[];
+  document.getElementById('matrix-body').innerHTML=rows.length
+    ? rows.map(x=>'<tr>'+
+        '<td><span class="mono">'+esc(x.scenario_id)+'</span><br>'+esc(x.title)+'</td>'+
+        '<td><span class="tag '+String(x.band||'').toLowerCase()+'">'+esc(x.band||'?')+'</span><br>'+esc(x.score==null?'?':x.score)+'</td>'+
+        '<td>'+esc((x.threat_context_ids||[]).join(', ')||'—')+'</td>'+
+        '<td>'+esc((x.attack_techniques||[]).map(t=>t.label).join(', ')||'—')+'</td>'+
+        '<td><span class="tag">'+esc(x.telemetry_status||'unknown')+'</span></td>'+
+        '<td><span class="tag">'+esc(x.detection_status||'unknown')+'</span></td>'+
+        '<td><span class="tag">'+esc(x.validation_status||'unknown')+'</span></td>'+
+        '<td>'+esc((x.decision_ids||[]).join(', ')||'—')+'</td>'+
+      '</tr>').join('')
+    : '<tr><td colspan="8">Nenhum cenário operacional encontrado.</td></tr>';
+
+  const coverage=m.coverage||{};
+  document.getElementById('matrix-coverage').innerHTML=Object.entries(coverage).map(([k,v])=>{
+    const n=v==null?0:v;
+    return '<div class="cover"><span class="mono">'+esc(k)+'</span><div class="bar"><i style="width:'+n+'%"></i></div><b>'+esc(v==null?'?':v+'%')+'</b></div>';
+  }).join('');
 }
 
 function renderHorizon(){
@@ -700,8 +763,8 @@ function renderStatus(){
 }
 async function boot(){
   try{
-    [state.status,state.caseData,state.contexts,state.engineering,state.horizon]=await Promise.all([jsonFetch('/api/status'),jsonFetch('/api/case'),jsonFetch('/api/contexts'),Promise.all([jsonFetch('/api/telemetry/health'),jsonFetch('/api/detection/backlog')]).then(([telemetry,backlog])=>({telemetry,backlog})),jsonFetch('/api/horizon')]);
-    renderStatus();render();renderContexts();renderEngineering();renderHorizon();
+    [state.status,state.caseData,state.contexts,state.matrix,state.engineering,state.horizon]=await Promise.all([jsonFetch('/api/status'),jsonFetch('/api/case'),jsonFetch('/api/contexts'),jsonFetch('/api/operational-matrix'),Promise.all([jsonFetch('/api/telemetry/health'),jsonFetch('/api/detection/backlog')]).then(([telemetry,backlog])=>({telemetry,backlog})),jsonFetch('/api/horizon')]);
+    renderStatus();render();renderContexts();renderMatrix();renderEngineering();renderHorizon();
   }catch(e){
     document.getElementById('metric-grid').innerHTML='<div class="error">'+esc(e.message)+'</div>';
   }

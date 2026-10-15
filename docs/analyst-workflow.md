@@ -1,6 +1,6 @@
-# Analyst Workflow
+# TCEM Analyst Workflow
 
-Threat Context Engineering is designed as a **decision workflow**, not a diagram exercise.
+TCEM operationalizes Threat Context Engineering as a **decision workflow**, not a diagram exercise.
 
 ## End-to-end flow
 
@@ -44,7 +44,7 @@ flowchart LR
 
 ## Definition of done
 
-A TCE assessment is complete enough for a review cycle when:
+A TCEM assessment is complete enough for a review cycle when:
 
 - the decision and Intelligence Requirements are explicit;
 - crown jewels have owners and rationale;

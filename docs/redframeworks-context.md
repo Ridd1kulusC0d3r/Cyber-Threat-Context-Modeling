@@ -1,8 +1,8 @@
-# RedFrameworks v6 as a TCE Context Provider
+# RedFrameworks v6 as a TCEM Context Provider
 
-TCE consumes RedFrameworks v6 as an external, review-gated context provider rather than copying its entire catalog into a second repository.
+TCEM consumes RedFrameworks v6 as an external, review-gated context provider rather than copying its entire catalog into a second repository.
 
-## What TCE reads
+## What TCEM reads
 
 The adapter caches selected RedFrameworks API v4 datasets:
 
@@ -30,7 +30,7 @@ The data is cached under:
 
 ## Enrich modeled contexts
 
-A TCE Threat Context can reference one or more RedFrameworks domain packs:
+A TCEM Threat Context can reference one or more RedFrameworks domain packs:
 
 ~~~yaml
 redframeworks:
@@ -67,7 +67,7 @@ or:
 
 > Which campaign explains this internal event?
 
-Those conclusions still require TCE evidence and analytical confidence.
+Those conclusions still require TCEM evidence and analytical confidence.
 
 The adapter therefore emits:
 
@@ -80,9 +80,9 @@ The adapter therefore emits:
 
 and each domain-pack enrichment also requires case evidence before actor relevance is promoted.
 
-## RedFrameworks domain packs in TCE
+## RedFrameworks domain packs in TCEM
 
-| RedFrameworks pack | TCE lens |
+| RedFrameworks pack | TCEM lens |
 |---|---|
 | identity | Identity & Access |
 | cloud | Cloud & Multi-Cloud |
@@ -93,7 +93,7 @@ and each domain-pack enrichment also requires case evidence before actor relevan
 | ics-ot | ICS / OT |
 | iot-embedded | IoT & Embedded |
 
-RedFrameworks remains the canonical catalog for those external datasets. TCE remains the organization-specific analytical model.
+RedFrameworks remains the canonical catalog for those external datasets. TCEM remains the organization-specific analytical model.
 
 ## Why keep the projects separate
 

@@ -115,6 +115,31 @@ def cmd_dashboard(args):
     print(str(output))
 
 
+def cmd_operational_matrix(args):
+    from .operational_matrix import build_operational_matrix
+
+    entities, errors = _load(args.case_dir)
+    _fail_parse(errors)
+
+    attack_index = None
+    if not args.offline:
+        try:
+            from .standards.attack import AttackIndex
+            attack_index = AttackIndex.load(sync_if_missing=False)
+        except FileNotFoundError:
+            attack_index = None
+
+    matrix = build_operational_matrix(entities, attack_index=attack_index)
+    rendered = json.dumps(matrix, indent=2, ensure_ascii=False)
+    if args.output:
+        output = Path(args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(rendered, encoding="utf-8")
+        print(str(output))
+    else:
+        print(rendered)
+
+
 def cmd_standards_sync(args):
     from .standards.attack import sync_attack
     from .standards.d3fend import sync_d3fend
@@ -622,18 +647,18 @@ def cmd_ai(args):
 
 
 def build_parser():
-    parser = argparse.ArgumentParser(prog="tce", description="Threat Context Engineering analyst toolkit")
+    parser = argparse.ArgumentParser(prog="tcem", description="TCEM — Threat Context Engineering Method analyst toolkit")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("validate", help="Validate case structure and references")
     p.add_argument("case_dir")
     p.set_defaults(func=cmd_validate)
 
-    p = sub.add_parser("score", help="Calculate TCE priority scores")
+    p = sub.add_parser("score", help="Calculate TCEM priority scores")
     p.add_argument("case_dir")
     p.set_defaults(func=cmd_score)
 
-    p = sub.add_parser("graph", help="Generate the native TCE case graph")
+    p = sub.add_parser("graph", help="Generate the native TCEM case graph")
     p.add_argument("case_dir")
     p.add_argument("--format", choices=["mermaid", "json"], default="mermaid")
     p.set_defaults(func=cmd_graph)
@@ -663,8 +688,14 @@ def build_parser():
 
     p = sub.add_parser("dashboard", help="Generate a self-contained HTML analyst dashboard")
     p.add_argument("case_dir")
-    p.add_argument("--output", default="tce-dashboard.html")
+    p.add_argument("--output", default="tcem-dashboard.html")
     p.set_defaults(func=cmd_dashboard)
+
+    p = sub.add_parser("operational-matrix", help="Render the TCEM Operational Matrix as JSON")
+    p.add_argument("case_dir")
+    p.add_argument("--offline", action="store_true", help="Do not enrich ATT&CK technique labels from the local cache")
+    p.add_argument("--output")
+    p.set_defaults(func=cmd_operational_matrix)
 
     p = sub.add_parser("standards-sync", help="Cache current ATT&CK STIX and D3FEND mappings")
     mode = p.add_mutually_exclusive_group()
@@ -690,7 +721,7 @@ def build_parser():
     p.add_argument("--limit", type=int, default=30)
     p.set_defaults(func=cmd_d3fend)
 
-    p = sub.add_parser("kg", help="Build the TCE + ATT&CK + D3FEND operational knowledge graph")
+    p = sub.add_parser("kg", help="Build the TCEM + ATT&CK + D3FEND operational knowledge graph")
     p.add_argument("case_dir")
     p.add_argument("--format", choices=["json", "graphml", "ttl"], default="json")
     p.add_argument("--output", default="tce-knowledge-graph.json")
@@ -704,13 +735,13 @@ def build_parser():
     p.add_argument("--output", default="attack-flow.json")
     p.set_defaults(func=cmd_export_attack_flow)
 
-    p = sub.add_parser("import-attack-flow", help="Convert Attack Flow into a review-only TCE scenario draft")
+    p = sub.add_parser("import-attack-flow", help="Convert Attack Flow into a review-only TCEM scenario draft")
     p.add_argument("bundle")
     p.add_argument("--output", default="imported-scenario.yaml")
     p.add_argument("--offline", action="store_true")
     p.set_defaults(func=cmd_import_attack_flow)
 
-    p = sub.add_parser("export-stix", help="Export the TCE graph as a STIX 2.1 bundle")
+    p = sub.add_parser("export-stix", help="Export the TCEM graph as a STIX 2.1 bundle")
     p.add_argument("case_dir")
     p.add_argument("--output", default="tce-case.stix.json")
     p.set_defaults(func=cmd_export_stix)
@@ -737,12 +768,12 @@ def build_parser():
     p.add_argument("--output", default="opencti-snapshot.json")
     p.set_defaults(func=cmd_opencti_pull)
 
-    p = sub.add_parser("opencti-to-tce", help="Convert an OpenCTI snapshot into review-only TCE evidence candidates")
+    p = sub.add_parser("opencti-to-tce", help="Convert an OpenCTI snapshot into review-only TCEM evidence candidates")
     p.add_argument("snapshot")
     p.add_argument("--output", default="opencti-evidence-candidates.yaml")
     p.set_defaults(func=cmd_opencti_to_tce)
 
-    p = sub.add_parser("opencti-resolve", help="Resolve OpenCTI snapshot entities against an existing TCE case")
+    p = sub.add_parser("opencti-resolve", help="Resolve OpenCTI snapshot entities against an existing TCEM case")
     p.add_argument("snapshot")
     p.add_argument("case_dir")
     p.add_argument("--threshold", type=float, default=0.90)
@@ -757,7 +788,7 @@ def build_parser():
     p.add_argument("--max-pages", type=int, default=20)
     p.set_defaults(func=cmd_taxii_pull)
 
-    p = sub.add_parser("horizon-conformance", help="Evaluate the optional TCE-Horizon enterprise extension")
+    p = sub.add_parser("horizon-conformance", help="Evaluate the optional TCEM-Horizon enterprise extension")
     p.add_argument("case_dir")
     p.set_defaults(func=cmd_horizon_conformance)
 
@@ -831,7 +862,7 @@ def build_parser():
     p.add_argument("--output", default="environment.yaml")
     p.set_defaults(func=cmd_environment_import_csv)
 
-    p = sub.add_parser("horizon-export", help="Export Horizon paths as review-only TCE scenario candidates")
+    p = sub.add_parser("horizon-export", help="Export Horizon paths as review-only TCEM scenario candidates")
     p.add_argument("case_dir")
     p.add_argument("--environment-id")
     p.add_argument("--max-hops", type=int, default=5)
@@ -840,7 +871,7 @@ def build_parser():
     p.add_argument("--output", default="horizon-scenario-candidates.yaml")
     p.set_defaults(func=cmd_horizon_export)
 
-    p = sub.add_parser("conformance", help="Evaluate a case against TCE conformance levels")
+    p = sub.add_parser("conformance", help="Evaluate a case against TCEM conformance levels")
     p.add_argument("case_dir")
     p.add_argument("--level", choices=["core", "detection", "validated", "operational"], default="operational")
     p.set_defaults(func=cmd_conformance)
@@ -874,17 +905,17 @@ def build_parser():
     p.add_argument("--output", default="tce-snapshot.json")
     p.set_defaults(func=cmd_snapshot)
 
-    p = sub.add_parser("snapshot-diff", help="Compare two TCE snapshots and surface regressions or drift")
+    p = sub.add_parser("snapshot-diff", help="Compare two TCEM snapshots and surface regressions or drift")
     p.add_argument("before")
     p.add_argument("after")
     p.set_defaults(func=cmd_snapshot_diff)
 
-    p = sub.add_parser("context-drift", help="Compare two RedFrameworks/TCE context-enrichment snapshots")
+    p = sub.add_parser("context-drift", help="Compare two RedFrameworks/TCEM context-enrichment snapshots")
     p.add_argument("before")
     p.add_argument("after")
     p.set_defaults(func=cmd_context_drift)
 
-    p = sub.add_parser("context-catalog", help="List TCE threat-context lenses")
+    p = sub.add_parser("context-catalog", help="List TCEM threat-context lenses")
     p.add_argument("--lens-id")
     p.set_defaults(func=cmd_context_catalog)
 
@@ -895,7 +926,7 @@ def build_parser():
     p = sub.add_parser("redframeworks-sync", help="Cache RedFrameworks v6 API context datasets")
     p.set_defaults(func=cmd_redframeworks_sync)
 
-    p = sub.add_parser("context-enrich", help="Enrich TCE threat contexts with review-only RedFrameworks v6 candidates")
+    p = sub.add_parser("context-enrich", help="Enrich TCEM threat contexts with review-only RedFrameworks v6 candidates")
     p.add_argument("case_dir")
     p.add_argument("--output")
     p.add_argument("--offline", action="store_true")
