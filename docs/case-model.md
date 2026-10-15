@@ -19,11 +19,11 @@ A **TCEM Case** is the unit of analysis.
 
 CLI:
 
-    tce validate <case-dir>
-    tce score <case-dir>
-    tce graph <case-dir>
-    tce gaps <case-dir>
-    tce coverage <case-dir>
-    tce chokepoints <case-dir>
-    tce trace <case-dir> DEC-001
-    tce report <case-dir> --output report.md
+    tcem validate <case-dir>
+    tcem score <case-dir>
+    tcem graph <case-dir>
+    tcem gaps <case-dir>
+    tcem coverage <case-dir>
+    tcem chokepoints <case-dir>
+    tcem trace <case-dir> DEC-001
+    tcem report <case-dir> --output report.md
