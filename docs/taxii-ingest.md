@@ -1,8 +1,8 @@
 # TAXII 2.1 Read Adapter
 
-TCE includes a small read-only TAXII 2.1 collection adapter.
+TCEM includes a small read-only TAXII 2.1 collection adapter.
 
-The goal is not to become another threat-feed platform. The goal is to allow external STIX intelligence to enter the same provenance and review pipeline used by TCE.
+The goal is not to become another threat-feed platform. The goal is to allow external STIX intelligence to enter the same provenance and review pipeline used by TCEM.
 
 ## Pull a collection
 
