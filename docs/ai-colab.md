@@ -1,6 +1,6 @@
 # Colab AI Workbench
 
-TCE v0.3 includes a Google Colab profile with **GLiNER ON by default** and **Qwen ON by default**.
+TCEM v0.3 includes a Google Colab profile with **GLiNER ON by default** and **Qwen ON by default**.
 
 ## Runtime policy
 
@@ -28,7 +28,7 @@ The notebook setup cell does four things before loading the models:
 
 The fourth step is intentional. In a long-lived notebook kernel, a new editable install can rely on a path file that is normally processed only when Python starts. A terminal launches a new interpreter after installation; Colab does not. Explicitly attaching `src/` makes the notebook immediately importable without a runtime restart.
 
-After setup, the notebook prints the TCE version and the exact imported module path. If that check fails, stop there rather than continuing into model loading.
+After setup, the notebook prints the TCEM toolkit version and the exact imported module path. If that check fails, stop there rather than continuing into model loading.
 
 ## Defaults
 
@@ -55,6 +55,6 @@ AI results remain a review queue. Candidate ATT&CK IDs are checked against the d
 
 Use `colab/TCE_v0_3_AI_Knowledge_Graph.ipynb`.
 
-The notebook checks hardware, installs TCE, verifies the live-kernel import, loads both models, synchronizes ATT&CK and D3FEND, builds the graph, runs the AI pipeline, exports Attack Flow, Navigator and STIX, and provides an optional reviewed OpenCTI import step.
+The notebook checks hardware, installs the TCEM toolkit, verifies the live-kernel import, loads both models, synchronizes ATT&CK and D3FEND, builds the graph, runs the AI pipeline, exports Attack Flow, Navigator and STIX, and provides an optional reviewed OpenCTI import step.
 
 OpenCTI transfer is not automatic.
