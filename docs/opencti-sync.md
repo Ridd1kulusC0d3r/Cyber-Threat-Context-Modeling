@@ -1,19 +1,19 @@
 # OpenCTI Bidirectional Bridge
 
-TCE v0.3.1 supports both directions:
+TCEM v0.3.1 supports both directions:
 
 ~~~mermaid
 flowchart LR
     O[OpenCTI] --> S[Local Snapshot]
     S --> R[Entity Resolution]
-    S --> E[TCE Evidence Candidates]
+    S --> E[TCEM Evidence Candidates]
     E --> A[Analyst Review]
-    A --> C[TCE Case]
+    A --> C[TCEM Case]
     C --> STIX[STIX 2.1 Export]
     STIX --> O
 ~~~
 
-## OpenCTI to TCE
+## OpenCTI to TCEM
 
 Configure the official PyCTI client:
 
@@ -37,7 +37,7 @@ Convert the snapshot into review-only evidence candidates:
       opencti-snapshot.json \
       --output opencti-evidence-candidates.yaml
 
-Nothing is automatically merged into a TCE Case.
+Nothing is automatically merged into a TCEM Case.
 
 ## Entity resolution
 
@@ -51,9 +51,9 @@ Before linking external intelligence to internal analytical objects:
 
 Exact normalized-name or alias matches score 1.0. Fuzzy matches below 1.0 remain analyst-review candidates.
 
-## TCE to OpenCTI
+## TCEM to OpenCTI
 
-Export a reviewed TCE graph:
+Export a reviewed TCEM graph:
 
     tce export-stix CASE_DIR --output case.stix.json
 
