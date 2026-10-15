@@ -89,10 +89,10 @@ This prevents old intelligence from becoming immortal merely because a spreadshe
 TCEM already uses RedFrameworks v6 as a review-gated domain-context provider. Horizon can convert a saved context-enrichment snapshot into **candidate intelligence signals**:
 
 ~~~bash
-tce context-enrich examples/cases/enterprise-identity \
+tcem context-enrich examples/cases/enterprise-identity \
   --output redframeworks-context.json
 
-tce horizon-intel-candidates \
+tcem horizon-intel-candidates \
   examples/cases/enterprise-identity \
   redframeworks-context.json \
   --output horizon-intelligence-candidates.yaml
@@ -123,10 +123,10 @@ It compares local telemetry requirements with actual enterprise telemetry capabi
 No extra mitreattack-python dependency is required. TCEM already parses current ATT&CK STIX and its defensive metadata, so a second parser would mostly create a second maintenance problem.
 
 ~~~bash
-tce horizon-absence examples/cases/enterprise-identity --offline
+tcem horizon-absence examples/cases/enterprise-identity --offline
 
-tce standards-sync --attack-only
-tce horizon-absence examples/cases/enterprise-identity
+tcem standards-sync --attack-only
+tcem horizon-absence examples/cases/enterprise-identity
 ~~~
 
 Horizon blind paths are also appended to the normal Detection Backlog as telemetry-blind-path work.
@@ -140,9 +140,9 @@ Every action remains proposed and review-gated. When D3FEND is available, Horizo
 When a budget is supplied, the optimizer uses **marginal path coverage**. Overlapping controls receive declining incremental benefit instead of each pretending to eliminate the same risk independently.
 
 ~~~bash
-tce horizon-actions examples/cases/enterprise-identity --budget 8 --offline
+tcem horizon-actions examples/cases/enterprise-identity --budget 8 --offline
 
-tce horizon-export-actions examples/cases/enterprise-identity \
+tcem horizon-export-actions examples/cases/enterprise-identity \
   --budget 8 --offline \
   --output horizon-preemptive-actions.yaml
 ~~~
@@ -150,7 +150,7 @@ tce horizon-export-actions examples/cases/enterprise-identity \
 ## Scenario candidates
 
 ~~~bash
-tce horizon-export examples/cases/enterprise-identity \
+tcem horizon-export examples/cases/enterprise-identity \
   --offline \
   --output horizon-scenario-candidates.yaml
 ~~~
@@ -171,15 +171,15 @@ Generated scenarios are never silently promoted.
 ## Drift
 
 ~~~bash
-tce horizon-assess examples/cases/enterprise-identity \
+tcem horizon-assess examples/cases/enterprise-identity \
   --offline --output horizon-before.json
 
 # environment, CTI, controls or telemetry changes
 
-tce horizon-assess examples/cases/enterprise-identity \
+tcem horizon-assess examples/cases/enterprise-identity \
   --offline --output horizon-after.json
 
-tce horizon-diff horizon-before.json horizon-after.json
+tcem horizon-diff horizon-before.json horizon-after.json
 ~~~
 
 The diff surfaces new/removed paths, score changes, component drivers, newly blind paths, resolved blind paths, and H0/H1 change. This provides the basis for a daily enterprise horizon report: **what changed, why it matters, and what defensive decision deserves review**.
@@ -187,11 +187,11 @@ The diff surfaces new/removed paths, score changes, component drivers, newly bli
 ## Main commands
 
 ~~~bash
-tce horizon-conformance examples/cases/enterprise-identity
-tce horizon-assess examples/cases/enterprise-identity --offline
-tce horizon-chokepoints examples/cases/enterprise-identity --offline
-tce horizon-absence examples/cases/enterprise-identity --offline
-tce horizon-actions examples/cases/enterprise-identity --budget 8 --offline
+tcem horizon-conformance examples/cases/enterprise-identity
+tcem horizon-assess examples/cases/enterprise-identity --offline
+tcem horizon-chokepoints examples/cases/enterprise-identity --offline
+tcem horizon-absence examples/cases/enterprise-identity --offline
+tcem horizon-actions examples/cases/enterprise-identity --budget 8 --offline
 ~~~
 
 ## Design boundary

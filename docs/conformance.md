@@ -11,10 +11,10 @@ TCEM exposes executable conformance checks for the 1.0 draft.
 
 Run:
 
-    tce conformance CASE_DIR --level core
-    tce conformance CASE_DIR --level detection
-    tce conformance CASE_DIR --level validated
-    tce conformance CASE_DIR --level operational
+    tcem conformance CASE_DIR --level core
+    tcem conformance CASE_DIR --level detection
+    tcem conformance CASE_DIR --level validated
+    tcem conformance CASE_DIR --level operational
 
 ## Optional TCEM-Horizon extension
 
@@ -22,7 +22,7 @@ TCEM-Horizon is orthogonal to the linear Core → Detection → Validated → Op
 
 Run:
 
-    tce horizon-conformance CASE_DIR
+    tcem horizon-conformance CASE_DIR
 
 The extension checks for an enterprise Environment State, entry/exposure points, crown-jewel mappings, trust/dependency relationships, defensive controls, telemetry sources, explicit intelligence-signal lifecycle states, and the separation of accepted forecasts from proposed machine scores.
 

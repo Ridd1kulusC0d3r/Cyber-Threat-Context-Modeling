@@ -5,7 +5,7 @@ The TCEM frontend is deliberately small and runs on the same Google Colab VM as 
 ## Start locally
 
     pip install -e .[web]
-    tce ui examples/cases/enterprise-identity --host 0.0.0.0 --port 3000
+    tcem ui examples/cases/enterprise-identity --host 0.0.0.0 --port 3000
 
 The Colab notebook performs this automatically and asks Colab for the proxied URL for port 3000.
 
