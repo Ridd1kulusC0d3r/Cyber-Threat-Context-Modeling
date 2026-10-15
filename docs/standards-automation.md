@@ -1,6 +1,6 @@
 # Standards Automation
 
-TCE v0.3 adds deterministic standards adapters around the AI layer.
+TCEM v0.3 adds deterministic standards adapters around the AI layer.
 
 ## ATT&CK
 
@@ -14,7 +14,7 @@ Qwen may propose a technique. The proposal remains a candidate until the ATT&CK 
 
 ## D3FEND
 
-TCE downloads the current inferred D3FEND mapping dataset.
+TCEM downloads the current inferred D3FEND mapping dataset.
 
     tce standards-sync --d3fend-only
     tce d3fend T1078
