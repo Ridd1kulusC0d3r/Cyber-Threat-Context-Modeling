@@ -1,8 +1,8 @@
 # Operational Knowledge Graph
 
-TCE v0.3 builds a typed multi-edge graph from the case plus ATT&CK and D3FEND.
+TCEM v0.3 builds a typed multi-edge graph from the case plus ATT&CK and D3FEND.
 
-Node families include TCE analytical objects, architecture nodes, crown jewels, ATT&CK techniques, D3FEND mappings, telemetry, detections, validation and intelligence gaps.
+Node families include TCEM analytical objects, architecture nodes, crown jewels, ATT&CK techniques, D3FEND mappings, telemetry, detections, validation and intelligence gaps.
 
 Example edges include supports, contradicts, targets, uses_behavior, defensive_mapping, telemetry_requirements, validation_ids, administers, controls and depends_on.
 
