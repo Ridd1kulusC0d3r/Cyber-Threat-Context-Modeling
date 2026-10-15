@@ -36,7 +36,7 @@ The goal is not to invent a query language. The pattern records the analytical i
 
 A Detection Specification may include a Sigma mapping.
 
-    tce sigma-export CASE_DIR DSP-001 --output dsp-001.yml
+    tcem sigma-export CASE_DIR DSP-001 --output dsp-001.yml
 
 Sigma is an implementation format, not the TCEM source of truth.
 
@@ -44,7 +44,7 @@ Sigma is an implementation format, not the TCEM source of truth.
 
 Validation uses structured logic over authorized fixtures or log-replay datasets.
 
-    tce validation-run CASE_DIR VAL-001
+    tcem validation-run CASE_DIR VAL-001
 
 The harness currently supports deterministic defensive checks for:
 
@@ -56,7 +56,7 @@ The fixture contains security events, not an attack procedure.
 
 ## Telemetry health
 
-    tce telemetry-health CASE_DIR
+    tcem telemetry-health CASE_DIR
 
 Each Telemetry Contract is scored on:
 
@@ -70,7 +70,7 @@ The output also maps conceptual fields to OCSF, ECS, Microsoft ASIM and Splunk C
 
 ## Detection backlog
 
-    tce detection-backlog CASE_DIR --output backlog.json
+    tcem detection-backlog CASE_DIR --output backlog.json
 
 The backlog starts from prioritized scenarios and identifies work such as:
 
@@ -87,11 +87,11 @@ This keeps the order correct:
 
 Create a reproducible snapshot:
 
-    tce snapshot CASE_DIR --output snapshots/2026-10-01.json
+    tcem snapshot CASE_DIR --output snapshots/2026-10-01.json
 
 Compare two snapshots:
 
-    tce snapshot-diff before.json after.json
+    tcem snapshot-diff before.json after.json
 
 The diff reports:
 
