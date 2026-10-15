@@ -1,6 +1,6 @@
-# TCE Principles
+# TCEM Principles
 
-These principles define the project beyond any single framework.
+These principles define **TCEM**, the formal method inside the broader Threat Context Engineering (TCE) discipline.
 
 1. **Mission before matrix.** Start with what the organization must protect, not with a technique catalog.
 2. **Crown jewels are relationships, not labels.** A critical asset is only meaningful in the context of the process, identity, dependency, and impact around it.
