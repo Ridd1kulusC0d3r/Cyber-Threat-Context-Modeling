@@ -110,7 +110,7 @@ def _status_payload(case_dir: Path) -> dict[str, Any]:
 def create_app(case_dir: str | Path | None = None) -> FastAPI:
     root = Path(case_dir or os.getenv("TCE_CASE_DIR", "examples/cases/enterprise-identity")).resolve()
     app = FastAPI(
-        title="Threat Context Engineering Workbench",
+        title="TCEM — Threat Context Engineering Method Workbench",
         version="0.5.1",
         docs_url="/api/docs",
         redoc_url=None,
