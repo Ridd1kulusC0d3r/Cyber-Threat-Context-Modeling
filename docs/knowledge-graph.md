@@ -1,6 +1,6 @@
-# TCE Knowledge Graph
+# TCEM Knowledge Graph
 
-The TCE data model is a graph connecting Mission, Decision, Intelligence Requirement, Crown Jewel, Architecture Node, Trust Boundary, Evidence, Threat Hypothesis, Threat Scenario, ATT&CK Behavior, Defensive Control, Telemetry Contract, Detection Use Case, Validation, Intelligence Gap, and Backlog Item.
+The TCEM data model is a graph connecting Mission, Decision, Intelligence Requirement, Crown Jewel, Architecture Node, Trust Boundary, Evidence, Threat Hypothesis, Threat Scenario, ATT&CK Behavior, Defensive Control, Telemetry Contract, Detection Use Case, Validation, Intelligence Gap, and Backlog Item.
 
 ~~~mermaid
 flowchart LR
@@ -18,4 +18,4 @@ flowchart LR
     G --> D2[Decision]
 ~~~
 
-TCE should interoperate with existing standards rather than replace them.
+TCEM should interoperate with existing standards rather than replace them.
