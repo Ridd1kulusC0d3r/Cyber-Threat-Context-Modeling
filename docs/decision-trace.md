@@ -1,6 +1,6 @@
 # Decision Trace
 
-Decision Trace is the explainability layer of TCE.
+Decision Trace is the explainability spine of the **TCEM Operational Matrix**. It connects operational decisions back to scenarios, hypotheses, evidence, Intelligence Requirements and crown jewels.
 
 ~~~mermaid
 flowchart BT
