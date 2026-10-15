@@ -144,8 +144,8 @@ def write_graph(graph: nx.MultiDiGraph, output: str | Path, fmt: str = "json"):
             )
         nx.write_graphml(safe, path)
     elif fmt == "ttl":
-        namespace = Namespace("https://tce.local/id/")
-        predicate = Namespace("https://tce.local/relation/")
+        namespace = Namespace("https://tce.example/id/")
+        predicate = Namespace("https://tce.example/relation/")
         rdf = Graph()
         for node, attrs in graph.nodes(data=True):
             subject = URIRef(namespace + str(node))

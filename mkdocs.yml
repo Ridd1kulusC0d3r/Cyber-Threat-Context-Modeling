@@ -69,6 +69,8 @@ nav:
   - Specification:
       - TCE 1.0 Draft: specification-draft.md
       - Conformance: conformance.md
+  - Security & Data Handling:
+      - Public Repository Data Safety: public-repository-safety.md
   - Operations:
       - Case Model & CLI: case-model.md
       - Decision Trace: decision-trace.md

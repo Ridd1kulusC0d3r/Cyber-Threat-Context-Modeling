@@ -6,11 +6,34 @@ build/
 dist/
 site/
 .venv/
+
+# Local configuration and credentials
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Private / organization-specific case material
 private-cases/
 client-cases/
 customer-cases/
+cases-private/
+private/
 *.private
 *.private.*
+*.sensitive
+*.sensitive.*
+*.secret
+*.secret.*
+
+# Generated assessments and exports that may contain organization context
+local-output/
+private-output/
+homologation*.json
+horizon-before*.json
+horizon-after*.json
+horizon-assessment*.json
+case-export*.json
