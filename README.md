@@ -25,7 +25,7 @@
 | **01 · Understand** | **02 · Engineer** | **03 · Decide** |
 | :--- | :--- | :--- |
 | Connect mission, crown jewels, architecture and evidence. | Turn plausible attack paths into controls, telemetry contracts and detections. | Validate coverage, expose gaps and trace each defensive decision. |
-| [Threat context →](docs/threat-context-matrix.md) | [Detection as code →](docs/detection-validation-as-code.md) | [Decision Trace →](docs/decision-trace.md) |
+| [Operational Matrix →](docs/operational-matrix.md) | [TCEM Detection →](docs/detection-engineering.md) | [Decision Trace →](docs/decision-trace.md) |
 
 ### Choose your entry point
 
@@ -168,7 +168,7 @@ See [Prioritization Model](docs/prioritization.md).
 
 | Start here | What you will find |
 | :--- | :--- |
-| [Method & workflow](docs/methodology.md) | The analytical process, from mission to decision |
+| [TCEM Method](docs/methodology.md) | The analytical process, from mission to decision |
 | [Horizon](docs/horizon.md) | Enterprise paths, blind spots and defensive action candidates |
 | [Reference cases](docs/reference-cases.md) | Identity, cloud, supply chain, AI agents, SaaS and ICS/OT |
 | [Templates](templates/) | Reusable analytical artifacts |
@@ -191,20 +191,20 @@ See [Prioritization Model](docs/prioritization.md).
 
 ## Analyst toolkit
 
-Install the repository in editable mode and operate directly on a TCEM Case:
+Install the repository in editable mode and operate directly on a TCEM Case. The preferred CLI is `tcem`; `tce` remains a backward-compatible alias during the pre-1.0 transition.
 
 ~~~bash
 pip install -e .
 
-tce validate examples/cases/enterprise-identity
-tce score examples/cases/enterprise-identity
-tce graph examples/cases/enterprise-identity
-tce gaps examples/cases/enterprise-identity
-tce coverage examples/cases/enterprise-identity
-tce chokepoints examples/cases/enterprise-identity
-tce trace examples/cases/enterprise-identity DEC-001
-tce report examples/cases/enterprise-identity --audience executive --output executive.md
-tce dashboard examples/cases/enterprise-identity --output dashboard.html
+tcem validate examples/cases/enterprise-identity
+tcem score examples/cases/enterprise-identity
+tcem graph examples/cases/enterprise-identity
+tcem gaps examples/cases/enterprise-identity
+tcem coverage examples/cases/enterprise-identity
+tcem chokepoints examples/cases/enterprise-identity
+tcem trace examples/cases/enterprise-identity DEC-001
+tcem report examples/cases/enterprise-identity --audience executive --output executive.md
+tcem dashboard examples/cases/enterprise-identity --output dashboard.html
 ~~~
 
 The CLI currently provides semantic validation, priority scoring, graph export, intelligence and telemetry gap discovery, multi-dimensional detection coverage, defensive choke-point analysis, Decision Trace, audience-specific Markdown reports, and a self-contained analyst dashboard.
@@ -246,11 +246,11 @@ v0.3 adds a Colab-ready intelligence workbench:
 - operational knowledge graph export to JSON, GraphML and RDF/Turtle.
 
 ~~~bash
-tce standards-sync
-tce attack-validate examples/cases/enterprise-identity
-tce kg examples/cases/enterprise-identity --format ttl --output tce-kg.ttl
-tce export-attack-flow examples/cases/enterprise-identity TS-001 --output flow.json
-tce export-stix examples/cases/enterprise-identity --output case.stix.json
+tcem standards-sync
+tcem attack-validate examples/cases/enterprise-identity
+tcem kg examples/cases/enterprise-identity --format ttl --output tce-kg.ttl
+tcem export-attack-flow examples/cases/enterprise-identity TS-001 --output flow.json
+tcem export-stix examples/cases/enterprise-identity --output case.stix.json
 ~~~
 
 OpenCTI is dry-run by default. AI outputs are review candidates by default.
@@ -268,15 +268,15 @@ The remaining v0.3 interoperability layer is now operational:
 - deterministic entity resolution before CTI is linked into the case.
 
 ~~~bash
-tce attack-detect T1078
+tcem attack-detect T1078
 
-tce import-attack-flow flow.json --output imported-scenario.yaml
+tcem import-attack-flow flow.json --output imported-scenario.yaml
 
-tce opencti-pull --output opencti-snapshot.json
-tce opencti-resolve opencti-snapshot.json examples/cases/enterprise-identity
-tce opencti-to-tce opencti-snapshot.json --output opencti-evidence-candidates.yaml
+tcem opencti-pull --output opencti-snapshot.json
+tcem opencti-resolve opencti-snapshot.json examples/cases/enterprise-identity
+tcem opencti-to-tce opencti-snapshot.json --output opencti-evidence-candidates.yaml
 
-tce taxii-pull https://example/taxii/root/collections/COLLECTION-ID \
+tcem taxii-pull https://example/taxii/root/collections/COLLECTION-ID \
   --output taxii-bundle.json
 ~~~
 
@@ -305,10 +305,10 @@ The built-in catalog contains more than twenty lenses, including Identity, Cloud
 Eight of those lenses map directly to **RedFrameworks v6 domain packs**. RedFrameworks remains the external catalog; TCE uses it as a review-gated context provider.
 
 ~~~bash
-tce context-catalog
-tce context-assess examples/cases/enterprise-identity
-tce redframeworks-sync
-tce context-enrich examples/cases/enterprise-identity --output context-intelligence.json
+tcem context-catalog
+tcem context-assess examples/cases/enterprise-identity
+tcem redframeworks-sync
+tcem context-enrich examples/cases/enterprise-identity --output context-intelligence.json
 ~~~
 
 External actor, campaign, detection and validation metadata remains **candidate context** until local evidence establishes relevance.
@@ -334,12 +334,12 @@ New capabilities:
 - executable TCE conformance levels and a 1.0 specification draft.
 
 ~~~bash
-tce conformance examples/cases/enterprise-identity --level validated
-tce telemetry-health examples/cases/enterprise-identity
-tce detection-backlog examples/cases/enterprise-identity
-tce sigma-export examples/cases/enterprise-identity DSP-001 --output dsp-001.yml
-tce validation-run examples/cases/enterprise-identity VAL-001
-tce snapshot examples/cases/enterprise-identity --output snapshot.json
+tcem conformance examples/cases/enterprise-identity --level validated
+tcem telemetry-health examples/cases/enterprise-identity
+tcem detection-backlog examples/cases/enterprise-identity
+tcem sigma-export examples/cases/enterprise-identity DSP-001 --output dsp-001.yml
+tcem validation-run examples/cases/enterprise-identity VAL-001
+tcem snapshot examples/cases/enterprise-identity --output snapshot.json
 ~~~
 
 The core chain is now executable:
@@ -378,17 +378,17 @@ Enterprise State
 Forecast pressure is **not attack probability**. Proposed machine scores remain separate from analyst-accepted scores.
 
 ~~~bash
-tce horizon-conformance examples/cases/enterprise-identity
+tcem horizon-conformance examples/cases/enterprise-identity
 
-tce horizon-assess examples/cases/enterprise-identity --offline
-tce horizon-chokepoints examples/cases/enterprise-identity --offline
-tce horizon-absence examples/cases/enterprise-identity --offline
-tce horizon-actions examples/cases/enterprise-identity --budget 8 --offline
+tcem horizon-assess examples/cases/enterprise-identity --offline
+tcem horizon-chokepoints examples/cases/enterprise-identity --offline
+tcem horizon-absence examples/cases/enterprise-identity --offline
+tcem horizon-actions examples/cases/enterprise-identity --budget 8 --offline
 
-tce horizon-export examples/cases/enterprise-identity \
+tcem horizon-export examples/cases/enterprise-identity \
   --offline --output horizon-scenario-candidates.yaml
 
-tce horizon-export-actions examples/cases/enterprise-identity \
+tcem horizon-export-actions examples/cases/enterprise-identity \
   --budget 8 --offline --output horizon-preemptive-actions.yaml
 ~~~
 
@@ -419,7 +419,7 @@ TCE now includes a lightweight dark frontend designed to run **inside the same C
 
 ~~~bash
 pip install -e .[web]
-tce ui examples/cases/enterprise-identity --port 3000
+tcem ui examples/cases/enterprise-identity --port 3000
 ~~~
 
 The Colab notebook starts it automatically and prints a proxied `*.prod.colab.dev` link.
