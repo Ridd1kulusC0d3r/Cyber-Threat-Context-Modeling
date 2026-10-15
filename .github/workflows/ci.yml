@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Public repository hygiene
+        run: python scripts/check_public_repo_hygiene.py
       - name: Install
         run: pip install -e .[web]
       - name: Unit tests

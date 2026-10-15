@@ -24,3 +24,7 @@ List primary sources, validation evidence, or worked examples when applicable.
 - [ ] Priority and confidence are not conflated
 - [ ] Defensive / authorized-testing scope is preserved
 - [ ] Documentation builds locally
+- [ ] All examples and fixtures are synthetic or public-source derived
+- [ ] No real organization/customer name, email, hostname, private IP, tenant/account ID, screenshot, log, or case excerpt is included
+- [ ] No temporary notebook proxy URL, agent/session URL, signed link, credential, token, secret, or private key is included
+- [ ] `python scripts/check_public_repo_hygiene.py` passes

@@ -459,6 +459,14 @@ The project is intended for defensive architecture, threat-informed detection, a
 
 The method now adds an enterprise Environment State and Horizon layer over the existing TCE pipeline. It can discover review-only exposure paths toward crown jewels, combine accepted time-decayed intelligence with vulnerability, control and telemetry context, calculate risk-weighted choke points, find Detection-by-Absence blind spots, propose budget-aware preemptive defensive actions, and feed approved candidates back into the normal detection and validation lifecycle. RedFrameworks, ATT&CK, D3FEND, Attack Flow, OpenCTI, TAXII, the operational knowledge graph, GLiNER and Qwen remain integrated around the evidence boundary.
 
+## Public repository data boundary
+
+This repository contains **synthetic and public-source material only**. Real enterprise assessments, customer/organization identifiers, internal infrastructure data, logs, screenshots, private URLs, session links, credentials, and non-public case material must remain outside the repository.
+
+Use reserved example domains and address ranges in fixtures. CI runs `python scripts/check_public_repo_hygiene.py` to catch common accidental disclosures before merge.
+
+See [Public Repository Data Safety](docs/public-repository-safety.md) and [SECURITY.md](SECURITY.md).
+
 ## Contributing
 
 Contributions that improve rigor, reproducibility, references, examples, and defensive applicability are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
