@@ -138,7 +138,7 @@ def evaluate_horizon_conformance(entities: dict[str, dict]) -> dict[str, Any]:
 
     failed = [row for row in checks if not row["passed"]]
     return {
-        "extension": "TCE-Horizon",
+        "extension": "TCEM-Horizon",
         "passed": not failed,
         "checks": checks,
         "failed_checks": [row["check"] for row in failed],
