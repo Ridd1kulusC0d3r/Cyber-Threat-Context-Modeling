@@ -1,6 +1,6 @@
 # Entity Resolution
 
-TCE uses a conservative deterministic entity-resolution layer before external CTI is linked to internal analytical objects.
+TCEM uses a conservative deterministic entity-resolution layer before external CTI is linked to internal analytical objects.
 
 ## Normalization
 
