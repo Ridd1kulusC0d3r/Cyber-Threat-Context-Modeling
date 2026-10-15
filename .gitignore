@@ -37,3 +37,13 @@ horizon-before*.json
 horizon-after*.json
 horizon-assessment*.json
 case-export*.json
+local-cases/
+confidential/
+restricted/
+sensitive/
+*.tfstate
+*.tfstate.*
+*.har
+*.pcap
+*.pcapng
+*.evtx
