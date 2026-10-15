@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/TCEM-v0.5.1-5de4d4?style=flat-square&amp;labelColor=102638" alt="TCEM v0.5.1">
   <a href="https://attack.mitre.org/"><img src="https://img.shields.io/badge/vocabulary-ATT%26CK-f0bc69?style=flat-square&amp;labelColor=102638" alt="ATT&amp;CK vocabulary"></a>
   <a href="https://d3fend.mitre.org/"><img src="https://img.shields.io/badge/defense-D3FEND-5de4d4?style=flat-square&amp;labelColor=102638" alt="D3FEND defensive vocabulary"></a>
-  <a href="https://colab.research.google.com/github/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/colab/TCE_v0_5_Horizon_Workbench.ipynb"><img src="https://img.shields.io/badge/Open_workbench-Colab-f0bc69?style=flat-square&amp;labelColor=102638" alt="Open workbench in Colab"></a>
+  <a href="https://colab.research.google.com/github/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/colab/TCEM_v0_5_Horizon_Workbench.ipynb"><img src="https://img.shields.io/badge/Open_workbench-Colab-f0bc69?style=flat-square&amp;labelColor=102638" alt="Open workbench in Colab"></a>
 </p>
 
 ---
