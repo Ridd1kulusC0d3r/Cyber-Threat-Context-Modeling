@@ -158,8 +158,8 @@ def main() -> int:
 
     if failures:
         print("PUBLIC_REPO_HYGIENE_FAILED")
-        for path, lineno, label, value in failures:
-            print(f"{path}:{lineno}: {label}: {value}")
+        for path, lineno, label, _value in failures:
+            print(f"{path}:{lineno}: {label}: [matching value suppressed]")
         print(
             "\nReplace organization-specific values with synthetic/reserved examples. "
             "Keep private case material outside the public repository."
