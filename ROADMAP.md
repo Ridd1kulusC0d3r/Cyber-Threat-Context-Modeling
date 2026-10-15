@@ -2,7 +2,8 @@
 
 ## v0.1 — Method foundation
 
-- [x] Define Threat Context Engineering
+- [x] Define Threat Context Engineering (TCE) as the umbrella discipline
+- [x] Formalize Threat Context Engineering Method (TCEM)
 - [x] Define Zero-Point Detection
 - [x] Crown-jewel model
 - [x] Threat-scenario model
@@ -23,7 +24,7 @@
 - [x] Validation object
 - [x] Intelligence-gap object
 - [x] Decision Trace
-- [x] Complete TCE Case
+- [x] Complete TCEM Case
 - [x] Functional CLI
 - [x] Priority score calculator
 - [x] Semantic reference validation
@@ -47,7 +48,7 @@
 - [x] D3FEND inferred mapping helper
 - [x] ATT&CK Navigator export
 - [x] Attack Flow STIX 2.1 export
-- [x] TCE STIX 2.1 graph export
+- [x] TCEM STIX 2.1 graph export
 - [x] OpenCTI PyCTI bridge with dry-run default
 - [x] Operational typed multi-edge knowledge graph
 - [x] JSON / GraphML / RDF-Turtle graph export
@@ -84,7 +85,7 @@
 - [x] Internal model drift snapshots
 - [x] External CTI context drift comparator
 - [x] Six executable reference cases
-- [x] Executable TCE conformance levels
+- [x] Executable TCEM conformance levels
 
 ## v0.5 — Horizon: predictive and preemptive enterprise defense
 
@@ -101,14 +102,23 @@
 - [x] Detection Backlog integration for blind paths
 - [x] Preemptive defensive action catalog
 - [x] Budget-aware marginal path-coverage optimizer
-- [x] Review-only TCE scenario candidate export
+- [x] Review-only TCEM scenario candidate export
 - [x] Review-only preemptive-action export
 - [x] Horizon snapshot diff with explainable score drivers
 - [x] Architecture fallback for cases without an Environment State
-- [x] TCE-Horizon extension conformance
+- [x] TCEM-Horizon extension conformance
 - [x] Horizon web-workbench view
 - [x] Synthetic enterprise identity reference environment
 - [x] Unit and API tests
+
+## v0.5.1 — Naming and operating model
+
+- [x] TCE defined as umbrella discipline
+- [x] TCEM defined as formal method
+- [x] TCEM Detection formalized
+- [x] TCEM Operational Matrix formalized
+- [x] TCEM Specification 1.0 naming adopted
+- [x] `tcem` CLI alias added with `tce` backward compatibility
 
 ## v0.6 — Analyst workspace
 
@@ -123,7 +133,7 @@
 - [ ] Import/export UI
 - [ ] Analyst workflow for accepting/rejecting Horizon candidates
 
-## v1.0 — Reproducible TCE
+## v1.0 — TCEM Specification 1.0
 
 - [x] Specification 1.0 draft
 - [x] Executable conformance levels
@@ -133,4 +143,4 @@
 - [ ] Machine-readable conformance manifest
 
 
-A practitioner can create an Intelligence Requirement, model crown jewels and architecture, preserve evidence lineage, test hypotheses, prioritize attack paths, identify choke points, define telemetry, generate detection work, validate coverage, register gaps, and produce an auditable decision trail without inventing a parallel process.
+A TCEM practitioner can create an Intelligence Requirement, model crown jewels and architecture, preserve evidence lineage, test hypotheses, prioritize attack paths, identify choke points, define telemetry, generate detection work, validate coverage, register gaps, and produce an auditable decision trail without inventing a parallel process.
