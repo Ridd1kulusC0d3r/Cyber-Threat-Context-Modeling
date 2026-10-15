@@ -15,6 +15,7 @@ class WebAppTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Do contexto", response.text)
         self.assertIn("GLiNER", response.text)
+        self.assertIn("TCEM", response.text)
 
     def test_health(self):
         response = self.client.get("/health")
@@ -34,6 +35,14 @@ class WebAppTests(unittest.TestCase):
         data = response.json()
         self.assertGreaterEqual(data["assessment"]["modeled_contexts"], 3)
         self.assertGreaterEqual(len(data["catalog"]), 20)
+
+    def test_operational_matrix(self):
+        response = self.client.get("/api/operational-matrix")
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["name"], "TCEM Operational Matrix")
+        self.assertTrue(payload["rows"])
+        self.assertEqual(payload["rows"][0]["scenario_id"], "TS-001")
 
     def test_horizon(self):
         response = self.client.get("/api/horizon")
