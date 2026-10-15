@@ -1,6 +1,6 @@
-# Threat Context Matrix
+# Threat Context Matrix — context layer of the TCEM Operational Matrix
 
-Threat Context Engineering is not limited to application or system-architecture threat modeling.
+This page documents the **context-lens layer** that originated as the Threat Context Matrix. In the refactored nomenclature, it is one layer of the broader **TCEM Operational Matrix**.
 
 The method treats **context itself as a first-class analytical object** so a scenario can be understood across mission, technology, adversary behavior, evidence, telemetry, resilience and time.
 
@@ -24,7 +24,7 @@ This prevents a common failure mode: a threat model that knows a technique but d
 
 ## Threat-context lenses
 
-TCE v0.3.2 ships a deterministic catalog of more than twenty lenses.
+TCEM v0.3.2 ships a deterministic catalog of more than twenty lenses.
 
 ### RedFrameworks-aligned domain lenses
 
@@ -39,7 +39,7 @@ These map directly to RedFrameworks v6 domain packs:
 - ICS / OT
 - IoT & Embedded
 
-### TCE-native cross-cutting lenses
+### TCEM-native cross-cutting lenses
 
 The method also covers contexts that are often lost when teams model only applications:
 
@@ -105,7 +105,7 @@ flowchart LR
 
 The catalog is not a maturity checklist where every organization must select every lens.
 
-TCE uses deterministic signals from the case to produce **applicability candidates**.
+TCEM uses deterministic signals from the case to produce **applicability candidates**.
 
 Example:
 
@@ -179,6 +179,6 @@ When CTI is available, it can refine:
 - collection priorities;
 - validation references.
 
-But TCE requires the source and relevance rationale to remain visible.
+But TCEM requires the source and relevance rationale to remain visible.
 
 External threat intelligence is **context**, not automatic proof that an organization is targeted.
