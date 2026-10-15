@@ -1,6 +1,6 @@
 # Public Repository Data Safety
 
-TCE is designed to work with sensitive enterprise context, which makes repository hygiene part of the threat model rather than an administrative afterthought.
+TCEM is designed to work with sensitive enterprise context, which makes repository hygiene part of the threat model rather than an administrative afterthought.
 
 The public repository must contain only:
 
@@ -74,7 +74,7 @@ Removing a value from `main` does not remove it from:
 
 If sensitive data ever reaches GitHub, rotate/invalidate anything actionable first. Then remove the current references and decide whether history rewrite and GitHub's sensitive-data removal process are required.
 
-## TCE case boundary
+## TCEM case boundary
 
 Real assessments should live in a separate private working location. The public repository should receive only sanitized, synthetic reproductions when an example is genuinely useful to the method.
 
