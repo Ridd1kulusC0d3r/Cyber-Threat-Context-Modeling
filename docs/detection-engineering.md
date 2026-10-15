@@ -1,8 +1,8 @@
-# Detection Engineering in TCE
+# TCEM Detection
 
-## Detection starts at threat modeling
+## Detection starts before the first log
 
-TCE treats detection requirements as an output of threat analysis.
+**TCEM Detection** is the telemetry and detection-engineering domain of TCEM. It treats detection requirements as an output of threat analysis and binds ATT&CK behavior, Detection Strategies, Analytics, Data Components, enterprise telemetry, DeTT&CT-style visibility assessment, correlation and validation.
 
 ~~~mermaid
 flowchart LR
