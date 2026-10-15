@@ -1,12 +1,12 @@
-# Threat Context Engineering Specification 1.0 — Draft
+# TCEM Specification 1.0 — Draft
 
 Status: **working draft**
 
-This document defines the intended stable analytical contract for Threat Context Engineering. It is not yet a final 1.0 release.
+This document defines the intended stable analytical contract for **Threat Context Engineering Method (TCEM)**, the formal method within the broader **Threat Context Engineering (TCE)** discipline.
 
 ## 1. Purpose
 
-TCE is a threat-informed intelligence and defensive-engineering method for connecting mission, crown jewels, architecture, threat context, evidence, behavior, telemetry, detection, validation and decisions in one auditable model.
+TCEM is a threat-informed intelligence and defensive-engineering method for connecting mission, crown jewels, architecture, threat context, evidence, behavior, telemetry, detection, validation and decisions in one auditable model.
 
 ## 2. Core principles
 
@@ -36,8 +36,6 @@ Mission
   -> Decision / Gap
 ~~~
 
-Not every case requires actor attribution, campaign attribution, AI assistance, OpenCTI or RedFrameworks enrichment.
-
 ## 4. First-class object namespaces
 
 | Object | Prefix | Required for core conformance |
@@ -51,85 +49,66 @@ Not every case requires actor attribution, campaign attribution, AI assistance, 
 | Threat Hypothesis | TH- | recommended |
 | Threat Scenario | TS- | yes |
 | Telemetry Contract | TC- | yes |
-| Detection Use Case | DU- | compatible legacy object |
 | Detection Specification | DSP- | yes for detection conformance |
 | Validation | VAL- | yes for validation conformance |
 | Intelligence Gap | GAP- | recommended |
 | Decision | DEC- | recommended |
-| Environment State | ENV- | TCE-Horizon extension |
-| Preemptive Action | PA- | TCE-Horizon extension |
+| Environment State | ENV- | TCEM-Horizon extension |
+| Preemptive Action | PA- | TCEM-Horizon extension |
 
 ## 5. Conformance levels
 
-### TCE-Core
+### TCEM-Core
+A conforming case SHALL contain mission context, at least one crown jewel, Threat Context, architecture and a prioritized threat scenario.
 
-A conforming case SHALL contain a mission, at least one crown jewel, one Threat Context, architecture, and one prioritized threat scenario.
+### TCEM-Detection
+TCEM-Core plus a Telemetry Contract and Detection Specification linked to the scenario.
 
-### TCE-Detection
+### TCEM-Validated
+TCEM-Detection plus at least one reproducible Validation object with expected versus observed evidence.
 
-TCE-Core plus a Telemetry Contract and Detection Specification linked to the scenario.
+### TCEM-Operational
+TCEM-Validated plus managed gaps, Decision Trace, ownership, review dates and historical snapshots sufficient to identify drift.
 
-### TCE-Validated
+## 6. TCEM Detection
 
-TCE-Detection plus at least one reproducible Validation object with evidence of expected versus observed behavior.
+**TCEM Detection** is the telemetry and detection-engineering domain of the method. It binds modeled behavior to ATT&CK Detection Strategies, Analytics, Data Components, enterprise telemetry, analytic hypotheses, correlation and validation.
 
-### TCE-Operational
-
-TCE-Validated plus managed gaps, decision trace, ownership, review dates and historical snapshots sufficient to identify drift.
-
-## 6. Detection Specification
-
-A Detection Specification is platform-neutral. It SHALL identify its scenarios and telemetry dependencies. It SHOULD define an analytic concept, correlation pattern, benign alternatives, implementations and validation references.
-
-Platform implementations such as Sigma, Microsoft Sentinel, Splunk or Elastic are representations of the specification, not replacements for it.
+A Detection Specification is platform-neutral. Platform implementations such as Sigma, Microsoft Sentinel, Splunk or Elastic are representations of the specification, not replacements for it.
 
 ## 7. Evidence boundary
 
-Observed internal evidence, external intelligence, analyst inference, assumptions and unknowns SHOULD remain distinguishable.
+Observed internal evidence, external intelligence, analyst inference, assumptions and unknowns SHOULD remain distinguishable. External intelligence SHALL NOT automatically create organization-specific attribution.
 
-External intelligence SHALL NOT automatically create organization-specific attribution.
+## 8. TCEM Operational Matrix
 
-## 8. Historical reproducibility
+A conforming operational implementation SHOULD expose the multidimensional relationship among Threat Context, ATT&CK behavior, observability, TCEM Detection, defensive controls, validation, Decision Trace and drift.
+
+The **TCEM Operational Matrix** is the normative operating view for this relationship.
+
+## 9. Historical reproducibility
 
 An operational implementation SHOULD be able to snapshot the model and compare snapshots for entity, priority, coverage, telemetry and validation drift.
 
-## 9. AI boundary
+## 10. AI boundary
 
-AI MAY assist entity extraction, hypothesis generation, summarization, mapping and gap discovery.
+AI MAY assist entity extraction, hypothesis generation, summarization, mapping and gap discovery. AI SHALL NOT silently alter evidence or automatically promote candidate intelligence into confirmed case facts.
 
-AI SHALL NOT silently alter immutable evidence or automatically promote candidate intelligence into confirmed case facts.
+## 11. Security boundary
 
-## 10. Security boundary
+TCEM is designed for defensive architecture, detection engineering, threat intelligence and authorized validation. Conformance does not require command-level adversary execution procedures.
 
-TCE is designed for defensive architecture, detection engineering, threat intelligence and authorized validation. A conforming implementation does not require command-level adversary execution procedures.
+## 12. TCEM-Horizon extension
 
-## 11. TCE-Horizon extension
+TCEM-Horizon is an optional enterprise extension for predictive and preemptive defensive analysis. It SHALL preserve the TCEM evidence boundary and SHALL NOT treat machine-generated forecast pressure as attack probability or accepted analyst judgment.
 
-TCE-Horizon is an optional enterprise extension for predictive and preemptive defensive analysis.
-
-A Horizon-conformant implementation SHALL preserve the normal TCE evidence boundary and SHALL NOT treat a machine-generated path score as attack probability or accepted analyst judgment.
-
-The extension introduces:
-
-- a time-stamped Environment State containing assets, identities, trust/dependency relationships, controls, telemetry, vulnerability signals and intelligence signals;
-- bounded candidate-path discovery from modeled exposure points toward crown-jewel nodes;
-- a proposed forecast-pressure score distinct from analyst-accepted scoring;
-- risk-weighted choke-point analysis;
-- Detection by Absence across local telemetry requirements and optional ATT&CK Data Components;
-- review-gated Preemptive Action candidates;
-- explainable drift between Horizon snapshots.
-
-Only intelligence signals in an explicitly accepted/active/validated/confirmed lifecycle state SHOULD affect forecast pressure. Candidate external intelligence MUST remain non-authoritative until analyst review.
-
-A Horizon implementation MUST NOT automatically execute defensive changes merely because an optimizer recommends them.
-
-## 12. Draft stabilization work
+## 13. Draft stabilization work
 
 Before final 1.0:
 
 - freeze core schemas;
 - publish conformance fixtures;
-- version migration rules;
+- publish version migration rules;
 - publish a formal glossary;
 - define extension rules;
 - validate the model against the reference-case suite;
