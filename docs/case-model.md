@@ -1,6 +1,6 @@
-# TCE Case Model
+# TCEM Case Model
 
-A **TCE Case** is the unit of analysis.
+A **TCEM Case** is the unit of analysis.
 
     cases/
     └── ORG-2026-001/
