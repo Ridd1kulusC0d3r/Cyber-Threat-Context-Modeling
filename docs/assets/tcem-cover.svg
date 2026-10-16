@@ -1,17 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="640" viewBox="0 0 1440 640" role="img" aria-labelledby="title desc">
-<title id="title">TCEM — Threat Context Engineering Method</title><desc id="desc">Formal method for context-driven, threat-informed defensive engineering.</desc>
-<defs><pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#17283c" stroke-width="1"/></pattern><linearGradient id="bg"><stop stop-color="#09111f"/><stop offset="1" stop-color="#10263a"/></linearGradient></defs>
+<title id="title">TCEM — Threat Context Engineering Method</title><desc id="desc">Threat context, ATT&amp;CK behavior, observability, detection, validation and decision in one traceable defensive method.</desc>
+<defs><pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#17283c" stroke-width="1"/></pattern><linearGradient id="bg" x1="0" x2="1"><stop stop-color="#07101d"/><stop offset="1" stop-color="#10283b"/></linearGradient></defs>
 <rect width="1440" height="640" rx="24" fill="url(#bg)"/><rect width="1440" height="640" rx="24" fill="url(#grid)"/>
-<path d="M64 64H132" stroke="#5de4d4" stroke-width="5"/>
-<g font-family="DejaVu Sans,Arial,sans-serif"><text x="152" y="71" font-size="17" fill="#5de4d4" letter-spacing="3">TCE / DISCIPLINE   •   TCEM / FORMAL METHOD</text>
-<text x="64" y="176" font-size="66" font-weight="bold" fill="#f2f6fc">Threat Context</text><text x="64" y="252" font-size="66" font-weight="bold" fill="#f2f6fc">Engineering Method.</text>
-<text x="68" y="316" font-size="25" fill="#b7c8dc">Context → observability → detection → decision.</text>
-<text x="68" y="359" font-size="19" fill="#b7c8dc">Model the environment. Engineer visibility. Validate the decision.</text>
-<rect x="68" y="404" width="238" height="38" rx="19" fill="#143c40"/><text x="88" y="429" font-size="14" fill="#7ef4e2" letter-spacing="2">ZERO-POINT DETECTION</text>
-<g fill="none" stroke="#2e6476" stroke-width="2"><circle cx="1120" cy="258" r="160"/><circle cx="1120" cy="258" r="112" stroke-dasharray="5 10"/><path d="M960 258H1280M1120 98V418M1007 145L1233 371M1007 371L1233 145"/></g>
-<path d="M1007 371L1120 258L1233 145" fill="none" stroke="#5de4d4" stroke-width="4"/>
-<g fill="#09111f" stroke="#5de4d4" stroke-width="3"><circle cx="1007" cy="371" r="9"/><circle cx="1233" cy="145" r="9"/><circle cx="1120" cy="258" r="38"/></g><path d="M1103 258L1115 270L1139 244" fill="none" stroke="#5de4d4" stroke-width="4"/>
-<text x="1120" y="461" text-anchor="middle" font-size="13" fill="#b7c8dc" letter-spacing="3">OPERATIONAL MATRIX</text>
-<path d="M64 500H1376" stroke="#294057"/>
-<text x="68" y="548" font-size="15" fill="#5de4d4">01 / CONTEXT</text><text x="412" y="548" font-size="15" fill="#5de4d4">02 / ATT&amp;CK</text><text x="756" y="548" font-size="15" fill="#5de4d4">03 / TCEM DETECTION</text><text x="1100" y="548" font-size="15" fill="#f0bc69">04 / DECISION</text>
-<text x="68" y="580" font-size="16" fill="#b7c8dc">Mission &amp; intelligence</text><text x="412" y="580" font-size="16" fill="#b7c8dc">Paths &amp; behavior</text><text x="756" y="580" font-size="16" fill="#b7c8dc">Telemetry &amp; analytics</text><text x="1100" y="580" font-size="16" fill="#b7c8dc">Validation &amp; drift</text></g></svg>
+<g font-family="DejaVu Sans,Arial,sans-serif">
+<text x="68" y="70" fill="#5de4d4" font-size="16" letter-spacing="3">TCE / DISCIPLINE  ·  TCEM / FORMAL METHOD</text>
+<text x="68" y="154" fill="#f2f6fc" font-size="70" font-weight="700">Threat Context</text><text x="68" y="232" fill="#f2f6fc" font-size="70" font-weight="700">Engineering Method.</text>
+<text x="72" y="290" fill="#b7c8dc" font-size="24">Model the environment. Engineer visibility. Validate the decision.</text>
+<g transform="translate(72,344)">
+<rect width="236" height="78" rx="14" fill="#0d1b2b" stroke="#2e6476"/><text x="22" y="30" fill="#5de4d4" font-size="13" letter-spacing="2">01 / CONTEXT</text><text x="22" y="57" fill="#f2f6fc" font-size="17">Mission · CTI · Trust</text>
+<rect x="258" width="236" height="78" rx="14" fill="#0d1b2b" stroke="#2e6476"/><text x="280" y="30" fill="#5de4d4" font-size="13" letter-spacing="2">02 / BEHAVIOR</text><text x="280" y="57" fill="#f2f6fc" font-size="17">ATT&amp;CK · Attack Paths</text>
+<rect x="516" width="236" height="78" rx="14" fill="#0d1b2b" stroke="#2e6476"/><text x="538" y="30" fill="#5de4d4" font-size="13" letter-spacing="2">03 / DETECTION</text><text x="538" y="57" fill="#f2f6fc" font-size="17">Telemetry · Analytics</text>
+<rect x="774" width="236" height="78" rx="14" fill="#151b21" stroke="#f0bc69"/><text x="796" y="30" fill="#f0bc69" font-size="13" letter-spacing="2">04 / DECISION</text><text x="796" y="57" fill="#f2f6fc" font-size="17">Validate · Trace · Drift</text>
+</g>
+<g transform="translate(1052,88)"><circle cx="145" cy="145" r="132" fill="none" stroke="#2e6476" stroke-width="2"/><circle cx="145" cy="145" r="96" fill="none" stroke="#2e6476" stroke-width="2" stroke-dasharray="5 9"/><path d="M145 13V277M13 145H277" stroke="#294057" stroke-width="2"/><path d="M60 220L112 166L145 145L188 98L232 61" fill="none" stroke="#5de4d4" stroke-width="5"/><circle cx="60" cy="220" r="9" fill="#09111f" stroke="#5de4d4" stroke-width="3"/><circle cx="145" cy="145" r="34" fill="#09111f" stroke="#5de4d4" stroke-width="3"/><circle cx="232" cy="61" r="9" fill="#f0bc69"/><path d="M130 145l11 12 22-25" fill="none" stroke="#5de4d4" stroke-width="4"/><text x="145" y="315" text-anchor="middle" fill="#b7c8dc" font-size="13" letter-spacing="2">OPERATIONAL MATRIX</text></g>
+<rect x="72" y="474" width="1004" height="1" fill="#294057"/>
+<text x="72" y="518" fill="#5de4d4" font-size="14">IDENTITY</text><text x="198" y="518" fill="#b7c8dc" font-size="14">CLOUD</text><text x="294" y="518" fill="#b7c8dc" font-size="14">SUPPLY CHAIN</text><text x="448" y="518" fill="#b7c8dc" font-size="14">AI AGENTS</text><text x="568" y="518" fill="#b7c8dc" font-size="14">SAAS / THIRD PARTY</text><text x="758" y="518" fill="#b7c8dc" font-size="14">ICS / OT</text>
+<text x="72" y="570" fill="#f2f6fc" font-size="17">Practical reference cases · review-gated intelligence · safe defensive validation</text><text x="72" y="606" fill="#b7c8dc" font-size="14">ZERO-POINT DETECTION: decide what must be observable before the first log.</text>
+</g></svg>

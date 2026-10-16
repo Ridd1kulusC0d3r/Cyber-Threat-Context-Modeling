@@ -10,6 +10,7 @@ hide:
 **Threat Context Engineering (TCE)** is the umbrella discipline. **Threat Context Engineering Method (TCEM)** is the formal workflow that connects mission, architecture, threat intelligence, MITRE-aligned behavior, telemetry, detection, validation and defensive decisions.
 
 [Explore the method](methodology.md){ .md-button .md-button--primary }
+[See practical examples](applicability.md){ .md-button .md-button--primary }
 [Run the workbench](colab-frontend.md){ .md-button }
 
 ## Three ways into TCEM
@@ -55,6 +56,40 @@ hide:
 
 !!! note "Keep uncertainty visible"
     Priority is separate from confidence. Horizon forecast pressure is **not attack probability**. AI suggestions and external intelligence require analyst review.
+
+## Where TCEM becomes useful
+
+![TCEM applicability map](assets/tcem-use-cases.svg)
+
+<div class="grid cards" markdown>
+
+-   **Identity / IAM**
+
+    Privileged trust → identity-control change → telemetry requirement → correlated detection → decision.
+
+-   **Cloud**
+
+    Control-plane administration → policy change → target-context gap → validation.
+
+-   **Software supply chain**
+
+    Source/dependency change → artifact publication → provenance evidence → release-integrity control.
+
+-   **AI agents**
+
+    Agent authority → tool/connector action → machine-identity observability → review.
+
+-   **Critical SaaS**
+
+    Delegated administration → configuration change → third-party trust decision.
+
+-   **ICS / OT**
+
+    Engineering access → control change → visibility + recovery evidence.
+
+</div>
+
+[Open the complete applicability walkthrough →](applicability.md){ .md-button }
 
 ## The four inherited questions
 

@@ -46,6 +46,7 @@ nav:
       - TCEM Method: methodology.md
       - Context Model: context-model.md
       - TCEM Operational Matrix: operational-matrix.md
+      - Practical Applicability: applicability.md
       - Context Lens Layer: threat-context-matrix.md
       - RedFrameworks v6 Context: redframeworks-context.md
       - Knowledge Graph: knowledge-graph.md
@@ -77,11 +78,13 @@ nav:
       - Detection & Validation as Code: detection-validation-as-code.md
       - Telemetry Schema Bridges: telemetry-schema-bridges.md
       - Continuous Threat Context: continuous-threat-context.md
-      - Reference Cases: reference-cases.md
   - TCEM v0.5 Horizon:
       - Horizon Method: horizon.md
       - Enterprise Environment State: environment-state.md
       - Detection by Absence: detection-by-absence.md
+  - Applicability:
+      - Practical Walkthroughs: applicability.md
+      - Executable Reference Cases: reference-cases.md
   - Specification:
       - TCEM Specification 1.0 Draft: specification-draft.md
       - Conformance: conformance.md
