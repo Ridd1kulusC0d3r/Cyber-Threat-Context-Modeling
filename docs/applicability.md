@@ -20,7 +20,7 @@ The method is deliberately broader than application threat modeling. The example
 
     **Output:** Telemetry Contract, ordered-sequence detection, validation evidence and a decision to reduce privilege or close visibility gaps.
 
-    [Open the full case →](../examples/cases/enterprise-identity/)
+    [Open the full case →](https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/tree/main/examples/cases/enterprise-identity)
 
 -   **Cloud control plane**
 
@@ -32,7 +32,7 @@ The method is deliberately broader than application threat modeling. The example
 
     **Output:** cloud audit requirements, correlation by actor, target-context gap and validated detection specification.
 
-    [Open the reference case →](../examples/reference-cases/cloud-control-plane/case.yaml)
+    [Open the reference case →](https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/examples/reference-cases/cloud-control-plane/case.yaml)
 
 -   **Software supply chain**
 
@@ -44,7 +44,7 @@ The method is deliberately broader than application threat modeling. The example
 
     **Output:** CI/CD provenance requirements, pipeline correlation, release-integrity detection and safe log-replay validation.
 
-    [Open the reference case →](../examples/reference-cases/software-supply-chain/case.yaml)
+    [Open the reference case →](https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/examples/reference-cases/software-supply-chain/case.yaml)
 
 -   **Enterprise AI agent**
 
@@ -56,7 +56,7 @@ The method is deliberately broader than application threat modeling. The example
 
     **Output:** agent/tool Telemetry Contract, correlation by agent.id, review-gated detection and validation.
 
-    [Open the reference case →](../examples/reference-cases/ai-agent-enterprise/case.yaml)
+    [Open the reference case →](https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/examples/reference-cases/ai-agent-enterprise/case.yaml)
 
 -   **Critical SaaS / third party**
 
@@ -68,7 +68,7 @@ The method is deliberately broader than application threat modeling. The example
 
     **Output:** external-admin visibility, correlation, evidence requirements and a decision on delegated trust.
 
-    [Open the reference case →](../examples/reference-cases/critical-saas-third-party/case.yaml)
+    [Open the reference case →](https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/examples/reference-cases/critical-saas-third-party/case.yaml)
 
 -   **ICS / OT resilience**
 
@@ -80,7 +80,7 @@ The method is deliberately broader than application threat modeling. The example
 
     **Output:** engineering-session telemetry, control-change observability, validation and recovery-oriented decision support.
 
-    [Open the reference case →](../examples/reference-cases/ics-ot-resilience/case.yaml)
+    [Open the reference case →](https://github.com/Ridd1kulusC0d3r/Cyber-Threat-Context-Modeling/blob/main/examples/reference-cases/ics-ot-resilience/case.yaml)
 
 </div>
 
