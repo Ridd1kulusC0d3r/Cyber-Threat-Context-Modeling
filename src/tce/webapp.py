@@ -421,6 +421,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
   <div class="nav mono">
     <button class="active" data-tab="overview">Visão geral</button>
     <button data-tab="contexts">Contextos</button>
+    <button data-tab="applicability">Aplicabilidade</button>
     <button data-tab="matrix">Matriz</button>
     <button data-tab="horizon">Horizonte</button>
     <button data-tab="scenarios">Cenários</button>
@@ -462,6 +463,34 @@ pre{white-space:pre-wrap;word-break:break-word;background:#07090a;border:1px sol
   </div>
   <div class="panel"><h2>Lacunas de contexto</h2><div id="context-gaps" class="list"></div></div>
   <div class="panel"><h2>Catálogo de lentes</h2><div id="context-catalog" class="list"></div></div>
+</section>
+
+<section id="applicability" class="section">
+  <div class="hero">
+    <div class="eyebrow mono">TCEM · PRACTICAL APPLICABILITY</div>
+    <h1 style="font-size:clamp(42px,6vw,82px)">Do cenário ao trabalho defensivo.</h1>
+    <p class="lead">Exemplos sintéticos mostram como o mesmo método liga crown jewel, contexto, ATT&CK, telemetria, detecção, validação e decisão em ambientes diferentes.</p>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="k mono">IDENTITY</div><div class="v" style="font-size:22px">Privileged trust</div><div class="s">Admin trust → identity-control change → telemetry gap → correlated detection.</div></div>
+    <div class="card"><div class="k mono">CLOUD</div><div class="v" style="font-size:22px">Control plane</div><div class="s">Privileged session → policy change → actor/target correlation → validation.</div></div>
+    <div class="card"><div class="k mono">SUPPLY CHAIN</div><div class="v" style="font-size:22px">Release integrity</div><div class="s">Source/dependency change → artifact publication → provenance evidence.</div></div>
+    <div class="card"><div class="k mono">AI AGENT</div><div class="v" style="font-size:22px">Tool authority</div><div class="s">Privileged agent authorization → sensitive connector action → auditability.</div></div>
+    <div class="card"><div class="k mono">SAAS / THIRD PARTY</div><div class="v" style="font-size:22px">Delegated trust</div><div class="s">External admin → critical config change → target visibility → trust review.</div></div>
+    <div class="card"><div class="k mono">ICS / OT</div><div class="v" style="font-size:22px">Engineering resilience</div><div class="s">Remote engineering → control change → observability → recovery decision.</div></div>
+  </div>
+  <div class="panel">
+    <h2>Exemplo completo · Enterprise Identity</h2>
+    <pre>Mission / Crown Jewel
+  → Identity + Third-Party + Recovery context
+  → privileged administration path
+  → ATT&CK T1078 → T1098
+  → Telemetry Contract
+  → missing target.resource
+  → TCEM Detection ordered sequence
+  → safe log-replay validation
+  → strengthen authentication, scope and target telemetry</pre>
+  </div>
 </section>
 
 <section id="matrix" class="section">

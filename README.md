@@ -7,6 +7,7 @@
 <p align="center">
   <a href="#quick-start">Get started</a> ·
   <a href="docs/methodology.md">Explore the method</a> ·
+  <a href="docs/applicability.md">See it in practice</a> ·
   <a href="docs/horizon.md">Discover Horizon</a> ·
   <a href="docs/reference-cases.md">Run a reference case</a>
 </p>
@@ -60,6 +61,25 @@ flowchart TB
     class A,B,C,D,E context
     class F decision
 ~~~
+
+## See TCEM in practice
+
+<p align="center">
+  <img src="docs/assets/tcem-use-cases.svg" alt="TCEM practical applicability across identity, cloud, supply chain, AI, SaaS and ICS/OT" width="100%">
+</p>
+
+TCEM is meant to produce engineering work, not merely another diagram with arrows that survives until the next architecture review.
+
+| Context | Practical question | TCEM output |
+|---|---|---|
+| **Identity** | Can privileged or delegated trust reach the identity control plane, and would we see the consequential change? | path + telemetry gap + ordered detection + decision |
+| **Cloud** | Can a privileged session be tied to a high-impact policy change? | cloud audit contract + actor correlation + validation |
+| **Supply chain** | Can upstream source/dependency change be connected to trusted artifact publication? | provenance telemetry + release-integrity detection |
+| **AI agents** | Can privileged tool authorization be tied to sensitive connector activity? | agent/tool/target telemetry + connector-use correlation |
+| **Critical SaaS** | Can external administration be tied to critical configuration change? | delegated-trust context + target visibility + review decision |
+| **ICS / OT** | Can remote engineering access be tied to control changes while preserving recovery context? | engineering audit + control-change visibility + validation |
+
+[**Explore the worked examples →**](docs/applicability.md)
 
 ## Naming and method architecture
 
@@ -170,6 +190,7 @@ See [Prioritization Model](docs/prioritization.md).
 | :--- | :--- |
 | [TCEM Method](docs/methodology.md) | The analytical process, from mission to decision |
 | [Horizon](docs/horizon.md) | Enterprise paths, blind spots and defensive action candidates |
+| [Practical applicability](docs/applicability.md) | Worked defensive examples from context to decision |
 | [Reference cases](docs/reference-cases.md) | Identity, cloud, supply chain, AI agents, SaaS and ICS/OT |
 | [Templates](templates/) | Reusable analytical artifacts |
 | [Analyst toolkit](docs/case-model.md) | Case model and CLI operations |
@@ -329,9 +350,9 @@ New capabilities:
 - deterministic validation harness for safe fixtures and log replay;
 - historical coverage / telemetry / validation snapshots and drift comparison;
 - scenario-to-detection engineering backlog;
-- continuous RedFrameworks/TCE external context drift comparison;
+- continuous RedFrameworks/TCEM external context drift comparison;
 - six executable reference cases across identity, cloud, software supply chain, AI agents, critical SaaS and ICS/OT;
-- executable TCE conformance levels and a 1.0 specification draft.
+- executable TCEM conformance levels and a 1.0 specification draft.
 
 ~~~bash
 tcem conformance examples/cases/enterprise-identity --level validated
@@ -415,7 +436,7 @@ See [TCEM Horizon](docs/horizon.md), [Enterprise Environment State](docs/environ
 
 ## Colab web workbench
 
-TCE now includes a lightweight dark frontend designed to run **inside the same Colab VM** on port `3000`.
+TCEM includes a lightweight dark frontend designed to run **inside the same Colab VM** on port `3000`.
 
 ~~~bash
 pip install -e .[web]
@@ -434,10 +455,10 @@ The UI provides:
 - ATT&CK Detection Strategy / Analytic / Data Component lookup;
 - D3FEND enrichment;
 - GLiNER + Qwen Evidence Packet analysis;
-- TCE graph inspection;
+- TCEM graph inspection;
 - STIX, ATT&CK Navigator and Attack Flow downloads.
 
-The frontend is intentionally thin: it reads the same case files and calls the same TCE Python modules rather than maintaining a second security-data model.
+The frontend is intentionally thin: it reads the same case files and calls the same TCEM implementation modules rather than maintaining a second security-data model.
 
 ## Awesome knowledge base
 
@@ -484,7 +505,7 @@ The project is intended for defensive architecture, threat-informed detection, a
 
 ## Status
 
-**v0.5.0 — Horizon: predictive and preemptive enterprise defense**
+**v0.5.1 — TCEM formal method + practical applicability + Horizon**
 
 The method now adds an enterprise Environment State and Horizon layer over the existing TCE pipeline. It can discover review-only exposure paths toward crown jewels, combine accepted time-decayed intelligence with vulnerability, control and telemetry context, calculate risk-weighted choke points, find Detection-by-Absence blind spots, propose budget-aware preemptive defensive actions, and feed approved candidates back into the normal detection and validation lifecycle. RedFrameworks, ATT&CK, D3FEND, Attack Flow, OpenCTI, TAXII, the operational knowledge graph, GLiNER and Qwen remain integrated around the evidence boundary.
 
